@@ -1,8 +1,4 @@
 PacksAnSpiel
 ============
 
-Das Spiel zum Lager.
-
-
-
-
+Das Spiel zu "Pack's An"
