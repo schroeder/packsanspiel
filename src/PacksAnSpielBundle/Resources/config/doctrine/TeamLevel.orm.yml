@@ -1,0 +1,50 @@
+PacksAnSpielBundle\Entity\TeamLevel:
+    type: entity
+    table: team_level
+    indexes:
+        fk_team_level_team_idx:
+            columns:
+                - team_id
+        fk_team_level_level1_idx:
+            columns:
+                - level_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        startTime:
+            type: time
+            nullable: true
+            column: start_time
+        finishTime:
+            type: time
+            nullable: true
+            column: finish_time
+    manyToOne:
+        level:
+            targetEntity: Level
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                level_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        team:
+            targetEntity: Team
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                team_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

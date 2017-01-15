@@ -1,0 +1,21 @@
+{% extends 'PacksAnSpielBundle::login_base.html.twig' %}
+
+{% block login %}
+    <div id="playground">
+        <div class="jumbotron">
+            <div class="panel panel-success">
+                <div class="panel-heading"><h3 class="panel-title">Auf zum nächsten Schritt!</h3></div>
+                <div class="panel-body">
+                    <div id="main">
+                        <div id="outdiv">
+                        </div>
+                        <div id="login_result">
+                            ZUM EINLOGGEN KARTE IN DEN SCHLITZ FÜHREN!
+                        </div>
+                    </div>
+                    <canvas id="qr-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

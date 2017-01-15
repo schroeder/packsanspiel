@@ -1,0 +1,78 @@
+PacksAnSpielBundle\Entity\Game:
+    type: entity
+    table: game
+    indexes:
+        fk_game_game_subject1_idx:
+            columns:
+                - game_subject_id
+        fk_game_level1_idx:
+            columns:
+                - level_id
+        fk_game_location1_idx:
+            columns:
+                - location_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
+        description:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        duration:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+        gamecol:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
+    manyToOne:
+        gameSubject:
+            targetEntity: GameSubject
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                game_subject_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        level:
+            targetEntity: Level
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                level_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        location:
+            targetEntity: Location
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                location_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
