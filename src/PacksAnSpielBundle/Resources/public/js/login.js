@@ -62,6 +62,7 @@ function setDefaultText() {
     document.getElementById("login_result").innerHTML = "ZUM EINLOGGEN KARTE IN DEN SCHLITZ FÜHREN!";
     document.getElementById("login_result").style.backgroundColor = "#EEEEEC";
     document.getElementById("login_result").style.color = "#000";
+    setTimeout(captureToCanvas, 500);
 }
 
 function isValidMD5(s) {

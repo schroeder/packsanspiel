@@ -3,14 +3,15 @@
 namespace PacksAnSpielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Team
  *
  * @ORM\Table(name="team", indexes={@ORM\Index(name="fk_team_level1_idx", columns={"current_level"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\TeamRepository")
  */
-class Team
+class Team implements UserInterface, \Serializable
 {
     /**
      * @var integer
@@ -51,7 +52,6 @@ class Team
      * })
      */
     private $currentLevel;
-
 
 
     /**
@@ -158,5 +158,54 @@ class Team
     public function getCurrentLevel()
     {
         return $this->currentLevel;
+    }
+
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function getUsername()
+    {
+        return $this->passcode;
+    }
+
+    public function getPassword()
+    {
+        return $this->passcode;
+    }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->passcode,
+            $this->passcode,
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
     }
 }

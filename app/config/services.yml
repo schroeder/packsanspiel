@@ -1,13 +1,13 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/service_container.html
 parameters:
-#    parameter_name: value
+  packsan.user.provider.class: PacksAnSpielBundle\Repository\TeamRepository
+  packsan.user.provider.entity.class: PacksAnSpielBundle\Entity\Team
 
 services:
-#    service_name:
-#        class: PacksAnSpielBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
-
-services:
-    app.webservice_user_provider:
-        class: PacksAnSpielBundle\Security\User\WebserviceUserProvider
+  packsan.user.provider:
+    class: %packsan.user.provider.class%
+    factory_service: doctrine
+    factory_method: getRepository
+    arguments:
+      - %packsan.user.provider.entity.class%
