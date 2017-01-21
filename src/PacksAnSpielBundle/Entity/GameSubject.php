@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GameSubject
  *
  * @ORM\Table(name="game_subject")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\GameSubjectRepository")
  */
 class GameSubject
 {
@@ -35,6 +35,19 @@ class GameSubject
      */
     private $description;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="done_color", type="string", length=45, nullable=true)
+     */
+    private $doneColor;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="todo_color", type="string", length=45, nullable=true)
+     */
+    private $todoColor;
 
 
     /**

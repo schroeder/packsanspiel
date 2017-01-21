@@ -1,5 +1,6 @@
 PacksAnSpielBundle\Entity\GameSubject:
     type: entity
+    repositoryClass: PacksAnSpielBundle\Repository\GameSubjectRepository
     table: game_subject
     id:
         id:
@@ -23,4 +24,18 @@ PacksAnSpielBundle\Entity\GameSubject:
             length: 45
             options:
                 fixed: false
+        doneColor:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
+            column: done_color
+        todoColor:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
+            column: todo_color
     lifecycleCallbacks: {  }

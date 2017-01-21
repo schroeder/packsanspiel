@@ -43,6 +43,10 @@ PacksAnSpielBundle\Entity\TeamLevelGame:
             options:
                 fixed: false
             column: finish_time
+        solvedByLeveljump:
+            type: boolean
+            nullable: true
+            column: solved_by_leveljump
     manyToOne:
         assignedGame:
             targetEntity: Game

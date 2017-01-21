@@ -4,31 +4,16 @@
     <div id="playground">
         <div class="jumbotron">
             <div class="panel panel-info">
-                <div class="panel-heading"><h3 class="panel-title">Panel title</h3></div>
+                <div class="panel-heading"><h3 class="panel-title">Hallo Gruppe!</h3></div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="jumbotron">
-                                Themenfeld 1
+                        {% for item in subject_list %}
+                            <div class="col-md-6">
+                                <div class="jumbotron">
+                                    {{ item.name }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="jumbotron">
-                                Themenfeld 2
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="jumbotron">
-                                Themenfeld 3
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="jumbotron">
-                                Themenfeld 4
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -37,13 +22,13 @@
 {% endblock %}
 
 {% block infobox %}
-    <div id="infobox">
-        <div class="jumbotron">
-            <div id="welcome">
-                <h1><span>Welcome to</span> Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}
-                </h1>
+<div id="infobox">
+    <div class="jumbotron">
+        <div id="welcome" class="panel panel-info">
+            <div class="panel-heading"><h3 class="panel-title">Eure Aktionen</h3></div>
+            <div class="panel-body">
             </div>
         </div>
     </div>
 
-{% endblock %}
+    {% endblock %}

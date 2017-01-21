@@ -31,10 +31,27 @@ class Team implements UserInterface, \Serializable
 
     /**
      * @var string
+     */
+    private $username;
+
+    /**
+     * @var string
+     */
+    private $password;
+
+    /**
+     * @var string
      *
      * @ORM\Column(name="member_of_team", type="string", length=45, nullable=true)
      */
     private $memberOfTeam;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
 
     /**
      * @var string
@@ -74,7 +91,8 @@ class Team implements UserInterface, \Serializable
     public function setPasscode($passcode)
     {
         $this->passcode = $passcode;
-
+        $this->username = $passcode;
+        $this->password = $passcode;
         return $this;
     }
 
@@ -191,10 +209,12 @@ class Team implements UserInterface, \Serializable
         return serialize(array(
             $this->id,
             $this->passcode,
-            $this->passcode,
-            // see section on salt below
-            // $this->salt,
         ));
+    }
+
+    public function __toString()
+    {
+        return $this->username;
     }
 
     /** @see \Serializable::unserialize() */
@@ -202,10 +222,31 @@ class Team implements UserInterface, \Serializable
     {
         list (
             $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt
+            $this->passcode,
             ) = unserialize($serialized);
+    }
+
+    /**
+     * Set status
+     *
+     * @param int $status
+     *
+     * @return Team
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

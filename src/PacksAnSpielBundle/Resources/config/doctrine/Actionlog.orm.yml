@@ -1,5 +1,6 @@
 PacksAnSpielBundle\Entity\Actionlog:
     type: entity
+    repositoryClass: PacksAnSpielBundle\Repository\ActionlogRepository
     table: actionlog
     indexes:
         fk_actionlog_team1_idx:
@@ -11,6 +12,8 @@ PacksAnSpielBundle\Entity\Actionlog:
     id:
         id:
             type: integer
+            generator:
+              strategy: AUTO
             nullable: false
             options:
                 unsigned: false
@@ -24,8 +27,14 @@ PacksAnSpielBundle\Entity\Actionlog:
                 fixed: false
             column: log_text
         timestamp:
-            type: time
+            type: integer
             nullable: true
+        logLevel:
+            type: integer
+            nullable: true
+            options:
+                fixed: false
+            column: log_level
     oneToOne:
         game:
             targetEntity: Game

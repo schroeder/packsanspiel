@@ -79,6 +79,12 @@ class Game
      */
     private $location;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
 
 
     /**
@@ -257,5 +263,29 @@ class Game
     public function getLocation()
     {
         return $this->location;
+    }
+
+    /**
+     * Set status
+     *
+     * @param int $status
+     *
+     * @return Game
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

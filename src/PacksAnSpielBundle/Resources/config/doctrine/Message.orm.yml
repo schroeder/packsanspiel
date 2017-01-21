@@ -1,10 +1,13 @@
-PacksAnSpielBundle\Entity\Member:
+PacksAnSpielBundle\Entity\Message:
     type: entity
-    table: member
+    table: message
     indexes:
-        fk_member_team1_idx:
+        fk_message_team1_idx:
             columns:
                 - team_id
+        fk_message_game1_idx:
+            columns:
+                - game_id
     id:
         id:
             type: integer
@@ -15,19 +18,32 @@ PacksAnSpielBundle\Entity\Member:
             generator:
                 strategy: IDENTITY
     fields:
-        name:
-            type: string
+        messageText:
+            type: text
             nullable: true
-            length: 45
+            length: 65535
             options:
                 fixed: false
-        grade:
-            type: string
+            column: message_text
+        sendTime:
+            type: datetime
             nullable: true
-            length: 45
-            options:
-                fixed: false
+            column: send_time
+        readTime:
+            type: datetime
+            nullable: true
+            column: read_time
     manyToOne:
+        game:
+            targetEntity: Game
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                game_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         team:
             targetEntity: Team
             cascade: {  }

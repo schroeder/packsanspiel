@@ -3,11 +3,21 @@
 parameters:
   packsan.user.provider.class: PacksAnSpielBundle\Repository\TeamRepository
   packsan.user.provider.entity.class: PacksAnSpielBundle\Entity\Team
+  packsan.game.logic.class: PacksAnSpielBundle\Game\GameLogic
+  packsan.game.logger.class: PacksAnSpielBundle\Game\GameActionLogger
 
 services:
-  packsan.user.provider:
-    class: %packsan.user.provider.class%
-    factory_service: doctrine
-    factory_method: getRepository
-    arguments:
-      - %packsan.user.provider.entity.class%
+#  packsan.user.provider:
+#    class: %packsan.user.provider.class%
+#    factory_service: doctrine
+#    factory_method: getRepository
+#    arguments:
+#      - %packsan.user.provider.entity.class%
+
+  packsan.game.logic:
+    class:        %packsan.game.logic.class%
+    arguments:     [ "@doctrine.orm.entity_manager" ]
+
+  packsan.action.logger:
+    class:        %packsan.game.logger.class%
+    arguments:     [ "@doctrine.orm.entity_manager" ]

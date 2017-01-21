@@ -38,12 +38,9 @@ PacksAnSpielBundle\Entity\Game:
             nullable: true
             options:
                 unsigned: false
-        gamecol:
-            type: string
+        status:
+            type: boolean
             nullable: true
-            length: 45
-            options:
-                fixed: false
     manyToOne:
         gameSubject:
             targetEntity: GameSubject

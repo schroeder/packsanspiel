@@ -1,5 +1,6 @@
 PacksAnSpielBundle\Entity\Team:
     type: entity
+    repositoryClass: PacksAnSpielBundle\Repository\TeamRepository
     table: team
     indexes:
         fk_team_level1_idx:
@@ -35,6 +36,9 @@ PacksAnSpielBundle\Entity\Team:
             options:
                 fixed: false
             column: count_persons
+        status:
+            type: boolean
+            nullable: true
     manyToOne:
         currentLevel:
             targetEntity: Level
