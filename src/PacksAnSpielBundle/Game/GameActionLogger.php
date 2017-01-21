@@ -20,10 +20,17 @@ class GameActionLogger
         $this->em = $entityManager;
     }
 
-    function logAction($message, $logLevel = Actionlog::LOGLEVEL_INFO, Team $team = NULL, Game $game = NULL, $log_time = 0)
+    function logAction($message, $logLevel = Actionlog::LOGLEVEL_INFO, $team = NULL, $game = NULL, $log_time = 0)
     {
         if ($log_time === 0) {
             $log_time = time();
+        }
+
+        if ($team == false) {
+            $team = NULL;
+        }
+        if ($game == false) {
+            $game = NULL;
         }
 
         try {

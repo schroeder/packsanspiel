@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Member
  *
  * @ORM\Table(name="member", indexes={@ORM\Index(name="fk_member_team1_idx", columns={"team_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\MemberRepository")
  */
 class Member
 {
@@ -24,6 +24,13 @@ class Member
     /**
      * @var string
      *
+     * @ORM\Column(name="passcode", type="string", length=45, nullable=true)
+     */
+    private $passcode;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="name", type="string", length=45, nullable=true)
      */
     private $name;
@@ -31,9 +38,9 @@ class Member
     /**
      * @var string
      *
-     * @ORM\Column(name="stufe", type="string", length=45, nullable=true)
+     * @ORM\Column(name="grade", type="string", length=45, nullable=true)
      */
-    private $stufe;
+    private $grade;
 
     /**
      * @var \PacksAnSpielBundle\Entity\Team
@@ -46,7 +53,6 @@ class Member
     private $team;
 
 
-
     /**
      * Get id
      *
@@ -55,6 +61,29 @@ class Member
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set passcode
+     *
+     * @param string $passcode
+     *
+     * @return Member
+     */
+    public function setPasscode($passcode)
+    {
+        $this->passcode = $passcode;
+        return $this;
+    }
+
+    /**
+     * Get passcode
+     *
+     * @return string
+     */
+    public function getPasscode()
+    {
+        return $this->passcode;
     }
 
     /**
@@ -82,27 +111,27 @@ class Member
     }
 
     /**
-     * Set stufe
+     * Set grade
      *
-     * @param string $stufe
+     * @param string $grade
      *
      * @return Member
      */
-    public function setStufe($stufe)
+    public function setGrade($stufe)
     {
-        $this->stufe = $stufe;
+        $this->grade = $stufe;
 
         return $this;
     }
 
     /**
-     * Get stufe
+     * Get grade
      *
      * @return string
      */
-    public function getStufe()
+    public function getGrade()
     {
-        return $this->stufe;
+        return $this->grade;
     }
 
     /**

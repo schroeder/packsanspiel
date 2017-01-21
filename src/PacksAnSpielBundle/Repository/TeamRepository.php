@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use PacksAnSpielBundle\Entity\Team;
+use PacksAnSpielBundle\Entity\Member;
+use PacksAnSpielBundle\Repository\MemberRepository;
 
 class TeamRepository extends EntityRepository implements UserProviderInterface
 {
@@ -14,7 +16,7 @@ class TeamRepository extends EntityRepository implements UserProviderInterface
     {
         //$result = $this->_em->createQuery('SELECT t.id FROM PacksAnSpielBundle\Entity\Team t WHERE t.passcode= :passcode')->setParameter('passcode', $passcode)->getFirstResult();
         //return $result;
-        $result = $this->_em->createQuery('SELECT t.id FROM PacksAnSpielBundle\Entity\Team t WHERE t.passcode= :passcode')->setParameter('passcode', $passcode)->execute();
+        $result = $this->_em->createQuery('SELECT t.id FROM PacksAnSpielBundle\Entity\Team t WHERE t.passcode= :passcode AND t.status > 1')->setParameter('passcode', $passcode)->execute();
         if (count($result) == 1) {
             return $this->find($result[0]['id']);
         }
@@ -68,4 +70,34 @@ class TeamRepository extends EntityRepository implements UserProviderInterface
     {
         return true;
     }
+
+    public function initializeNewTeam($teamCode, $status = Team::STATUS_IN_REGISTRATION)
+    {
+        $team = new Team();
+        $team->setPasscode($teamCode);
+        $team->setMemberOfTeam($teamCode);
+        $team->setStatus($status);
+        $team->setCurrentLevel(NULL);
+
+        $this->_em->persist($team);
+        $this->_em->flush();
+
+        return $team;
+    }
+
+    public function setTeamMember($team, $memberList)
+    {
+        /* @var Member $member */
+        foreach ($memberList as $member) {
+            $member->setTeam($team);
+            $this->_em->persist($member);
+            $this->_em->flush();
+        }
+        $team->setStatus(Team::STATUS_ACTIVE);
+        $this->_em->persist($team);
+        $this->_em->flush();
+
+        return $team;
+    }
+
 }

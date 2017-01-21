@@ -32,30 +32,48 @@ function captureToCanvas() {
                 console.log(e);
                 setTimeout(captureToCanvas, 500);
             }
-            ;
         }
         catch (e) {
             console.log(e);
             setTimeout(captureToCanvas, 500);
         }
-        ;
     }
 }
 
-function read(a) {
+function codeReadOnLoginPage(a) {
     if (isValidMD5(a)) {
-        /*
-         * TODO: CHeck QR Code
-         * */
+        console.log("[OnLogin] Found code: " + a);
         window.location = "/PacksAnSpiel/web/app_dev.php/login?qr=" + a;
     }
     else {
-        document.getElementById("login_result").innerHTML = "DAS HAT LEIDER NICHT GEKLAPPT!";
-        document.getElementById("login_result").style.backgroundColor = "#FF0000";
-        document.getElementById("login_result").style.color = "#EEEEEC";
+        showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
         setTimeout(setDefaultText, 3000);
-
     }
+}
+
+function codeReadOnRegisterPage(a) {
+    if (isValidMD5(a)) {
+        console.log("[OnRegister] Found code: " + a);
+        var res = a.split(":");
+        if (res[0] == 'member') {
+            console.log("[OnRegister] Found member: " + res[1]);
+            window.location = "/PacksAnSpiel/web/app_dev.php/register?action=addMember&qr=" + a;
+        }
+        else if (res[0] == 'team') {
+            console.log("[OnRegister] Found team: " + res[1]);
+            window.location = "/PacksAnSpiel/web/app_dev.php/register?action=setTeam&qr=" + a;
+        }
+    }
+    else {
+        showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
+        setTimeout(setDefaultText, 3000);
+    }
+}
+
+function showLoginErrorMessage(message) {
+    document.getElementById("login_result").innerHTML = message;
+    document.getElementById("login_result").style.backgroundColor = "#CC0000";
+    document.getElementById("login_result").style.color = "#EEEEEC";
 }
 
 function setDefaultText() {
@@ -66,8 +84,10 @@ function setDefaultText() {
 }
 
 function isValidMD5(s) {
-    /*    return s.matches("[a-fA-F0-9]{32}");*/
-    return s.toString().match("[a-fA-F0-9]{32}");
+    /* TODO: check for valid type:md5
+     s.toString().match("(.*):[a-fA-F0-9]{32}")
+     * */
+    return true;
 }
 
 function isCanvasSupported() {
@@ -90,20 +110,6 @@ function success(stream) {
 function error(error) {
     gUM = false;
     return;
-}
-
-function load() {
-    if (isCanvasSupported() && window.File && window.FileReader) {
-        initCanvas(800, 600);
-        qrcode.callback = read;
-        document.getElementById("main").style.display = "inline";
-        setwebcam();
-    }
-    else {
-        document.getElementById("main").style.display = "inline";
-        document.getElementById("main").innerHTML = '<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>' +
-            '<br><p id="mp2">sorry your browser is not supported</p><br><br>';
-    }
 }
 
 function setwebcam() {

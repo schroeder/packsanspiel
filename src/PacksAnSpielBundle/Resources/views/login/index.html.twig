@@ -19,3 +19,29 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            if ("{{ error_message }}" != false) {
+                showLoginErrorMessage("{{ error_message }}");
+                setTimeout(setDefaultText, 3000);
+            }
+
+        });
+        function load() {
+            if (isCanvasSupported() && window.File && window.FileReader) {
+                initCanvas(800, 600);
+                qrcode.callback = codeReadOnLoginPage;
+                document.getElementById("main").style.display = "inline";
+                setwebcam();
+            }
+            else {
+                document.getElementById("main").style.display = "inline";
+                document.getElementById("main").innerHTML = '<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>' +
+                    '<br><p id="mp2">sorry your browser is not supported</p><br><br>';
+            }
+        }
+
+    </script>
+{% endblock %}

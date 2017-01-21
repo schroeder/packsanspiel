@@ -4,6 +4,7 @@ namespace PacksAnSpielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Team
@@ -13,6 +14,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Team implements UserInterface, \Serializable
 {
+    const STATUS_UNUSED = 0;
+    const STATUS_IN_REGISTRATION = 1;
+    const STATUS_ACTIVE = 2;
+    const STATUS_BLOCKED = 3;
+
     /**
      * @var integer
      *
@@ -72,6 +78,17 @@ class Team implements UserInterface, \Serializable
 
 
     /**
+     *
+     * @OneToMany(targetEntity="Member", mappedBy="team")
+     */
+    private $teamMembers;
+
+    public function __construct()
+    {
+        $this->teamMembers = new ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -128,6 +145,16 @@ class Team implements UserInterface, \Serializable
     public function getMemberOfTeam()
     {
         return $this->memberOfTeam;
+    }
+
+    /**
+     * Get teamMembers
+     *
+     * @return array
+     */
+    public function getTeamMembers()
+    {
+        return $this->teamMembers;
     }
 
     /**

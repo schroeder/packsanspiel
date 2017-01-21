@@ -2,45 +2,121 @@
 
 namespace PacksAnSpielBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\UserBundle\Controller\RegistrationController as BaseController;
 use Symfony\Component\HttpFoundation\Request;
+use PacksAnSpielBundle\Game\GameActionLogger;
+use PacksAnSpielBundle\Repository\MemberRepository;
+use PacksAnSpielBundle\Repository\TeamRepository;
+use PacksAnSpielBundle\Entity\Member;
+use PacksAnSpielBundle\Entity\Team;
+use PacksAnSpielBundle\Entity\Actionlog;
 
 class RegistrationController extends BaseController
 {
+    /**
+     * @Route("/register", name="register")
+     */
     public function registerAction(Request $request)
     {
-        $form = $this->container->get('fos_user.registration.form');
-        $formHandler = $this->container->get('fos_user.registration.form.handler');
-        $confirmationEnabled = $this->container->getParameter('fos_user.registration.confirmation.enabled');
+        /* @var GameActionLogger $logger */
+        $logger = $this->get('packsan.action.logger');
+        $errorMessage = false;
 
-        $process = $formHandler->process($confirmationEnabled);
-        if ($process) {
-            $user = $form->getData();
+        $em = $this->getDoctrine();
 
-            /*****************************************************
-             * Add new functionality (e.g. log the registration) *
-             *****************************************************/
-            $this->container->get('logger')->info(
-                sprintf('New user registration: %s', $user)
-            );
+        $action = $request->get('action');
 
-            if ($confirmationEnabled) {
-                $this->container->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
-                $route = 'fos_user_registration_check_email';
-            } else {
-                $this->authenticateUser($user);
-                $route = 'fos_user_registration_confirmed';
-            }
+        $team = false;
+        $memberList = [];
 
-            $this->setFlash('fos_user_success', 'registration.flash.user_created');
-            $url = $this->container->get('router')->generate($route);
+        /* @var MemberRepository $repo */
+        $memberRepo = $em->getRepository("PacksAnSpielBundle:Member");
+        /* @var TeamRepository $repo */
+        $teamRepo = $em->getRepository("PacksAnSpielBundle:Team");
 
-            return new RedirectResponse($url);
+        if ($this->get('session')->has('team')) {
+            $teamId = $this->get('session')->get('team');
+            $team = $teamRepo->findOneByPasscode($teamId);
         }
 
-        return $this->container->get('templating')->renderResponse('@FOSUser/Registration/register.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        if ($this->get('session')->has('member_list')) {
+            $memberIdString = $this->get('session')->get('member_list');
+            $memberIdList = explode(',', $memberIdString);
+            foreach ($memberIdList as $memberId) {
+                /* @var Member $member */
+                $member = $memberRepo->findOneByPasscode($memberId);
+                if ($member) {
+                    $memberList[] = $member;
+                } else {
+                    $logger->logAction("Registration: Cannot find member with passcode $memberId.", Actionlog::LOGLEVEL_CRIT, $team);
+                }
+            }
+        }
+
+        $scannedQRCode = $request->get('qr');
+        if ($scannedQRCode) {
+            list($codeType, $scannedQRCode) = explode(':', $scannedQRCode);
+
+            if (!$codeType || !$scannedQRCode || $codeType == "" || $scannedQRCode == "") {
+                $errorMessage = "Invalid code";
+                $logger->logAction("Failed login try with qr code $scannedQRCode, error: \"$errorMessage\"", Actionlog::LOGLEVEL_WARN);
+                return new RedirectResponse($this->generateUrl('login'));
+            }
+        }
+
+        switch ($action) {
+            case 'init':
+                break;
+            case 'addMember':
+                if ($codeType == 'member') {
+                    $member = $memberRepo->findOneByPasscode($scannedQRCode);
+                    if ($member) {
+                        if (!in_array($member, $memberList)) {
+                            $memberList[] = $member;
+                            $memberIdList[] = $scannedQRCode;
+                            $memberIdString = implode(',', array_unique($memberIdList));
+                            $this->get('session')->set('member_list', $memberIdString);
+                        } else {
+                            $logger->logAction("Registration: member already registered", Actionlog::LOGLEVEL_WARN, $team);
+                        }
+                    } else {
+                        $logger->logAction("Registration: Cannot find member to add $scannedQRCode.", Actionlog::LOGLEVEL_CRIT, $team);
+                    }
+                } else {
+                    $logger->logAction("Registration: Cannot find member type to add: $codeType.", Actionlog::LOGLEVEL_CRIT, $team);
+                }
+                return new RedirectResponse($this->generateUrl('register') . "?action=init");
+                break;
+            case 'setTeam':
+                if ($codeType == 'team') {
+                    /* @var Team $team */
+                    $team = $teamRepo->findOneByPasscode($scannedQRCode);
+                    if (!$team) {
+                        $team = $teamRepo->initializeNewTeam($scannedQRCode);
+                        $logger->logAction("Registration: Team initializedCannot find team to add $scannedQRCode.", Actionlog::LOGLEVEL_CRIT, $team);
+                    }
+                    $this->get('session')->set('team', $team->getPasscode());
+                } else {
+                    $logger->logAction("Registration: Cannot find member type to add: $codeType.", Actionlog::LOGLEVEL_CRIT, $team);
+                }
+                return new RedirectResponse($this->generateUrl('register') . "?action=init");
+                break;
+            case
+            'removeMember':
+                break;
+            case 'finish':
+                $teamRepo->setTeamMember($team, $memberList);
+                $this->get('session')->remove('member_list');
+                $this->get('session')->remove('team');
+                return new RedirectResponse($this->generateUrl('login'));
+        }
+
+        return $this->render('PacksAnSpielBundle::register/index.html.twig',
+            ["error_message" => $errorMessage,
+                "member_list" => $memberList,
+                "team" => $team]
+        );
     }
 }
