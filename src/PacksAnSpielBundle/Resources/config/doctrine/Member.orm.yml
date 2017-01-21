@@ -1,5 +1,6 @@
 PacksAnSpielBundle\Entity\Member:
     type: entity
+    repositoryClass: PacksAnSpielBundle\Repository\MemberRepository
     table: member
     indexes:
         fk_member_team1_idx:
@@ -15,6 +16,12 @@ PacksAnSpielBundle\Entity\Member:
             generator:
                 strategy: IDENTITY
     fields:
+        passcode:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
         name:
             type: string
             nullable: true

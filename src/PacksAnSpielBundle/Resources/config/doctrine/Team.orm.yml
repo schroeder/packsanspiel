@@ -50,4 +50,9 @@ PacksAnSpielBundle\Entity\Team:
                 current_level:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToMany:
+        teamMembers:
+            targetEntity: Member
+            mappedBy: team
+
     lifecycleCallbacks: {  }
