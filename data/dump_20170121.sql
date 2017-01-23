@@ -34,7 +34,7 @@ CREATE TABLE `actionlog` (
   KEY `fk_actionlog_game1_idx` (`game_id`),
   CONSTRAINT `fk_actionlog_game1` FOREIGN KEY (`game_id`) REFERENCES `game` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_actionlog_team1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `actionlog` (
 
 LOCK TABLES `actionlog` WRITE;
 /*!40000 ALTER TABLE `actionlog` DISABLE KEYS */;
-INSERT INTO `actionlog` VALUES (1,'Team logged in.',1,1485008899,NULL,1),(2,'Failed admin login try with qr code dde3259db83f1c5a86720338341e8608!',NULL,1485026985,NULL,3),(3,'Failed admin login try with qr code dde3259db83f1c5a86720338341e8608!',NULL,1485026986,NULL,3),(4,'Failed admin login try with qr code dde3259db83f1c5a86720338341e8608!',NULL,1485027146,NULL,3),(5,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027172,NULL,2),(6,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027173,NULL,2),(7,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027173,NULL,2),(8,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027180,NULL,2),(9,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027233,NULL,2),(10,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027240,NULL,2),(11,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027240,NULL,2),(12,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027240,NULL,2),(13,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027265,NULL,2),(14,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027275,NULL,2),(15,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027276,NULL,2),(16,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027365,NULL,2),(17,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027416,NULL,2),(18,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027424,NULL,2),(19,'Failed team login try with qr code 07f942ee7d5e4f8a341236a199781eec!',NULL,1485027435,NULL,2),(20,'Failed team login try with qr code 07f942ee7d5e4f8a341236a199781eec!',NULL,1485027436,NULL,2),(21,'Failed team login try with qr code 07f942ee7d5e4f8a341236a199781eec!',NULL,1485029074,NULL,2),(22,'Registration: Cannot find member to add member:5f8dd29a3fc26e057b5d3a179b501432.',NULL,1485035612,NULL,3),(23,'Registration: Cannot find team to add 1a1ce120f74c03216b2bcb575cc7b592.',NULL,1485037959,NULL,3),(24,'Registration: Cannot find team to add 1a1ce120f74c03216b2bcb575cc7b592.',NULL,1485038562,NULL,3),(25,'Registration: Team initializedCannot find team to add 1a1ce120f74c03216b2bcb575cc7b592.',2,1485038693,NULL,3),(26,'Unable to log in team . ',2,1485039801,NULL,3),(27,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485040099,NULL,2),(28,'Unable to log in team . ',2,1485041137,NULL,3),(29,'Unable to log in team . ',2,1485041188,NULL,3),(30,'Team logged in . ',2,1485041202,NULL,1);
+INSERT INTO `actionlog` VALUES (1,'Team logged in.',1,1485008899,NULL,1),(2,'Failed admin login try with qr code dde3259db83f1c5a86720338341e8608!',NULL,1485026985,NULL,3),(3,'Failed admin login try with qr code dde3259db83f1c5a86720338341e8608!',NULL,1485026986,NULL,3),(4,'Failed admin login try with qr code dde3259db83f1c5a86720338341e8608!',NULL,1485027146,NULL,3),(5,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027172,NULL,2),(6,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027173,NULL,2),(7,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027173,NULL,2),(8,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027180,NULL,2),(9,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027233,NULL,2),(10,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027240,NULL,2),(11,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027240,NULL,2),(12,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027240,NULL,2),(13,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027265,NULL,2),(14,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027275,NULL,2),(15,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027276,NULL,2),(16,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027365,NULL,2),(17,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027416,NULL,2),(18,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485027424,NULL,2),(19,'Failed team login try with qr code 07f942ee7d5e4f8a341236a199781eec!',NULL,1485027435,NULL,2),(20,'Failed team login try with qr code 07f942ee7d5e4f8a341236a199781eec!',NULL,1485027436,NULL,2),(21,'Failed team login try with qr code 07f942ee7d5e4f8a341236a199781eec!',NULL,1485029074,NULL,2),(22,'Registration: Cannot find member to add member:5f8dd29a3fc26e057b5d3a179b501432.',NULL,1485035612,NULL,3),(23,'Registration: Cannot find team to add 1a1ce120f74c03216b2bcb575cc7b592.',NULL,1485037959,NULL,3),(24,'Registration: Cannot find team to add 1a1ce120f74c03216b2bcb575cc7b592.',NULL,1485038562,NULL,3),(25,'Registration: Team initializedCannot find team to add 1a1ce120f74c03216b2bcb575cc7b592.',2,1485038693,NULL,3),(26,'Unable to log in team . ',2,1485039801,NULL,3),(27,'Failed team login try with qr code 1a1ce120f74c03216b2bcb575cc7b592!',NULL,1485040099,NULL,2),(28,'Unable to log in team . ',2,1485041137,NULL,3),(29,'Unable to log in team . ',2,1485041188,NULL,3),(30,'Team logged in . ',2,1485041202,NULL,1),(31,'Team logged in . ',2,1485082317,NULL,1),(32,'Team logged in . ',2,1485082318,NULL,1),(33,'Team logged in . ',2,1485082318,NULL,1);
 /*!40000 ALTER TABLE `actionlog` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,6 +194,8 @@ DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `group` varchar(255) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
   `grade` varchar(45) DEFAULT NULL,
   `passcode` varchar(45) DEFAULT NULL,
@@ -209,7 +211,7 @@ CREATE TABLE `member` (
 
 LOCK TABLES `member` WRITE;
 /*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES (1,'Peter Pan',2,'woe','68d5c9dfbb3d45ecd77d609b8eca1ebd'),(2,'Klaus',2,'woe','a3715699b7c3b00b81d64799245f0f47'),(3,'Claudia',2,'woe','5f8dd29a3fc26e057b5d3a179b501432');
+INSERT INTO `member` VALUES (1,'Peter Pan',NULL,NULL,2,'woe','68d5c9dfbb3d45ecd77d609b8eca1ebd'),(2,'Klaus',NULL,NULL,2,'woe','a3715699b7c3b00b81d64799245f0f47'),(3,'Claudia',NULL,NULL,2,'woe','5f8dd29a3fc26e057b5d3a179b501432');
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,9 +256,8 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `passcode` varchar(45) DEFAULT NULL,
-  `member_of_team` varchar(45) DEFAULT NULL,
+  `parent_team` varchar(45) DEFAULT NULL,
   `current_level` int(11) DEFAULT NULL,
-  `count_persons` varchar(45) DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_team_level1_idx` (`current_level`),
@@ -270,7 +271,7 @@ CREATE TABLE `team` (
 
 LOCK TABLES `team` WRITE;
 /*!40000 ALTER TABLE `team` DISABLE KEYS */;
-INSERT INTO `team` VALUES (1,'a95c530a7af5f492a74499e70578d150','a95c530a7af5f492a74499e70578d150',1,'3',1),(2,'1a1ce120f74c03216b2bcb575cc7b592','1a1ce120f74c03216b2bcb575cc7b592',NULL,NULL,2);
+INSERT INTO `team` VALUES (1,'a95c530a7af5f492a74499e70578d150','a95c530a7af5f492a74499e70578d150',1,1),(2,'1a1ce120f74c03216b2bcb575cc7b592','1a1ce120f74c03216b2bcb575cc7b592',NULL,2);
 /*!40000 ALTER TABLE `team` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -374,4 +375,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-22  0:28:48
+-- Dump completed on 2017-01-23 12:29:17
