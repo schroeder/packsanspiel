@@ -24,6 +24,16 @@
 {% block infobox %}
     <div id="infobox">
         <div class="jumbotron">
+            <div id="info" class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">Infos</h3></div>
+                <div class="panel-body">
+                    <p>Ihr seid <strong>{{ team.countMembers }}</strong> Leute in der Gruppe.</p>
+                    {% if team.currentLevel %}
+                        <p>Ihr spielt in Level <strong>{{ team.currentLevel.name }}</strong>.</p>
+                    {% endif %}
+                </div>
+            </div>
+
             <div id="welcome" class="panel panel-info">
                 <div class="panel-heading"><h3 class="panel-title">Eure Aktionen</h3></div>
                 <div class="panel-body">

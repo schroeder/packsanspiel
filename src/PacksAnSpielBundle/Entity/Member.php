@@ -38,6 +38,24 @@ class Member
     /**
      * @var string
      *
+     * @ORM\Column(name="first_name", type="string", length=45, nullable=true)
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * Der Stamm
+     *
+     * @ORM\Column(name="group", type="string", length=255, nullable=true)
+     */
+    private $group;
+
+    /**
+     * @var string
+     *
+     * Die Stufe
+     *
      * @ORM\Column(name="grade", type="string", length=45, nullable=true)
      */
     private $grade;
@@ -87,6 +105,28 @@ class Member
     }
 
     /**
+     * Get full name
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstName + " " + $this->name;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
@@ -101,13 +141,51 @@ class Member
     }
 
     /**
+     * Set first name
+     *
+     * @param string $name
+     *
+     * @return Member
+     */
+    public function setFirstName($name)
+    {
+        $this->firstName = $name;
+
+        return $this;
+    }
+
+    /**
      * Get name
      *
      * @return string
      */
-    public function getName()
+    public function getFirstName()
     {
-        return $this->name;
+        return $this->firstName;
+    }
+
+    /**
+     * Set first name
+     *
+     * @param string $name
+     *
+     * @return Member
+     */
+    public function setGroup($name)
+    {
+        $this->group = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->group;
     }
 
     /**

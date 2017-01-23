@@ -37,12 +37,8 @@ PacksAnSpielBundle\Entity\Member:
     manyToOne:
         team:
             targetEntity: Team
-            cascade: {  }
-            fetch: LAZY
-            mappedBy: null
-            inversedBy: null
+            inversedBy: team_members
             joinColumns:
                 team_id:
                     referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

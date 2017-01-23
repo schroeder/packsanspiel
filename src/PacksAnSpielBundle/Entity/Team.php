@@ -5,6 +5,8 @@ namespace PacksAnSpielBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use PacksAnSpielBundle\Entity\Member;
+use PacksAnSpielBundle\Entity\Level;
 
 /**
  * Team
@@ -37,20 +39,28 @@ class Team implements UserInterface, \Serializable
 
     /**
      * @var string
+     * Dummy field for authorization, not really used!
      */
     private $username;
 
     /**
      * @var string
+     * Dummy field for authorization, not really used!
      */
     private $password;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="member_of_team", type="string", length=45, nullable=true)
+     * @ManyToOne(targetEntity="Team", inversedBy="childTeams")
+     * @JoinColumn(name="parent_team", referencedColumnName="id")
      */
-    private $memberOfTeam;
+    private $parentTeam;
+
+    /**
+     * @var Collection
+     * One Category has Many Categories.
+     * @OneToMany(targetEntity="Team", mappedBy="parentTeam")
+     */
+    private $childTeams;
 
     /**
      * @var integer
@@ -60,14 +70,7 @@ class Team implements UserInterface, \Serializable
     private $status;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="count_persons", type="string", length=45, nullable=true)
-     */
-    private $countPersons;
-
-    /**
-     * @var \PacksAnSpielBundle\Entity\Level
+     * @var PacksAnSpielBundle\Entity\Level
      *
      * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Level")
      * @ORM\JoinColumns({
@@ -78,6 +81,7 @@ class Team implements UserInterface, \Serializable
 
 
     /**
+     * @var Collection
      *
      * @OneToMany(targetEntity="Member", mappedBy="team")
      */
@@ -86,6 +90,8 @@ class Team implements UserInterface, \Serializable
     public function __construct()
     {
         $this->teamMembers = new ArrayCollection();
+        var_dump($this->teamMembers);
+        $this->childTeams = new ArrayCollection();
     }
 
     /**
@@ -126,13 +132,13 @@ class Team implements UserInterface, \Serializable
     /**
      * Set memberOfTeam
      *
-     * @param string $memberOfTeam
+     * @param Team $memberOfTeam
      *
-     * @return Team
+     * @return PacksAnSpielBundle\Entity\Team
      */
-    public function setMemberOfTeam($memberOfTeam)
+    public function setParentTeam($parentTeam)
     {
-        $this->memberOfTeam = $memberOfTeam;
+        $this->parentTeam = $parentTeam;
 
         return $this;
     }
@@ -140,17 +146,27 @@ class Team implements UserInterface, \Serializable
     /**
      * Get memberOfTeam
      *
-     * @return string
+     * @return PacksAnSpielBundle\Entity\Team
      */
-    public function getMemberOfTeam()
+    public function getParentTeam()
     {
-        return $this->memberOfTeam;
+        return $this->parentTeam;
     }
 
     /**
-     * Get teamMembers
+     * Get memberOfTeam
      *
-     * @return array
+     * @return ArrayCollection<PacksAnSpielBundle\Entity\Team>
+     */
+    public function getChildTeams()
+    {
+        return $this->childTeams;
+    }
+
+    /**
+     * Get memberOfTeam
+     *
+     * @return ArrayCollection<PacksAnSpielBundle\Entity\Member>
      */
     public function getTeamMembers()
     {
@@ -158,27 +174,23 @@ class Team implements UserInterface, \Serializable
     }
 
     /**
-     * Set countPersons
+     * Get countPersons
      *
-     * @param string $countPersons
-     *
-     * @return Team
+     * @return integer
      */
-    public function setCountPersons($countPersons)
+    public function getCountMembers()
     {
-        $this->countPersons = $countPersons;
-
-        return $this;
+        return $this->getTeamMembers()->count();
     }
 
     /**
      * Get countPersons
      *
-     * @return string
+     * @return integer
      */
-    public function getCountPersons()
+    public function getCountGroups()
     {
-        return $this->countPersons;
+        return $this->getChildTeams()->count();
     }
 
     /**
@@ -188,7 +200,7 @@ class Team implements UserInterface, \Serializable
      *
      * @return Team
      */
-    public function setCurrentLevel(\PacksAnSpielBundle\Entity\Level $currentLevel = null)
+    public function setCurrentLevel(Level $currentLevel = null)
     {
         $this->currentLevel = $currentLevel;
 
