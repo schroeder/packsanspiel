@@ -25,7 +25,13 @@ class DefaultController extends Controller
         /* @var Team $currentTeam */
         $currentTeam = $this->get('security.token_storage')->getToken()->getUser();
 
+
         $em = $this->getDoctrine();
+
+        /* @var TeamRepository $repository */
+        $teamrepo = $em->getRepository("PacksAnSpielBundle:Team");
+
+        $currentTeam = $teamrepo->find($currentTeam->getId());
 
         /* @var GameSubjectRepository $repository */
         $repository = $em->getRepository("PacksAnSpielBundle:GameSubject");
@@ -34,6 +40,6 @@ class DefaultController extends Controller
         $gameSubjectList = $repository->getFourRandomGameSubjects();
 
         return $this->render('PacksAnSpielBundle::default/index.html.twig',
-            array('subject_list' => $gameSubjectList));
+            array('subject_list' => $gameSubjectList, 'team' => $currentTeam));
     }
 }

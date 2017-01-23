@@ -22,20 +22,13 @@ PacksAnSpielBundle\Entity\Team:
             length: 45
             options:
                 fixed: false
-        memberOfTeam:
+        parentTeam:
             type: string
             nullable: true
             length: 45
             options:
                 fixed: false
-            column: member_of_team
-        countPersons:
-            type: string
-            nullable: true
-            length: 45
-            options:
-                fixed: false
-            column: count_persons
+            column: parent_team
         status:
             type: boolean
             nullable: true

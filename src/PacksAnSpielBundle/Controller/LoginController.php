@@ -96,7 +96,7 @@ class LoginController extends Controller
                     break;
                 case 'joker':
                 default:
-                    $error = "Bitte Teilnehmerkarte oder Teamkarte in den Terminal führen!";
+                    $errorMessage = "Bitte Teilnehmerkarte oder Teamkarte in den Terminal führen!";
                     break;
             };
 

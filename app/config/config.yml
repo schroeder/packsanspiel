@@ -38,6 +38,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    paths:
+        '%kernel.root_dir%/../src/PacksAnSpielBundle/Resources/views/': PacksAnSpielBundle
+
 
 # Doctrine Configuration
 doctrine:
