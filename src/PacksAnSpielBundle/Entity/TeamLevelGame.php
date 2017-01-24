@@ -82,7 +82,12 @@ class TeamLevelGame
      */
     private $teamLevel;
 
-
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="solved_by_leveljump", type="boolean", nullable=true)
+     */
+    private $solvedByLeveljump;
 
     /**
      * Set id
