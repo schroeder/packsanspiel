@@ -23,7 +23,7 @@
 {% block infobox %}
     <div id="infobox">
         <div class="jumbotron">
-            {% if team %}
+            {% if team or team_id %}
                 {% set team_css = 'panel-success' %}
             {% else %}
                 {% set team_css = 'panel-danger' %}
@@ -34,7 +34,11 @@
                     {% if team %}
                         {{ team.passcode }}
                     {% else %}
-                        Die Teamkarte fehlt noch!
+                        {% if team_id %}
+                            {{ team_id }}
+                        {% else %}
+                            Die Teamkarte fehlt noch!
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
