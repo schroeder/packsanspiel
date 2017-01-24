@@ -65,6 +65,10 @@ class LoginController extends Controller
                     $repo = $em->getRepository("PacksAnSpielBundle:Member");
                     /* @var Member $member */
                     $member = $repo->findOneByPasscode($memberId);
+                    if (!$member) {
+                        $this->get('session')->set('member_list', $memberId);
+                        return new RedirectResponse($this->generateUrl('register') . "?action=init");
+                    }
                     $team = $member->getTeam();
                     if (!$team) {
                         $this->get('session')->set('member_list', $memberId);

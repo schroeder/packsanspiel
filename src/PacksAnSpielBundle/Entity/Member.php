@@ -113,7 +113,7 @@ class Member
      */
     public function getFullName()
     {
-        return $this->firstName + " " + $this->name;
+        return $this->firstName . " " . $this->name;
     }
 
     /**

@@ -94,10 +94,9 @@ class RegistrationController extends BaseController
                     /* @var Team $team */
                     $team = $teamRepo->findOneByPasscode($scannedQRCode);
                     if (!$team) {
-                        $team = $teamRepo->initializeNewTeam($scannedQRCode);
-                        $logger->logAction("Registration: Team initializedCannot find team to add $scannedQRCode.", Actionlog::LOGLEVEL_CRIT, $team);
+                        $logger->logAction("Registration: Cannot find team to add $scannedQRCode.", Actionlog::LOGLEVEL_WARN, $team);
                     }
-                    $this->get('session')->set('team', $team->getPasscode());
+                    $this->get('session')->set('team', $scannedQRCode);
                 } else {
                     $logger->logAction("Registration: Cannot find member type to add: $codeType.", Actionlog::LOGLEVEL_CRIT, $team);
                 }
@@ -107,6 +106,13 @@ class RegistrationController extends BaseController
             'removeMember':
                 break;
             case 'finish':
+                if (!($team || $this->get('session')->has('team')) || count($memberList) == 0) {
+                    $logger->logAction("Registration: Cannot finish registration!", Actionlog::LOGLEVEL_CRIT);
+                    break;
+                }
+                if (!$team) {
+                    $team = $teamRepo->initializeNewTeam($this->get('session')->get('team'), Team::STATUS_ACTIVE)   ;
+                }
                 $teamRepo->setTeamMember($team, $memberList);
                 $this->get('session')->remove('member_list');
                 $this->get('session')->remove('team');
@@ -116,7 +122,8 @@ class RegistrationController extends BaseController
         return $this->render('PacksAnSpielBundle::register/index.html.twig',
             ["error_message" => $errorMessage,
                 "member_list" => $memberList,
-                "team" => $team]
+                "team" => $team,
+                "team_id" => $this->get('session')->get('team')]
         );
     }
 }

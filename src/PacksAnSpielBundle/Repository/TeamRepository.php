@@ -73,14 +73,16 @@ class TeamRepository extends EntityRepository implements UserProviderInterface
 
     public function initializeNewTeam($teamCode, $status = Team::STATUS_IN_REGISTRATION)
     {
-        $team = new Team();
-        $team->setPasscode($teamCode);
-        $team->setMemberOfTeam($teamCode);
-        $team->setStatus($status);
-        $team->setCurrentLevel(NULL);
+        if (!$eam = $this->findOneByPasscode($teamCode)) {
+            $team = new Team();
+            $team->setPasscode($teamCode);
+            $team->setParentTeam($teamCode);
+            $team->setStatus($status);
+            $team->setCurrentLevel(NULL);
 
-        $this->_em->persist($team);
-        $this->_em->flush();
+            $this->_em->persist($team);
+            $this->_em->flush();
+        }
 
         return $team;
     }
