@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use PacksAnSpielBundle\Entity\Member;
 use PacksAnSpielBundle\Entity\Level;
+use PacksAnSpielBundle\Repository\TeamLevelRepository;
 
 /**
  * Team
@@ -79,13 +80,19 @@ class Team implements UserInterface, \Serializable
      */
     private $currentLevel;
 
-
     /**
      * @var Collection
      *
      * @OneToMany(targetEntity="Member", mappedBy="team")
      */
     private $teamMembers;
+
+    /**
+     * @var Collection
+     *
+     * @OneToMany(targetEntity="Actionlog", mappedBy="team")
+     */
+    private $logEntries;
 
     public function __construct()
     {
@@ -174,6 +181,17 @@ class Team implements UserInterface, \Serializable
     }
 
     /**
+     * Get memberOfTeam
+     *
+     * @return ArrayCollection<PacksAnSpielBundle\Entity\Actionlog>
+     */
+    public function getLogEntries()
+    {
+        return $this->logEntries;
+    }
+
+
+    /**
      * Get countPersons
      *
      * @return integer
@@ -216,7 +234,6 @@ class Team implements UserInterface, \Serializable
     {
         return $this->currentLevel;
     }
-
 
     public function getSalt()
     {

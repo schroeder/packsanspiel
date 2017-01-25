@@ -29,16 +29,16 @@ class TeamLevelGame
     private $playedPoints;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="start_time", type="string", length=45, nullable=true)
+     * @ORM\Column(name="start_time", type="integer", nullable=true)
      */
     private $startTime;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="finish_time", type="string", length=45, nullable=true)
+     * @ORM\Column(name="finish_time", type="integer", nullable=true)
      */
     private $finishTime;
 

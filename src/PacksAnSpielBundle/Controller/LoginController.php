@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use PacksAnSpielBundle\Game\GameActionLogger;
 use PacksAnSpielBundle\Entity\Team;
 use PacksAnSpielBundle\Repository\TeamRepository;
+use PacksAnSpielBundle\Game\GameLogic;
 
 class LoginController extends Controller
 {
@@ -28,7 +29,13 @@ class LoginController extends Controller
 
         $scannedQRCode = $request->get('qr');
         if ($scannedQRCode) {
-            list($codeType, $scannedQRCode) = explode(':', $scannedQRCode);
+            try {
+                list($codeType, $scannedQRCode) = explode(':', $scannedQRCode);
+
+            } catch (\Exception $e) {
+                $codeType = false;
+                $scannedQRCode = false;
+            }
 
             if (!$codeType || !$scannedQRCode || $codeType == "" || $scannedQRCode == "") {
                 $errorMessage = "Invalid code";
@@ -46,16 +53,17 @@ class LoginController extends Controller
                     /* @var TeamRepository $repo */
                     $repo = $em->getRepository("PacksAnSpielBundle:Team");
                     /* @var Team $team */
-                    $team = $repo->findOneByPasscode($teamId);
+                    $team = $repo->findLeadingGroup($teamId);
 
                     if (!$team) {
                         $logger->logAction("Failed team login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_WARN);
                         $errorMessage = "Das Team kenne ich leider nicht!";
+                        break;
                     }
 
-                    // TODO Redirect to /register if number of members less than 3
+                    // Redirect to /register if number of members less than 3
                     if (count($team->getTeamMembers()) < 3) {
-                        $this->get('session')->set('team', $team);
+                        $this->get('session')->set('team', $team->getPasscode());
                         return new RedirectResponse($this->generateUrl('register') . "?action=init");
                     }
                     break;
@@ -70,6 +78,12 @@ class LoginController extends Controller
                         return new RedirectResponse($this->generateUrl('register') . "?action=init");
                     }
                     $team = $member->getTeam();
+
+                    /* @var TeamRepository $repo */
+                    $repo = $em->getRepository("PacksAnSpielBundle:Team");
+                    /* @var Team $team */
+                    $team = $repo->findLeadingGroup($team->getPasscode());
+
                     if (!$team) {
                         $this->get('session')->set('member_list', $memberId);
                         return new RedirectResponse($this->generateUrl('register') . "?action=init");
@@ -114,6 +128,14 @@ class LoginController extends Controller
                     $event = new InteractiveLoginEvent($request, $token);
                     $this->get("event_dispatcher")->dispatch("security . interactive_login", $event);
                     $logger->logAction("Team logged in . ", Actionlog::LOGLEVEL_INFO, $team);
+
+                    if ($team->getCurrentLevel() == false) {
+
+                        /* @var GameLogic $gameLogic */
+                        $gameLogic = $this->get('packsan.game.logic');
+                        $gameLogic->initializeFirstLevel($team);
+                        $logger->logAction("Moved Team into first level. ", Actionlog::LOGLEVEL_INFO, $team);
+                    }
 
                     return new RedirectResponse($this->generateUrl('packsan'));
                 } catch (\Exception $e) {

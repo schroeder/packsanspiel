@@ -52,7 +52,7 @@ PacksAnSpielBundle\Entity\Actionlog:
             cascade: {  }
             fetch: LAZY
             mappedBy: null
-            inversedBy: null
+            inversedBy: log_entries
             joinColumns:
                 team_id:
                     referencedColumnName: id
