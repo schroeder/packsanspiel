@@ -23,6 +23,21 @@ class TeamRepository extends EntityRepository implements UserProviderInterface
         return false;
     }
 
+    public function findLeadingGroup($passcode)
+    {
+        $result = $this->_em->createQuery('SELECT t2.id FROM 
+                PacksAnSpielBundle\Entity\Team t1, 
+                PacksAnSpielBundle\Entity\Team t2 
+                WHERE t1.passcode= :passcode 
+                AND t2.passcode=t1.parentTeam
+                AND t1.status > 1
+                AND t2.status > 1')->setParameter('passcode', $passcode)->execute();
+        if (count($result) == 1) {
+            return $this->find($result[0]['id']);
+        }
+        return false;
+    }
+
     /**
      * Loads the user for the given username.
      *

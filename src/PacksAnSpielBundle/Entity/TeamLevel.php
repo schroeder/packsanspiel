@@ -22,16 +22,16 @@ class TeamLevel
     private $id;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="start_time", type="time", nullable=true)
+     * @ORM\Column(name="start_time", type="integer", nullable=true)
      */
     private $startTime;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="finish_time", type="time", nullable=true)
+     * @ORM\Column(name="finish_time", type="integer", nullable=true)
      */
     private $finishTime;
 
@@ -55,7 +55,12 @@ class TeamLevel
      */
     private $team;
 
-
+    /**
+     * @var Collection
+     *
+     * @OneToMany(targetEntity="TeamLevelGame", mappedBy="teamLevel")
+     */
+    private $teamLevelGames;
 
     /**
      * Get id
@@ -161,5 +166,15 @@ class TeamLevel
     public function getTeam()
     {
         return $this->team;
+    }
+
+
+    /**
+     *
+     * @return ArrayCollection<PacksAnSpielBundle\Entity\TeamLevelGame>
+     */
+    public function getTeamLevelGames()
+    {
+        return $this->teamLevelGames;
     }
 }

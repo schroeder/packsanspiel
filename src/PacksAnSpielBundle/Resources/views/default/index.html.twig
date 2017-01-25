@@ -4,7 +4,7 @@
     <div id="playground">
         <div class="jumbotron">
             <div class="panel panel-info">
-                <div class="panel-heading"><h3 class="panel-title">Hallo Gruppe!</h3></div>
+                <div class="panel-heading"><h3 class="panel-title">Hallo Team {{ team.id }}!</h3></div>
                 <div class="panel-body">
                     <div class="row">
                         {% for item in subject_list %}
@@ -37,6 +37,9 @@
             <div id="welcome" class="panel panel-info">
                 <div class="panel-heading"><h3 class="panel-title">Eure Aktionen</h3></div>
                 <div class="panel-body">
+                    <a href="{{ path('logout') }}" class="btn btn-primary btn-lg"
+                       role="button">Abbrechen
+                    </a>
                 </div>
             </div>
         </div>

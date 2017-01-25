@@ -1,5 +1,6 @@
 PacksAnSpielBundle\Entity\TeamLevel:
     type: entity
+    repositoryClass: PacksAnSpielBundle\Repository\TeamLevelRepository
     table: team_level
     indexes:
         fk_team_level_team_idx:
@@ -19,13 +20,17 @@ PacksAnSpielBundle\Entity\TeamLevel:
                 strategy: IDENTITY
     fields:
         startTime:
-            type: time
+            type: integer
             nullable: true
             column: start_time
         finishTime:
-            type: time
+            type: integer
             nullable: true
             column: finish_time
+    oneToMany:
+        teamLevelGames:
+            targetEntity: TeamLevelGame
+            mappedBy: teamLevel
     manyToOne:
         level:
             targetEntity: Level
