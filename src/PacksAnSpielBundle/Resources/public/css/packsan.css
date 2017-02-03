@@ -59,3 +59,8 @@ body {
     line-height: 2.333333;
     width: 100%;
 }
+
+.category:active {
+    background-color: #4e9a06 !important;
+    color: #eeeeec;
+}

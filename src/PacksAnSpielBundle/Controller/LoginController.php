@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use PacksAnSpielBundle\Game\GameActionLogger;
 use PacksAnSpielBundle\Entity\Team;
 use PacksAnSpielBundle\Repository\TeamRepository;
+use PacksAnSpielBundle\Repository\MemberRepository;
 use PacksAnSpielBundle\Game\GameLogic;
 
 class LoginController extends Controller
@@ -95,8 +96,21 @@ class LoginController extends Controller
                     $repo = $em->getRepository("PacksAnSpielBundle:Member");
                     /* @var Member $member */
                     $member = $repo->findAdminByPasscode($memberId);
-                    if ($member) {
-                        // TODO redirect to administration panel
+                    if ($member && $member->getGrade() == "admin") {
+
+                        $team = $member->getTeam();
+                        if (in_array("ROLE_ADMIN", $team->getRoles())) {
+                            $token = new UsernamePasswordToken($team, null, "main", $team->getRoles());
+
+                            //now the user is logged in
+                            $this->get("security.token_storage")->setToken($token);
+
+                            $event = new InteractiveLoginEvent($request, $token);
+                            $this->get("event_dispatcher")->dispatch("security . interactive_login", $event);
+                            $logger->logAction("Admin logged in . ", Actionlog::LOGLEVEL_INFO, $team);
+
+                            return new RedirectResponse($this->generateUrl('admin'));
+                        }
                     } else {
                         $logger->logAction("Failed admin login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_CRIT);
                         $errorMessage = "Den Teilnehmer kenne ich leider nicht!";

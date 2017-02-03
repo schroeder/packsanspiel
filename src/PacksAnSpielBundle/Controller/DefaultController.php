@@ -28,7 +28,6 @@ class DefaultController extends Controller
         /* @var Team $currentTeam */
         $currentTeam = $this->get('security.token_storage')->getToken()->getUser();
 
-
         $em = $this->getDoctrine();
 
         /* @var TeamRepository $repository */
@@ -48,12 +47,6 @@ class DefaultController extends Controller
         foreach ($currentTeamLevel->getTeamLevelGames() as $teamLevelGame) {
             $gameSubjectList[] = $teamLevelGame->getAssignedGameSubject();
         }
-
-
-        // TODO: Replace by level games.
-        /* @var GameSubjectRepository $repository */
-        //$repository = $em->getRepository("PacksAnSpielBundle:GameSubject");
-        //$gameSubjectList = $repository->getFourRandomGameSubjects();
 
         return $this->render('PacksAnSpielBundle::default/index.html.twig',
             array('subject_list' => $gameSubjectList, 'team' => $currentTeam));

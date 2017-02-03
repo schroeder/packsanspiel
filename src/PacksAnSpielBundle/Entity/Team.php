@@ -21,6 +21,7 @@ class Team implements UserInterface, \Serializable
     const STATUS_IN_REGISTRATION = 1;
     const STATUS_ACTIVE = 2;
     const STATUS_BLOCKED = 3;
+    const STATUS_ADMIN = 4;
 
     /**
      * @var integer
@@ -252,6 +253,9 @@ class Team implements UserInterface, \Serializable
 
     public function getRoles()
     {
+        if ($this->getStatus() == Team::STATUS_ADMIN) {
+            return array('ROLE_ADMIN');
+        }
         return array('ROLE_USER');
     }
 
