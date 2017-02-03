@@ -16,7 +16,8 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new PacksAnSpielBundle\PacksAnSpielBundle(),
-            new \FOS\UserBundle\FOSUserBundle()
+            new \FOS\UserBundle\FOSUserBundle(),
+            new Endroid\Bundle\QrCodeBundle\EndroidQrCodeBundle()
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

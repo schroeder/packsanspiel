@@ -9,7 +9,8 @@
                     <div class="row">
                         {% for item in subject_list %}
                             <div class="col-md-6">
-                                <div class="jumbotron">
+                                <div class="jumbotron category category{{ item.id }}"
+                                     style="background-color: {{ item.todocolor }};">
                                     {{ item.name }}
                                 </div>
                             </div>

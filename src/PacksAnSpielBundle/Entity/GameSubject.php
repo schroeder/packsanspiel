@@ -107,4 +107,52 @@ class GameSubject
     {
         return $this->description;
     }
+
+    /**
+     * Set todo color
+     *
+     * @param string $todoColor
+     *
+     * @return GameSubject
+     */
+    public function setTodoColor($todoColor)
+    {
+        $this->todoColor = $todoColor;
+
+        return $this;
+    }
+
+    /**
+     * Get todoColor
+     *
+     * @return string
+     */
+    public function getTodoColor()
+    {
+        return $this->todoColor;
+    }
+
+    /**
+     * Set done color
+     *
+     * @param string $doneColor
+     *
+     * @return GameSubject
+     */
+    public function setDoneColor($doneColor)
+    {
+        $this->doneColor = $doneColor;
+
+        return $this;
+    }
+
+    /**
+     * Get doneColor
+     *
+     * @return string
+     */
+    public function getDoneColor()
+    {
+        return $this->doneColor;
+    }
 }

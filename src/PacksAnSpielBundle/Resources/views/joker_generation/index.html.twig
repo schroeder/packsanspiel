@@ -1,0 +1,35 @@
+{% extends 'PacksAnSpielBundle::joker_base.html.twig' %}
+
+{% block playground %}
+    <div id="playground">
+        <div class="jumbotron">
+            <div class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">Hallo zum Pack's An Joker Spiel!</h3></div>
+                <div class="panel-body">
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block infobox %}
+    <div id="infobox">
+        <div class="jumbotron">
+            <div id="info" class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">Infos</h3></div>
+                <img src="{{ qrcode_data_uri(qrcode_message) }}"/>
+
+                <div class="panel-body">
+                </div>
+            </div>
+
+            <div id="welcome" class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">Eure Aktionen</h3></div>
+                <div class="panel-body">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

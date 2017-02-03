@@ -47,7 +47,6 @@ PacksAnSpielBundle\Entity\Team:
         teamMembers:
             targetEntity: Member
             mappedBy: team
-    oneToMany:
         logEntries:
             targetEntity: Actionlog
             mappedBy: team
