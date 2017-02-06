@@ -2,3 +2,4 @@
 packsan:
     resource: "@PacksAnSpielBundle/Controller/"
     type:     annotation
+

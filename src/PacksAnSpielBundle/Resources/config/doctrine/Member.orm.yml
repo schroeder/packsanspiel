@@ -28,6 +28,12 @@ PacksAnSpielBundle\Entity\Member:
             length: 45
             options:
                 fixed: false
+        firstName:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
         grade:
             type: string
             nullable: true

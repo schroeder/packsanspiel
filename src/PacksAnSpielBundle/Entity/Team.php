@@ -22,6 +22,7 @@ class Team implements UserInterface, \Serializable
     const STATUS_ACTIVE = 2;
     const STATUS_BLOCKED = 3;
     const STATUS_ADMIN = 4;
+    const STATUS_GAME = 5;
 
     /**
      * @var integer
@@ -98,7 +99,6 @@ class Team implements UserInterface, \Serializable
     public function __construct()
     {
         $this->teamMembers = new ArrayCollection();
-        var_dump($this->teamMembers);
         $this->childTeams = new ArrayCollection();
     }
 
@@ -255,6 +255,8 @@ class Team implements UserInterface, \Serializable
     {
         if ($this->getStatus() == Team::STATUS_ADMIN) {
             return array('ROLE_ADMIN');
+        } elseif ($this->getStatus() == Team::STATUS_GAME) {
+            return array('ROLE_GAME');
         }
         return array('ROLE_USER');
     }
