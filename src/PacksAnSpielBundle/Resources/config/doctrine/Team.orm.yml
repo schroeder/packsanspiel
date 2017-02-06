@@ -30,7 +30,7 @@ PacksAnSpielBundle\Entity\Team:
                 fixed: false
             column: parent_team
         status:
-            type: boolean
+            type: integer
             nullable: true
     manyToOne:
         currentLevel:

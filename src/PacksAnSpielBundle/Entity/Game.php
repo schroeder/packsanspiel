@@ -86,6 +86,12 @@ class Game
      */
     private $status;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="passcode", type="string", length=45, nullable=true)
+     */
+    private $passcode;
 
     /**
      * Get id
@@ -288,4 +294,28 @@ class Game
     {
         return $this->status;
     }
+
+    /**
+     * Set passcode
+     *
+     * @param string $passcode
+     *
+     * @return Member
+     */
+    public function setPasscode($passcode)
+    {
+        $this->passcode = $passcode;
+        return $this;
+    }
+
+    /**
+     * Get passcode
+     *
+     * @return string
+     */
+    public function getPasscode()
+    {
+        return $this->passcode;
+    }
+
 }

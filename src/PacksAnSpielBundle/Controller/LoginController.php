@@ -15,7 +15,9 @@ use PacksAnSpielBundle\Game\GameActionLogger;
 use PacksAnSpielBundle\Entity\Team;
 use PacksAnSpielBundle\Repository\TeamRepository;
 use PacksAnSpielBundle\Repository\MemberRepository;
+use PacksAnSpielBundle\Repository\GameRepository;
 use PacksAnSpielBundle\Game\GameLogic;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class LoginController extends Controller
 {
@@ -99,7 +101,7 @@ class LoginController extends Controller
                     if ($member && $member->getGrade() == "admin") {
 
                         $team = $member->getTeam();
-                        if (in_array("ROLE_ADMIN", $team->getRoles())) {
+                        if ($team && in_array("ROLE_ADMIN", $team->getRoles())) {
                             $token = new UsernamePasswordToken($team, null, "main", $team->getRoles());
 
                             //now the user is logged in
@@ -110,6 +112,8 @@ class LoginController extends Controller
                             $logger->logAction("Admin logged in . ", Actionlog::LOGLEVEL_INFO, $team);
 
                             return new RedirectResponse($this->generateUrl('admin'));
+                        } else {
+                            $team = false;
                         }
                     } else {
                         $logger->logAction("Failed admin login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_CRIT);
@@ -118,15 +122,46 @@ class LoginController extends Controller
                     break;
                 case 'game':
                     $gameId = $scannedQRCode;
-                    /* @var GameRepository $repo */
-                    $repo = $em->getRepository("PacksAnSpielBundle:Game");
+
+                    /* @var GameRepository $gameRepo */
+                    $gameRepo = $em->getRepository("PacksAnSpielBundle:Game");
+
                     /* @var Game $game */
-                    $game = $repo->findGameByPasscode($gameId);
+                    $game = $gameRepo->findGameByPasscode($gameId);
+
                     if ($game) {
-                        // TODO redirect to game panel
+                        $gameAdminPasscode = $this->getParameter('packsan_game_admin_passcode');
+
+                        /* @var TeamRepository $teamRepo */
+                        $teamRepo = $em->getRepository("PacksAnSpielBundle:Team");
+
+                        $team = $teamRepo->findOneByPasscode($gameAdminPasscode);
+                        if ($team && in_array("ROLE_GAME", $team->getRoles())) {
+                            $token = new UsernamePasswordToken($team, null, "main", $team->getRoles());
+
+                            //now the user is logged in
+                            $this->get("security.token_storage")->setToken($token);
+
+                            /* @var Session $session */
+                            $session = $request->getSession();
+                            $session->set('game_id', $game->getId());
+                            $session->set('game_passcode', $game->getPasscode());
+
+                            $event = new InteractiveLoginEvent($request, $token);
+                            $this->get("event_dispatcher")->dispatch("security . interactive_login", $event);
+                            $logger->logAction("Game logged in . ", Actionlog::LOGLEVEL_INFO, $team);
+
+                            return new RedirectResponse($this->generateUrl('gameadmin'));
+                        } else {
+                            $team = false;
+                        }
+                    } else {
+                        $logger->logAction("Failed admin login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_CRIT);
+                        $errorMessage = "Den Teilnehmer kenne ich leider nicht!";
                     }
                     break;
-                case 'joker':
+                case
+                'joker':
                 default:
                     $errorMessage = "Bitte Teilnehmerkarte oder Teamkarte in den Terminal führen!";
                     break;
@@ -169,7 +204,8 @@ class LoginController extends Controller
     /**
      * @Route("/logout", name="logout")
      */
-    public function logoutAction(Request $request)
+    public
+    function logoutAction(Request $request)
     {
         $this->get('security.token_storage')->setToken(null);
         $this->get('request')->getSession()->invalidate();

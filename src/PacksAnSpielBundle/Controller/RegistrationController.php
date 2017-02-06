@@ -3,6 +3,7 @@
 namespace PacksAnSpielBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\UserBundle\Controller\RegistrationController as BaseController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,10 +14,14 @@ use PacksAnSpielBundle\Entity\Member;
 use PacksAnSpielBundle\Entity\Team;
 use PacksAnSpielBundle\Entity\Actionlog;
 
+/**
+ * @Route("/register", name="register")
+ */
 class RegistrationController extends BaseController
 {
     /**
-     * @Route("/register", name="register")
+     * @Route("/", name="get_register")
+     * @Method({"GET"})
      */
     public function registerAction(Request $request)
     {
@@ -111,7 +116,7 @@ class RegistrationController extends BaseController
                     break;
                 }
                 if (!$team) {
-                    $team = $teamRepo->initializeNewTeam($this->get('session')->get('team'), Team::STATUS_ACTIVE)   ;
+                    $team = $teamRepo->initializeNewTeam($this->get('session')->get('team'), Team::STATUS_ACTIVE);
                 }
                 $teamRepo->setTeamMember($team, $memberList);
                 $this->get('session')->remove('member_list');
@@ -125,5 +130,14 @@ class RegistrationController extends BaseController
                 "team" => $team,
                 "team_id" => $this->get('session')->get('team')]
         );
+    }
+
+    /**
+     * @Route("/addMember/{team}", name="add_member_register")
+     * @Method({"POST"})
+     */
+    public function registerAddMemberAction(Request $request)
+    {
+
     }
 }

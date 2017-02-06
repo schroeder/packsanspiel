@@ -17,7 +17,10 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new PacksAnSpielBundle\PacksAnSpielBundle(),
             new \FOS\UserBundle\FOSUserBundle(),
-            new Endroid\Bundle\QrCodeBundle\EndroidQrCodeBundle()
+            new Endroid\Bundle\QrCodeBundle\EndroidQrCodeBundle(),
+            new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),
+            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

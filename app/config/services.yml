@@ -5,6 +5,7 @@ parameters:
   packsan.user.provider.entity.class: PacksAnSpielBundle\Entity\Team
   packsan.game.logic.class: PacksAnSpielBundle\Game\GameLogic
   packsan.game.logger.class: PacksAnSpielBundle\Game\GameActionLogger
+  packsan_admin.menu_listener.class: PacksAnSpielBundle\EventListener\AdminMenuItemListListener
 
 services:
 #  packsan.user.provider:
@@ -21,3 +22,8 @@ services:
   packsan.action.logger:
     class:        %packsan.game.logger.class%
     arguments:     [ "@doctrine.orm.entity_manager" ]
+
+  packsan_admin.menu_listener:
+            class: %packsan_admin.menu_listener.class%
+            tags:
+                - { name: kernel.event_listener, event:theme.sidebar_setup_menu, method:onSetupMenu }

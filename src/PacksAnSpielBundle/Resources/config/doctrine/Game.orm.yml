@@ -1,6 +1,7 @@
 PacksAnSpielBundle\Entity\Game:
     type: entity
     table: game
+    repositoryClass: PacksAnSpielBundle\Repository\GameRepository
     indexes:
         fk_game_game_subject1_idx:
             columns:
@@ -31,6 +32,12 @@ PacksAnSpielBundle\Entity\Game:
             type: text
             nullable: true
             length: 65535
+            options:
+                fixed: false
+        passcode:
+            type: string
+            nullable: true
+            length: 45
             options:
                 fixed: false
         duration:

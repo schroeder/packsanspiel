@@ -40,15 +40,46 @@ function captureToCanvas() {
     }
 }
 
-function codeReadOnLoginPage(a) {
+function codeReadOnRegisterPage(a) {
     if (isValidMD5(a)) {
-        console.log("[OnLogin] Found code: " + a);
-        window.location = "/login?qr=" + a;
+        console.log("[OnRegistration] Found code: " + a);
+        url = window.location.href;
+
+        var jqxhr = $.post('/register/addMember/', {addMember: a}, function () {
+            console.log("success");
+        })
+            .done(function () {
+                console.log("second success");
+            })
+            .fail(function () {
+                console.log("error");
+            })
+            .always(function () {
+                console.log("finished");
+            });
+
     }
     else {
         showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
         setTimeout(setDefaultText, 3000);
     }
+
+    /*    if (isValidMD5(a)) {
+     console.log("[OnRegister] Found code: " + a);
+     var res = a.split(":");
+     if (res[0] == 'member') {
+     console.log("[OnRegister] Found member: " + res[1]);
+     window.location = "/register?action=addMember&qr=" + a;
+     }
+     else if (res[0] == 'team') {
+     console.log("[OnRegister] Found team: " + res[1]);
+     window.location = "/register?action=setTeam&qr=" + a;
+     }
+     }
+     else {
+     showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
+     setTimeout(setDefaultText, 3000);
+     }*/
 }
 
 function showLoginErrorMessage(message) {
