@@ -29,4 +29,17 @@ class MemberRepository extends EntityRepository
         }
         return false;
     }
+
+    public function findByMemberOnly($orderBy = [])
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb->where($qb->expr()->not($qb->expr()->eq('m.grade', '?1')));
+        $qb->setParameter(1, 'admin');
+        if ($orderBy) {
+            $qb->addOrderBy($orderBy);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }
