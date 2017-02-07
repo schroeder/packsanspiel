@@ -43,7 +43,7 @@ class AdminController extends Controller
 
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', 10);
-
+        $offset = ($page * $limit) - $limit;
 
         $em = $this->getDoctrine();
 
@@ -52,7 +52,7 @@ class AdminController extends Controller
         /* @var MemberRepository $memberRepo */
         $memberRepo = $em->getRepository("PacksAnSpielBundle:Member");
 
-        $fullMemberList = $memberRepo->findBy(array(), null, 100, 0);
+        $fullMemberList = $memberRepo->findByMemberOnly(null);
 
         $memberList = $paginator->paginate(
             $fullMemberList,
@@ -60,7 +60,13 @@ class AdminController extends Controller
             $limit /*limit per page*/
         );
 
-        return $this->render('PacksAnSpielBundle::admin/admin_member_passcode.html.twig', array("member_list" => $memberList, "page" => $page, "limit" => $limit));
+        return $this->render('PacksAnSpielBundle::admin/admin_member_passcode.html.twig', [
+                "member_list" => $memberList,
+                "page" => $page,
+                "limit" => $limit,
+                "total_count" => count($fullMemberList)
+            ]
+        );
     }
 
     /**
@@ -68,7 +74,7 @@ class AdminController extends Controller
      */
     public function generateMemberPasscodeAction($id, Request $request)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security . authorization_checker')->isGranted('ROLE_ADMIN')) {
             return new RedirectResponse($this->generateUrl('login'));
         }
 
@@ -86,7 +92,7 @@ class AdminController extends Controller
         $qrCode = new QrCode();
         $qrCode->setText($qrCodeMessage);
 
-        $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_member_') . '.png';
+        $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_member_') . ' . png';
 
         $qrCode->save($temp_file);
 
@@ -115,7 +121,7 @@ class AdminController extends Controller
 
 
         return new Response($pdf->Output(), 200, array(
-            'Content-Type' => 'application/pdf'));
+            'Content - Type' => 'application/pdf'));
     }
 
     /**
@@ -147,7 +153,13 @@ class AdminController extends Controller
             $limit /*limit per page*/
         );
 
-        return $this->render('PacksAnSpielBundle::admin/admin_team_passcode.html.twig', array("team_list" => $teamList, "page" => $page, "limit" => $limit));
+        return $this->render('PacksAnSpielBundle::admin/admin_team_passcode.html.twig', [
+                "team_list" => $teamList,
+                "page" => $page,
+                "limit" => $limit,
+                "total_count" => count($fullTeamList)
+            ]
+        );
     }
 
     /**
@@ -155,7 +167,7 @@ class AdminController extends Controller
      */
     public function generateTeamPasscodeAction($id, Request $request)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security . authorization_checker')->isGranted('ROLE_ADMIN')) {
             return new RedirectResponse($this->generateUrl('login'));
         }
 
@@ -173,7 +185,7 @@ class AdminController extends Controller
         $qrCode = new QrCode();
         $qrCode->setText($qrCodeMessage);
 
-        $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_team_') . '.png';
+        $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_team_') . ' . png';
 
         $qrCode->save($temp_file);
 
@@ -200,6 +212,6 @@ class AdminController extends Controller
 
 
         return new Response($pdf->Output(), 200, array(
-            'Content-Type' => 'application/pdf'));
+            'Content - Type' => 'application/pdf'));
     }
 }
