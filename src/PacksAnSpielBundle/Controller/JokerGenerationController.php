@@ -2,20 +2,16 @@
 
 namespace PacksAnSpielBundle\Controller;
 
-use PacksAnSpielBundle\Entity\GameSubject;
-use PacksAnSpielBundle\Entity\TeamLevelGame;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use PacksAnSpielBundle\Repository\GameSubjectRepository;
-use PacksAnSpielBundle\Entity\Team;
-use PacksAnSpielBundle\Repository\TeamLevelRepository;
-use PacksAnSpielBundle\Repository\TeamRepository;
+use PacksAnSpielBundle\Entity\Joker;
 use FPDF;
 use Symfony\Component\HttpFoundation\Response;
 use Endroid\QrCode\QrCode;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class JokerGenerationController extends Controller
 {
@@ -24,7 +20,6 @@ class JokerGenerationController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $qrCodeMessage = 'joker:' . md5(time() . '-' . rand(0, 100000));
         // http://blog.michaelperrin.fr/2016/02/17/generating-pdf-files-with-symfony/
         // TODO: Put Joker in db
         /* TODO: process:
@@ -33,10 +28,36 @@ class JokerGenerationController extends Controller
          * POST: Correct : Generate joker, store, Show Joker, PDF to doenload, set cookie
          * Not correct: Show message
         */
+        $finalQuestion = false;
+        $errorMessage = false;
+        $response = new Response();
 
+        if ($request->getMethod() == "POST") {
+            if ($request->get('answer') && $request->get('answer') == "42") {
 
-        return $this->render('PacksAnSpielBundle::joker_generation/index.html.twig',
-            array('qrcode_message' => $qrCodeMessage));
+                $cookie = new Cookie('game-final-answer', md5('correct:' . time()), (time() + (3600 * 24 * 365)));
+                $response->headers->setCookie($cookie);
+
+                $session = $request->getSession();
+                $session->set('game-final-answer', md5('correct:' . time()));
+                $finalQuestion = true;
+            } else {
+                $errorMessage = "Die Antwort war jetzt nicht ganz richtig!";
+            }
+        } else {
+            $cookies = $request->cookies;
+            if ($cookies->has('game-final-answer') && $cookies->get('game-final-answer') != "") {
+                $finalQuestion = true;
+            }
+
+        }
+        if ($finalQuestion == true) {
+            return $this->render('PacksAnSpielBundle::joker_generation/generate_joker.html.twig', [], $response);
+
+        } else {
+            return $this->render('PacksAnSpielBundle::joker_generation/index.html.twig', ['error_message' => $errorMessage], $response);
+        }
+
     }
 
     /**
@@ -44,7 +65,8 @@ class JokerGenerationController extends Controller
      */
     public function getJokerAction(Request $request)
     {
-        $qrCodeMessage = 'joker:' . md5(time() . '-' . rand(0, 100000));
+        $qrCodePasscode = md5(time() . '-' . rand(0, 100000));
+        $qrCodeMessage = 'joker:' . $qrCodePasscode;
 
         $qrCode = new QrCode();
         $qrCode->setText($qrCodeMessage);
@@ -73,6 +95,14 @@ class JokerGenerationController extends Controller
         $pdf->Text(145, 149, 'Bitte hier knicken!');
         $pdf->Text(145, 213, 'Hier auch knicken!');
 
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $joker = new Joker();
+        $joker->setJokercode($qrCodePasscode);
+        $joker->setJokerUsed(false);
+        $joker->setCreated(time());
+        $em->persist($joker);
+        $em->flush();
 
         return new Response($pdf->Output(), 200, array(
             'Content-Type' => 'application/pdf'));
