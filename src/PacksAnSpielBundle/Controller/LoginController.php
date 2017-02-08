@@ -67,7 +67,7 @@ class LoginController extends Controller
                     // Redirect to /register if number of members less than 3
                     if (count($team->getTeamMembers()) < 3) {
                         $this->get('session')->set('team', $team->getPasscode());
-                        return new RedirectResponse($this->generateUrl('register') . "?action=init");
+                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
                     }
                     break;
                 case 'member':
@@ -78,7 +78,7 @@ class LoginController extends Controller
                     $member = $repo->findOneByPasscode($memberId);
                     if (!$member) {
                         $this->get('session')->set('member_list', $memberId);
-                        return new RedirectResponse($this->generateUrl('register') . "?action=init");
+                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
                     }
                     $team = $member->getTeam();
 
@@ -89,7 +89,7 @@ class LoginController extends Controller
 
                     if (!$team) {
                         $this->get('session')->set('member_list', $memberId);
-                        return new RedirectResponse($this->generateUrl('register') . "?action=init");
+                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
                     }
                     break;
                 case 'admin':

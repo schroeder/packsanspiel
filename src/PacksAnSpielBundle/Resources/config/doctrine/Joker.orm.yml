@@ -21,4 +21,7 @@ PacksAnSpielBundle\Entity\Joker:
             type: boolean
             nullable: true
             column: joker_used
+        created:
+            type: integer
+            nullable: true
     lifecycleCallbacks: {  }

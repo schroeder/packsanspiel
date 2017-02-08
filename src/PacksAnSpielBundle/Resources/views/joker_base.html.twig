@@ -16,10 +16,11 @@
 
 </head>
 <body>
-<div class="container-fluid fill panel">
+<div class="joker-page">
     <div class="row">
-        <div class="col-md-8">{% block playground %}{% endblock %}</div>
-        <div class="col-md-4">{% block infobox %}{% endblock %}</div>
+        <div class="col-md-3 col-md-offset-1">{% block leftcol %}{% endblock %}</div>
+        <div class="col-md-3">{% block playground %}{% endblock %}</div>
+        <div class="col-md-3">{% block infobox %}{% endblock %}</div>
     </div>
 </div>
 

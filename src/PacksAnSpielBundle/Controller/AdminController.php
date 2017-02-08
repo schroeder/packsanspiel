@@ -74,7 +74,7 @@ class AdminController extends Controller
      */
     public function generateMemberPasscodeAction($id, Request $request)
     {
-        if (false === $this->get('security . authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             return new RedirectResponse($this->generateUrl('login'));
         }
 
@@ -92,7 +92,7 @@ class AdminController extends Controller
         $qrCode = new QrCode();
         $qrCode->setText($qrCodeMessage);
 
-        $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_member_') . ' . png';
+        $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_member_') . '.png';
 
         $qrCode->save($temp_file);
 
@@ -121,7 +121,7 @@ class AdminController extends Controller
 
 
         return new Response($pdf->Output(), 200, array(
-            'Content - Type' => 'application/pdf'));
+            'Content-Type' => 'application/pdf'));
     }
 
     /**
@@ -167,7 +167,7 @@ class AdminController extends Controller
      */
     public function generateTeamPasscodeAction($id, Request $request)
     {
-        if (false === $this->get('security . authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             return new RedirectResponse($this->generateUrl('login'));
         }
 
@@ -185,7 +185,7 @@ class AdminController extends Controller
         $qrCode = new QrCode();
         $qrCode->setText($qrCodeMessage);
 
-        $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_team_') . ' . png';
+        $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_team_') . '.png';
 
         $qrCode->save($temp_file);
 
@@ -212,6 +212,6 @@ class AdminController extends Controller
 
 
         return new Response($pdf->Output(), 200, array(
-            'Content - Type' => 'application/pdf'));
+            'Content-Type' => 'application/pdf'));
     }
 }
