@@ -23,6 +23,17 @@ class TeamRepository extends EntityRepository implements UserProviderInterface
         return false;
     }
 
+    public function findOneUnregisteredByPasscode($passcode)
+    {
+        //$result = $this->_em->createQuery('SELECT t.id FROM PacksAnSpielBundle\Entity\Team t WHERE t.passcode= :passcode')->setParameter('passcode', $passcode)->getFirstResult();
+        //return $result;
+        $result = $this->_em->createQuery('SELECT t.id FROM PacksAnSpielBundle\Entity\Team t WHERE t.passcode= :passcode AND t.status <= 1')->setParameter('passcode', $passcode)->execute();
+        if (count($result) == 1) {
+            return $this->find($result[0]['id']);
+        }
+        return false;
+    }
+
     public function findLeadingGroup($passcode)
     {
         $result = $this->_em->createQuery('SELECT t2.id FROM 

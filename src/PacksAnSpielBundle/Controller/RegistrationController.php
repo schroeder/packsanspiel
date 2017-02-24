@@ -60,68 +60,17 @@ class RegistrationController extends BaseController
             }
         }
 
-        $scannedQRCode = $request->get('qr');
-        if ($scannedQRCode) {
-            list($codeType, $scannedQRCode) = explode(':', $scannedQRCode);
-
-            if (!$codeType || !$scannedQRCode || $codeType == "" || $scannedQRCode == "") {
-                $errorMessage = "Invalid code";
-                $logger->logAction("Failed login try with qr code $scannedQRCode, error: \"$errorMessage\"", Actionlog::LOGLEVEL_WARN);
-                return new RedirectResponse($this->generateUrl('login'));
+        if ($action == "finish") {
+            if (!($team || $this->get('session')->has('team')) || count($memberList) == 0) {
+                $logger->logAction("Registration: Cannot finish registration!", Actionlog::LOGLEVEL_CRIT);
             }
-        }
-
-        switch ($action) {
-            case 'init':
-                break;
-            case 'addMember':
-                if ($codeType == 'member') {
-                    $member = $memberRepo->findOneByPasscode($scannedQRCode);
-                    if ($member) {
-                        if (!in_array($member, $memberList)) {
-                            $memberList[] = $member;
-                            $memberIdList[] = $scannedQRCode;
-                            $memberIdString = implode(',', array_unique($memberIdList));
-                            $this->get('session')->set('member_list', $memberIdString);
-                        } else {
-                            $logger->logAction("Registration: member already registered", Actionlog::LOGLEVEL_WARN, $team);
-                        }
-                    } else {
-                        $logger->logAction("Registration: Cannot find member to add $scannedQRCode.", Actionlog::LOGLEVEL_CRIT, $team);
-                    }
-                } else {
-                    $logger->logAction("Registration: Cannot find member type to add: $codeType.", Actionlog::LOGLEVEL_CRIT, $team);
-                }
-                return new RedirectResponse($this->generateUrl('register') . "?action=init");
-                break;
-            case 'setTeam':
-                if ($codeType == 'team') {
-                    /* @var Team $team */
-                    $team = $teamRepo->findOneByPasscode($scannedQRCode);
-                    if (!$team) {
-                        $logger->logAction("Registration: Cannot find team to add $scannedQRCode.", Actionlog::LOGLEVEL_WARN, $team);
-                    }
-                    $this->get('session')->set('team', $scannedQRCode);
-                } else {
-                    $logger->logAction("Registration: Cannot find member type to add: $codeType.", Actionlog::LOGLEVEL_CRIT, $team);
-                }
-                return new RedirectResponse($this->generateUrl('register') . "?action=init");
-                break;
-            case
-            'removeMember':
-                break;
-            case 'finish':
-                if (!($team || $this->get('session')->has('team')) || count($memberList) == 0) {
-                    $logger->logAction("Registration: Cannot finish registration!", Actionlog::LOGLEVEL_CRIT);
-                    break;
-                }
-                if (!$team) {
-                    $team = $teamRepo->initializeNewTeam($this->get('session')->get('team'), Team::STATUS_ACTIVE);
-                }
-                $teamRepo->setTeamMember($team, $memberList);
-                $this->get('session')->remove('member_list');
-                $this->get('session')->remove('team');
-                return new RedirectResponse($this->generateUrl('login'));
+            if (!$team) {
+                $team = $teamRepo->initializeNewTeam($this->get('session')->get('team'), Team::STATUS_ACTIVE);
+            }
+            $teamRepo->setTeamMember($team, $memberList);
+            $this->get('session')->remove('member_list');
+            $this->get('session')->remove('team');
+            return new RedirectResponse($this->generateUrl('login'));
         }
 
         return $this->render('PacksAnSpielBundle::register/index.html.twig',
@@ -133,11 +82,155 @@ class RegistrationController extends BaseController
     }
 
     /**
-     * @Route("/addMember/{team}", name="add_member_register")
+     * @Route("/cancel", name="cancel_registration")
+     * @Method({"GET"})
+     */
+    public function cancelRegistrationAction(Request $request)
+    {
+        /* @var GameActionLogger $logger */
+        $logger = $this->get('packsan.action.logger');
+
+        $em = $this->getDoctrine();
+
+        $action = $request->get('action');
+
+        $team = false;
+        $memberList = [];
+
+        /* @var MemberRepository $repo */
+        $memberRepo = $em->getRepository("PacksAnSpielBundle:Member");
+        if ($this->get('session')->has('team')) {
+            /* @var TeamRepository $repo */
+            $teamRepo = $em->getRepository("PacksAnSpielBundle:Team");
+            $teamId = $this->get('session')->get('team');
+            $team = $teamRepo->findOneByPasscode($teamId);
+
+            $logger->logAction("Registration: Cancel registration for group " . $this->get('session')->has('team') . ".", Actionlog::LOGLEVEL_CRIT, $team);
+            $this->get('session')->remove('team');
+        }
+
+        if ($this->get('session')->has('member_list')) {
+            $memberIdString = $this->get('session')->get('member_list');
+            $memberIdList = explode(',', $memberIdString);
+            foreach ($memberIdList as $memberId) {
+                $logger->logAction("Registration: Cancel registration for member $memberId.", Actionlog::LOGLEVEL_CRIT);
+            }
+            $this->get('session')->remove('team');
+        }
+
+        return new RedirectResponse($this->generateUrl('login'));
+    }
+
+    /**
+     * @Route("/addPasscode", name="add_passcode_register")
      * @Method({"POST"})
      */
-    public function registerAddMemberAction(Request $request)
+    public function registerAddPasscodeAction(Request $request)
     {
+        /* @var GameActionLogger $logger */
+        $logger = $this->get('packsan.action.logger');
 
+        $qr = $request->get('qr');
+
+        if (!$qr || !is_string($qr)) {
+            $logger->logAction("Failed register action with qr code $qr.", Actionlog::LOGLEVEL_WARN);
+            return $this->json(array('error_message' => 'Bitte einen passenden Code einscannen!'), 400);
+        }
+
+        try {
+            list($codeType, $qrCode) = explode(':', $qr);
+
+        } catch (\Exception $e) {
+            $logger->logAction("Failed register action with qr code $qr.", Actionlog::LOGLEVEL_WARN);
+            return $this->json(array('error_message' => 'Bitte einen passenden Code einscannen!'), 400);
+        }
+
+        if ($qrCode == "") {
+            $logger->logAction("Failed register action with qr code $qr.", Actionlog::LOGLEVEL_WARN);
+            return $this->json(array('error_message' => 'Bitte einen passenden Code einscannen!'), 400);
+        }
+
+        $team = false;
+        $memberList = [];
+
+        $em = $this->getDoctrine();
+
+        /* @var MemberRepository $repo */
+        $memberRepo = $em->getRepository("PacksAnSpielBundle:Member");
+        /* @var TeamRepository $repo */
+        $teamRepo = $em->getRepository("PacksAnSpielBundle:Team");
+
+        if ($this->get('session')->has('team')) {
+            $teamId = $this->get('session')->get('team');
+            $team = $teamRepo->findOneByPasscode($teamId);
+        }
+
+        if ($this->get('session')->has('member_list')) {
+            $memberIdString = $this->get('session')->get('member_list');
+            $memberIdList = explode(',', $memberIdString);
+            foreach ($memberIdList as $memberId) {
+                /* @var Member $member */
+                $member = $memberRepo->findOneByPasscode($memberId);
+                if ($member) {
+                    $memberList[] = $member;
+                } else {
+                    $logger->logAction("Registration: Cannot find member with passcode $memberId.", Actionlog::LOGLEVEL_CRIT, $team);
+                }
+            }
+        }
+
+        switch ($codeType) {
+            case 'team':
+                $teamId = $qrCode;
+
+                if ($team) {
+                    return $this->json(array('error_message' => 'Ihr habt schon eine Teamkarte eingescannt!'), 400);
+                }
+                /* @var TeamRepository $repo */
+                $repo = $em->getRepository("PacksAnSpielBundle:Team");
+                /* @var Team $team */
+                $team = $repo->findOneUnregisteredByPasscode($teamId);
+                if ($team) {
+                    $this->get('session')->set('team', $teamId);
+                    return $this->json(array('success_message' => 'Teamkarte eingescannt!', 'team_id' => $teamId), 200);
+                } else {
+                    return $this->json(array('error_message' => 'Ihr habt schon eine Teamkarte eingescannt!'), 400);
+                }
+                break;
+            case 'member':
+                if ($codeType == 'member') {
+                    /* @var TeamRepository $repo */
+                    $repo = $em->getRepository("PacksAnSpielBundle:Member");
+                    $member = $repo->findOneByPasscode($qrCode);
+                    if ($member) {
+                        if (!in_array($member, $memberList)) {
+                            $memberList[] = $member;
+                            $memberIdList[] = $qrCode;
+                            $memberIdString = implode(',', array_unique($memberIdList));
+                            $this->get('session')->set('member_list', $memberIdString);
+                            $enableFinish = false;
+                            if (count($memberIdList) >= 3 && $this->get('session')->has('team')) {
+                                $enableFinish = true;
+                            }
+                            return $this->json(array('success_message' => 'Teilnehmerkarte eingescannt!', 'member_id' => $member->getFullName(), 'enable_finish' => $enableFinish), 200);
+                        } else {
+                            $logger->logAction("Registration: member already registered", Actionlog::LOGLEVEL_WARN, $team);
+                        }
+                    } else {
+                        $logger->logAction("Registration: Cannot find member to add $qrCode.", Actionlog::LOGLEVEL_CRIT, $team);
+                    }
+                } else {
+                    $logger->logAction("Registration: Cannot find member type to add: $codeType.", Actionlog::LOGLEVEL_CRIT, $team);
+                }
+                return $this->json(array('error_message' => 'Irgendwas ist schief gelaufen!'), 400);
+                break;
+            case
+            'removeMember':
+                break;
+            default:
+                return $this->json(array('error_message' => 'Bitte einen passenden Code einscannen!'), 400);
+                break;
+        };
+        return $this->json(array('error_message' => 'Bitte einen passenden Code einscannen!'), 400);
     }
 }

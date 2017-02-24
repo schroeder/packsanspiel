@@ -33,8 +33,7 @@ body {
     background-color: #eeeeec;
     margin: 5px;
     border: 2px solid #babdb6;
-    height: 100%;
-    min-height: 100%;
+    min-height: 98%;
 }
 
 #v, #qr-canvas {
@@ -59,7 +58,7 @@ body {
     width: 100%;
 }
 
-.category:active {
+.game-subject:active, .game-subject:focus {
     background-color: #4e9a06 !important;
     color: #eeeeec;
 }
@@ -80,3 +79,21 @@ body {
     font-size: 20px;
     font-weight: bold;
 }
+
+.btn-group .btn.game-subject {
+    height: 250px;
+    width: 48%;
+}
+
+.btn-group > .btn.game-subject:first-child:not(:last-child):not(.dropdown-toggle),
+.btn-group > .btn.game-subject:not(:first-child):not(:last-child):not(.dropdown-toggle),
+.btn-group > .btn.game-subject:last-child:not(:first-child), .btn-group > .dropdown-toggle:not(:first-child) {
+    background-color: #888a85;
+    width: 48%;
+    margin: 10px;
+    height: 250px;
+    border-radius: 6px !important;
+    font-size: 31px;
+    font-weight: 200;
+}
+
