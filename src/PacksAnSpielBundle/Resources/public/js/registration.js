@@ -45,17 +45,43 @@ function codeReadOnRegisterPage(a) {
         console.log("[OnRegistration] Found code: " + a);
         url = window.location.href;
 
-        var jqxhr = $.post('/register/addMember/', {addMember: a}, function () {
-            console.log("success");
+        var jqxhr = $.ajax({
+            type: "POST",
+            url: '/register/addPasscode',
+            data: {qr: a},
+            success: function (data) {
+                console.log("success");
+                if (data.success_message != undefined) {
+                    message = data.success_message;
+                }
+                if (data.team_id != undefined) {
+                    $("team_id").text = data.team_id;
+                }
+
+                if (data.member_id != undefined) {
+                    $("#member_list").append('<li>' + data.member_id + '</li>');
+                }
+
+                if (data.enable_finish != undefined && data.enable_finish != false) {
+                    $("#finish").removeClass('hidden');
+                }
+                showRegistrationSuccessMessage(message);
+            }
         })
             .done(function () {
                 console.log("second success");
             })
-            .fail(function () {
-                console.log("error");
+            .fail(function (data) {
+                console.log("second success");
+                message = "Irgendwas hat nicht geklappt!";
+                if (data.error_message !== undefined) {
+                    message = data.responseJSON.error_message;
+                }
+                showRegistrationErrorMessage(message);
             })
             .always(function () {
                 console.log("finished");
+                setTimeout(setDefaultText, 3000);
             });
 
     }
@@ -63,35 +89,26 @@ function codeReadOnRegisterPage(a) {
         showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
         setTimeout(setDefaultText, 3000);
     }
-
-    /*    if (isValidMD5(a)) {
-     console.log("[OnRegister] Found code: " + a);
-     var res = a.split(":");
-     if (res[0] == 'member') {
-     console.log("[OnRegister] Found member: " + res[1]);
-     window.location = "/register?action=addMember&qr=" + a;
-     }
-     else if (res[0] == 'team') {
-     console.log("[OnRegister] Found team: " + res[1]);
-     window.location = "/register?action=setTeam&qr=" + a;
-     }
-     }
-     else {
-     showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
-     setTimeout(setDefaultText, 3000);
-     }*/
 }
 
-function showLoginErrorMessage(message) {
-    document.getElementById("login_result").innerHTML = message;
-    document.getElementById("login_result").style.backgroundColor = "#CC0000";
-    document.getElementById("login_result").style.color = "#EEEEEC";
+function showRegistrationErrorMessage(message) {
+    $("#login_result").text(message);
+    $("#login_result").addClass("alert");
+    $("#login_result").addClass("alert-danger");
+
+}
+
+function showRegistrationSuccessMessage(message) {
+    $("#login_result").text(message);
+    $("#login_result").addClass("alert");
+    $("#login_result").addClass("alert-success");
+
 }
 
 function setDefaultText() {
-    document.getElementById("login_result").innerHTML = "ZUM EINLOGGEN KARTE IN DEN SCHLITZ FÜHREN!";
-    document.getElementById("login_result").style.backgroundColor = "#EEEEEC";
-    document.getElementById("login_result").style.color = "#000";
+    $("#login_result").text("Jetzt Teamkarte und Teilnehmerkarten Scannen!");
+    $("#login_result").removeClass("alert");
+    $("#login_result").removeClass("alert-danger");
     setTimeout(captureToCanvas, 500);
 }
 

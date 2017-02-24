@@ -7,14 +7,14 @@
                 <div class="panel-heading"><h3 class="panel-title">Hallo Team {{ team.id }}!</h3></div>
                 <div class="panel-body">
                     <div class="row">
-                        {% for item in subject_list %}
-                            <div class="col-md-6">
-                                <div class="jumbotron category category{{ item.id }}"
-                                     style="background-color: {{ item.todocolor }};">
-                                    {{ item.name }}
-                                </div>
-                            </div>
-                        {% endfor %}
+                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                            {% for item in subject_list %}
+                                <button type="button"
+                                        class="btn btn-default jumbotron game-subject game-subject{{ item.id }}"
+                                        style="background-color: {{ item.todocolor }};"
+                                        id="category_{{ item.id }}">{{ item.name }}</button>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>

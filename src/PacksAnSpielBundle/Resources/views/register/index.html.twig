@@ -9,8 +9,8 @@
                     <div id="main">
                         <div id="outdiv">
                         </div>
-                        <div id="login_result">
-                            TODO: Prozess fehlt, jetzt Team und Teilnehmerkarten Scannen
+                        <div id="login_result" class="">
+                            Jetzt Teamkarte und Teilnehmerkarten scannen!
                         </div>
                     </div>
                     <canvas id="qr-canvas"></canvas>
@@ -30,7 +30,7 @@
             {% endif %}
             <div id="team" class="panel {{ team_css }}">
                 <div class="panel-heading"><h3 class="panel-title">Euer Team</h3></div>
-                <div class="panel-body">
+                <div class="panel-body" id="team_id">
                     {% if team %}
                         {{ team.passcode }}
                     {% else %}
@@ -51,7 +51,7 @@
                 <div class="panel-heading"><h3 class="panel-title">Eure Mitglieder</h3></div>
                 <div class="panel-body">
                     {% if member_list %}
-                        <ul>
+                        <ul id="member_list">
                             {% for member in member_list %}
                                 <li>{{ member.fullname|e }}</li>
                             {% endfor %}
@@ -62,14 +62,17 @@
             <div id="action" class="panel panel-info">
                 <div class="panel-heading"><h3 class="panel-title">Aktionen</h3></div>
                 <div class="panel-body">
-                    {% if member_list|length >= 3 %}
-                        <a href="{{ path('register', {'action': 'finish'}) }}" class="btn btn-primary btn-lg"
+                    <div id="finish"
+                         class="form-group{% if (member_list|length) >= 3 and (team or team_id) %}{% else %} hidden{% endif %}">
+                        <a href="{{ path('get_register', {'action': 'finish'}) }}" class="btn btn-success btn-lg"
                            role="button">Registrierung abschliessen
                         </a>
-                    {% endif %}
-                    <a href="{{ path('login') }}" class="btn btn-primary btn-lg"
-                       role="button">Abbrechen
-                    </a>
+                    </div>
+                    <div class="form-group">
+                        <a href="{{ path('cancel_registration') }}" class="btn btn-primary btn-lg"
+                           role="button">Abbrechen
+                        </a>
+                    </div>
 
 
                 </div>
