@@ -43,13 +43,6 @@ class Game
     private $duration;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="gamecol", type="string", length=45, nullable=true)
-     */
-    private $gamecol;
-
-    /**
      * @var \PacksAnSpielBundle\Entity\GameSubject
      *
      * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\GameSubject")
@@ -92,6 +85,7 @@ class Game
      * @ORM\Column(name="passcode", type="string", length=45, nullable=true)
      */
     private $passcode;
+
 
     /**
      * Get id
@@ -318,4 +312,236 @@ class Game
         return $this->passcode;
     }
 
+    /**
+     * @var string
+     */
+    private $game_description;
+
+    /**
+     * @var string
+     */
+    private $group_text_game_start;
+
+    /**
+     * @var string
+     */
+    private $group_text_game_question;
+
+    /**
+     * @var string
+     */
+    private $group_text_game_correct_answer;
+
+    /**
+     * @var string
+     */
+    private $group_text_game_wrong_answer_1;
+
+    /**
+     * @var string
+     */
+    private $group_text_game_wrong_answer_2;
+
+    /**
+     * @var string
+     */
+    private $group_text_game_wrong_answer_3;
+
+    /**
+     * @var string
+     */
+    private $group_text_game_end;
+
+
+    /**
+     * Set gameDescription
+     *
+     * @param string $gameDescription
+     *
+     * @return Game
+     */
+    public function setGameDescription($gameDescription)
+    {
+        $this->game_description = $gameDescription;
+
+        return $this;
+    }
+
+    /**
+     * Get gameDescription
+     *
+     * @return string
+     */
+    public function getGameDescription()
+    {
+        return $this->game_description;
+    }
+
+    /**
+     * Set groupTextGameStart
+     *
+     * @param string $groupTextGameStart
+     *
+     * @return Game
+     */
+    public function setGroupTextGameStart($groupTextGameStart)
+    {
+        $this->group_text_game_start = $groupTextGameStart;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameStart
+     *
+     * @return string
+     */
+    public function getGroupTextGameStart()
+    {
+        return $this->group_text_game_start;
+    }
+
+    /**
+     * Set groupTextGameQuestion
+     *
+     * @param string $groupTextGameQuestion
+     *
+     * @return Game
+     */
+    public function setGroupTextGameQuestion($groupTextGameQuestion)
+    {
+        $this->group_text_game_question = $groupTextGameQuestion;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameQuestion
+     *
+     * @return string
+     */
+    public function getGroupTextGameQuestion()
+    {
+        return $this->group_text_game_question;
+    }
+
+    /**
+     * Set groupTextGameCorrectAnswer
+     *
+     * @param string $groupTextGameCorrectAnswer
+     *
+     * @return Game
+     */
+    public function setGroupTextGameCorrectAnswer($groupTextGameCorrectAnswer)
+    {
+        $this->group_text_game_correct_answer = $groupTextGameCorrectAnswer;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameCorrectAnswer
+     *
+     * @return string
+     */
+    public function getGroupTextGameCorrectAnswer()
+    {
+        return $this->group_text_game_correct_answer;
+    }
+
+    /**
+     * Set groupTextGameWrongAnswer1
+     *
+     * @param string $groupTextGameWrongAnswer1
+     *
+     * @return Game
+     */
+    public function setGroupTextGameWrongAnswer1($groupTextGameWrongAnswer1)
+    {
+        $this->group_text_game_wrong_answer_1 = $groupTextGameWrongAnswer1;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameWrongAnswer1
+     *
+     * @return string
+     */
+    public function getGroupTextGameWrongAnswer1()
+    {
+        return $this->group_text_game_wrong_answer_1;
+    }
+
+    /**
+     * Set groupTextGameWrongAnswer2
+     *
+     * @param string $groupTextGameWrongAnswer2
+     *
+     * @return Game
+     */
+    public function setGroupTextGameWrongAnswer2($groupTextGameWrongAnswer2)
+    {
+        $this->group_text_game_wrong_answer_2 = $groupTextGameWrongAnswer2;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameWrongAnswer2
+     *
+     * @return string
+     */
+    public function getGroupTextGameWrongAnswer2()
+    {
+        return $this->group_text_game_wrong_answer_2;
+    }
+
+    /**
+     * Set groupTextGameWrongAnswer3
+     *
+     * @param string $groupTextGameWrongAnswer3
+     *
+     * @return Game
+     */
+    public function setGroupTextGameWrongAnswer3($groupTextGameWrongAnswer3)
+    {
+        $this->group_text_game_wrong_answer_3 = $groupTextGameWrongAnswer3;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameWrongAnswer3
+     *
+     * @return string
+     */
+    public function getGroupTextGameWrongAnswer3()
+    {
+        return $this->group_text_game_wrong_answer_3;
+    }
+
+    /**
+     * Set groupTextGameEnd
+     *
+     * @param string $groupTextGameEnd
+     *
+     * @return Game
+     */
+    public function setGroupTextGameEnd($groupTextGameEnd)
+    {
+        $this->group_text_game_end = $groupTextGameEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameEnd
+     *
+     * @return string
+     */
+    public function getGroupTextGameEnd()
+    {
+        return $this->group_text_game_end;
+    }
 }

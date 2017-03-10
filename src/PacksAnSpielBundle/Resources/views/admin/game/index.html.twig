@@ -1,0 +1,80 @@
+{% extends 'PacksAnSpielBundle:admin:baseadmin-layout.html.twig' %}
+
+
+{% block page_title %}<a href="{{ path('game_new') }}" class="btn btn-primary">Create a new game</a>{% endblock %}
+{% block page_subtitle %}{% endblock %}
+{% block flash_messages %}{% endblock %}
+
+{% block page_content %}
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Spielliste</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="example1" class="table table-bordered table-striped dataTable" role="grid"
+                               aria-describedby="example1_info">
+                            <thead>
+                            <tr>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-label="Platform(s): activate to sort column ascending" style="width: 321px;">
+                                    Id
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-label="Platform(s): activate to sort column ascending" style="width: 321px;">
+                                    Name
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-label="Platform(s): activate to sort column ascending" style="width: 321px;">
+                                    Description
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-label="Platform(s): activate to sort column ascending" style="width: 321px;">
+                                    Passcode
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-label="Platform(s): activate to sort column ascending" style="width: 321px;">
+                                    Duration
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-label="Platform(s): activate to sort column ascending" style="width: 321px;">
+                                    Status
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-label="Platform(s): activate to sort column ascending" style="width: 321px;">
+                                    Actions
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for game in games %}
+                                <tr>
+                                    <td><a href="{{ path('game_show', { 'id': game.id }) }}">{{ game.id }}</a></td>
+                                    <td>{{ game.name }}</td>
+                                    <td>{{ game.description }}</td>
+                                    <td>{{ game.passcode }}</td>
+                                    <td>{{ game.duration }}</td>
+                                    <td>{% if game.status %}Yes{% else %}No{% endif %}</td>
+                                    <td>
+                                        <a href="{{ path('game_show', { 'id': game.id }) }}">
+                                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                        </a>
+                                        <a href="{{ path('game_edit', { 'id': game.id }) }}">
+                                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

@@ -36,7 +36,6 @@ class Location
     private $description;
 
 
-
     /**
      * Get id
      *
@@ -93,5 +92,10 @@ class Location
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->name;
     }
 }

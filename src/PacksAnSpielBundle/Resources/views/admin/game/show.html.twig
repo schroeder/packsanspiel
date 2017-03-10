@@ -1,0 +1,93 @@
+{% extends 'PacksAnSpielBundle:admin:baseadmin-layout.html.twig' %}
+
+{% block page_title %}{% endblock %}
+{% block page_subtitle %}{% endblock %}
+{% block flash_messages %}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Spiel "{{ game.name }}"</h3>
+
+                    <div class="box-body">
+
+
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th>Id</th>
+                                <td>{{ game.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <td>{{ game.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Beschreibung</th>
+                                <td>{{ game.description }}</td>
+                            </tr>
+                            <tr>
+                                <th>Passcode</th>
+                                <td>{{ game.passcode }}</td>
+                            </tr>
+                            <tr>
+                                <th>Duration</th>
+                                <td>{{ game.duration }}</td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td>{{ game.status }}</td>
+                            </tr>
+                            <tr>
+                                <th>Game subject</th>
+                                <td>{{ game.gameSubject }}</td>
+                            </tr>
+                            <tr>
+                                <th>Level</th>
+                                <td>{{ game.level }}</td>
+                            </tr>
+                            <tr>
+                                <th>Location</th>
+                                <td>{{ game.location }}</td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Status</th>
+                                <td>{% if game.status %}Yes{% else %}No{% endif %}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <a href="{{ path('game_index') }}" class="btn-primary btn">Zurück zur Liste</a>
+                        </div>
+                        <div class="form-group">
+                            <a href="{{ path('game_edit', { 'id': game.id }) }}"
+                               class="btn-primary btn">Bearbeiten</a>
+                        </div>
+                        <div class="form-group">
+                            {{ form_start(delete_form) }}
+                            <input type="submit" value="Löschen" class="btn-danger btn">
+                            {{ form_end(delete_form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

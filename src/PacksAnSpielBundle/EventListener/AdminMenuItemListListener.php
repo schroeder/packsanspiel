@@ -30,7 +30,7 @@ class AdminMenuItemListListener
         $menuItem02->addChild(new MenuItemModel('MitgliederListe', 'Liste', 'admin', array(/* options */), 'iconclasses fa fa-list'));
         $menuItem02->addChild(new MenuItemModel('MitgliederVerwalten', 'Mitglieder verwalten', 'admin', array(/* options */), 'iconclasses fa fa-edit'));
         $menuItem02->addChild(new MenuItemModel('MitgliederNachrichtSchicken', 'Nachricht schicken', 'admin', array(/* options */), 'iconclasses fa fa-commenting'));
-        $menuItem03->addChild(new MenuItemModel('SpieleListe', 'Liste', 'admin', array(/* options */), 'iconclasses fa fa-list'));
+        $menuItem03->addChild(new MenuItemModel('SpieleListe', 'Liste', 'game_index', array(/* options */), 'iconclasses fa fa-list'));
         $menuItem03->addChild(new MenuItemModel('SpieleNachrichtSchicken', 'Nachricht schicken', 'admin', array(/* options */), 'iconclasses fa fa-commenting'));
         $menuItem05->addChild(new MenuItemModel('PasscodeGenerierenSpiel', 'Spiel', 'admin', array(/* options */), 'iconclasses fa fa-futbol-o'));
         $menuItem05->addChild(new MenuItemModel('PasscodeGenerierenGruppe', 'Gruppe', 'admin_team_passcode', array(/* options */), 'iconclasses fa fa-users'));
