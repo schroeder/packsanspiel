@@ -22,7 +22,7 @@ PacksAnSpielBundle\Entity\Actionlog:
         logText:
             type: string
             nullable: true
-            length: 45
+            length: 1024
             options:
                 fixed: false
             column: log_text

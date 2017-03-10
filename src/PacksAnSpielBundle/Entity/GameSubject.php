@@ -155,4 +155,9 @@ class GameSubject
     {
         return $this->doneColor;
     }
+
+    public function __toString()
+    {
+        return (string)$this->name;
+    }
 }

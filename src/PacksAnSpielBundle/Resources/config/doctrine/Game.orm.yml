@@ -48,6 +48,54 @@ PacksAnSpielBundle\Entity\Game:
         status:
             type: boolean
             nullable: true
+        game_description:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        group_text_game_start:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        group_text_game_question:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        group_text_game_correct_answer:
+            type: text
+            nullable: true
+            length: 140
+            options:
+                fixed: false
+        group_text_game_wrong_answer_1:
+            type: text
+            nullable: true
+            length: 140
+            options:
+                fixed: false
+        group_text_game_wrong_answer_2:
+            type: text
+            nullable: true
+            length: 140
+            options:
+                fixed: false
+        group_text_game_wrong_answer_3:
+            type: text
+            nullable: true
+            length: 140
+            options:
+                fixed: false
+        group_text_game_end:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
     manyToOne:
         gameSubject:
             targetEntity: GameSubject
