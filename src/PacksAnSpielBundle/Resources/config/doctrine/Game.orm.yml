@@ -127,4 +127,11 @@ PacksAnSpielBundle\Entity\Game:
                 location_id:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToOne:
+        parentGame:
+            targetEntity: Game
+            joinColumn:
+                name: parent_game
+                referencedColumnName: id
+
     lifecycleCallbacks: {  }

@@ -65,6 +65,9 @@
                                         <a href="{{ path('game_edit', { 'id': game.id }) }}">
                                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                         </a>
+                                        <a href="{{ path('game_export', { 'id': game.id }) }}">
+                                            <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}

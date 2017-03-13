@@ -7,6 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Spiritix\HtmlToPdf\Converter;
+use Spiritix\HtmlToPdf\Input\StringInput;
+use Spiritix\HtmlToPdf\Output\EmbedOutput;
 
 /**
  * Game controller.
@@ -97,6 +101,38 @@ class GameController extends Controller
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    /**
+     * Displays a form to edit an existing game entity.
+     *
+     * @Route("/{id}/export", name="game_export")
+     * @Method({"GET", "POST"})
+     */
+    public function exportAction(Request $request, Game $game)
+    {
+        $html = $this->render('PacksAnSpielBundle::admin/game/export.html.twig', array(
+            'game' => $game));
+
+        $input = new StringInput();
+        $input->setHtml($html->getContent());
+
+
+        $converter = new Converter($input, new EmbedOutput());
+
+        //$converter->setOption('n');
+        //$converter->setOption('d', '300');
+
+        $converter->setOptions([
+            'no-background',
+            'margin-bottom' => '100',
+            'margin-top' => '100',
+        ]);
+
+        $output = $converter->convert();
+        $output->embed("game.pdf");
+        exit;
+
     }
 
     /**

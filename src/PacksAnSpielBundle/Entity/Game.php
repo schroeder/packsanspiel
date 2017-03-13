@@ -352,6 +352,10 @@ class Game
      */
     private $group_text_game_end;
 
+    /**
+     * @var Game
+     */
+    private $parentGame;
 
     /**
      * Set gameDescription
@@ -543,5 +547,34 @@ class Game
     public function getGroupTextGameEnd()
     {
         return $this->group_text_game_end;
+    }
+
+    /**
+     * Set groupTextGameEnd
+     *
+     * @param string $groupTextGameEnd
+     *
+     * @return Game
+     */
+    public function setParentGame($parentGame)
+    {
+        $this->parentGame = $parentGame;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameEnd
+     *
+     * @return string
+     */
+    public function getParentGame()
+    {
+        return $this->parentGame;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->name . " (" . (string)$this->level . ")";
     }
 }

@@ -21,6 +21,7 @@ class GameType extends AbstractType
                     'label' => 'Spielanleitung')
             )->add('duration', null, array('label' => 'Geschätzte Spieldauer'))
             ->add('gameSubject', null, array('label' => 'Themenbereich'))
+            ->add('parentGame', null, array('label' => 'Spiel ist abgeleitet von Spiel'))
             ->add('level', null, array('label' => 'Level'))
             ->add('location', null, array('label' => 'Ort'))
             ->add('group_text_game_start', null, array('label' => 'Hinweistext für die Gruppe beim Spielstart'))
