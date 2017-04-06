@@ -79,7 +79,7 @@ fos_user:
     firewall_name: main
     user_class: PacksAnSpielBundle\Entity\Team
     from_email:
-      address: admin@packsan.local
+      address: admin@packsanspiel.isozaponol.de
       sender_name: Admin
 
 endroid_qr_code:

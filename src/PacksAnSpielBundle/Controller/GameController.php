@@ -37,6 +37,17 @@ class GameController extends Controller
     }
 
     /**
+     * For all undone features.
+     *
+     * @Route("/todo", name="todo")
+     * @Method("GET")
+     */
+    public function todoAction()
+    {
+        return $this->render('PacksAnSpielBundle::admin/game/todo.html.twig', array());
+    }
+
+    /**
      * Creates a new game entity.
      *
      * @Route("/new", name="game_new")

@@ -51,25 +51,6 @@ class LoginController extends Controller
             $team = false;
 
             switch ($codeType) {
-                case 'team':
-                    $teamId = $scannedQRCode;
-                    /* @var TeamRepository $repo */
-                    $repo = $em->getRepository("PacksAnSpielBundle:Team");
-                    /* @var Team $team */
-                    $team = $repo->findLeadingGroup($teamId);
-
-                    if (!$team) {
-                        $logger->logAction("Failed team login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_WARN);
-                        $errorMessage = "Das Team kenne ich leider nicht!";
-                        break;
-                    }
-
-                    // Redirect to /register if number of members less than 3
-                    if (count($team->getTeamMembers()) < 3) {
-                        $this->get('session')->set('team', $team->getPasscode());
-                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
-                    }
-                    break;
                 case 'member':
                     $memberId = $scannedQRCode;
                     /* @var MemberRepository $repo */
