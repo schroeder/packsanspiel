@@ -26,6 +26,12 @@ class LoginController extends Controller
      */
     public function loginAction(Request $request)
     {
+        $gameStarted = false;
+
+        if ($gameStarted != true) {
+            return $this->render('PacksAnSpielBundle::index.html.twig');
+        }
+
         /* @var GameActionLogger $logger */
         $logger = $this->get('packsan.action.logger');
         $errorMessage = false;
