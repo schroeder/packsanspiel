@@ -1,6 +1,6 @@
-$(".category").click(function () {
+$(".game-subject").click(function () {
     var gameSubjectList = $(this).attr('id').split('_');
-    var gameSubject = catList[1];
+    var gameSubject = gameSubjectList[1];
     var jqxhr = $.ajax({
         type: "POST",
         url: '/play/selectGame',
@@ -35,7 +35,7 @@ $(".category").click(function () {
         })
         .always(function () {
             console.log("finished");
-            setTimeout(setDefaultText, 3000);
+            //setTimeout(setDefaultText, 3000);
         });
 
 });
