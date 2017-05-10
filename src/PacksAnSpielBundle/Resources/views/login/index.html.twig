@@ -1,8 +1,8 @@
-{% extends 'PacksAnSpielBundle::login_base.html.twig' %}
+{% extends 'PacksAnSpielBundle::base.html.twig' %}
 
-{% block login %}
+{% block playground %}
     <div id="playground">
-        <div class="jumbotron">
+        <div class="box">
             <div class="panel panel-success">
                 <div class="panel-heading"><h3 class="panel-title">Auf zum nächsten Schritt!</h3></div>
                 <div class="panel-body">
@@ -43,5 +43,6 @@
             }
         }
 
+        load();
     </script>
 {% endblock %}

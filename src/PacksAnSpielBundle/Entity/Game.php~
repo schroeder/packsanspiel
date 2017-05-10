@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Game
  *
- * @ORM\Table(name="game", indexes={@ORM\Index(name="fk_game_level1_idx", columns={"level_id"}), @ORM\Index(name="fk_game_location1_idx", columns={"location_id"})})
- * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\GameRepository")
+ * @ORM\Table(name="game", indexes={@ORM\Index(name="fk_game_game_subject1_idx", columns={"game_subject_id"}), @ORM\Index(name="fk_game_level1_idx", columns={"level_id"}), @ORM\Index(name="fk_game_location1_idx", columns={"location_id"})})
+ * @ORM\Entity
  */
 class Game
 {
@@ -20,13 +20,6 @@ class Game
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="identifier", type="string", length=45)
-     */
-    private $identifier;
 
     /**
      * @var string
@@ -50,9 +43,19 @@ class Game
     private $duration;
 
     /**
+     * @var \PacksAnSpielBundle\Entity\GameSubject
+     *
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\GameSubject")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="game_subject_id", referencedColumnName="id")
+     * })
+     */
+    private $gameSubject;
+
+    /**
      * @var \PacksAnSpielBundle\Entity\Level
      *
-     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Level", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Level")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="level_id", referencedColumnName="id")
      * })
@@ -62,7 +65,7 @@ class Game
     /**
      * @var \PacksAnSpielBundle\Entity\Location
      *
-     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Location", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Location")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="location_id", referencedColumnName="id")
      * })
@@ -79,28 +82,20 @@ class Game
     /**
      * @var string
      *
-     * @ORM\Column(name="grade", type="string", length=15, nullable=true)
-     */
-    private $grade;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="passcode", type="string", length=45, nullable=true)
      */
     private $passcode;
 
-    /**
-     * @var string
-     */
-    private $game_description;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="game_answer", type="string", length=45, nullable=true)
-     */
-    private $game_answer;
+    private $gameDescription;
+    private $groupTextGameStart;
+    private $groupTextGameQuestion;
+    private $groupTextGameCorrectAnswer;
+    private $groupTextGameWrongAnswer1;
+    private $groupTextGameWrongAnswer2;
+    private $groupTextGameWrongAnswer3;
+    private $groupTextGameEnd;
+
 
     /**
      * Get id
@@ -185,27 +180,51 @@ class Game
     }
 
     /**
-     * Set identifier
+     * Set gamecol
      *
-     * @param string
+     * @param string $gamecol
      *
      * @return Game
      */
-    public function setIdentifier($identifier)
+    public function setGamecol($gamecol)
     {
-        $this->identifier = $identifier;
+        $this->gamecol = $gamecol;
 
         return $this;
     }
 
     /**
-     * Get identifier
+     * Get gamecol
      *
      * @return string
      */
-    public function getIdentifier()
+    public function getGamecol()
     {
-        return $this->identifier;
+        return $this->gamecol;
+    }
+
+    /**
+     * Set gameSubject
+     *
+     * @param \PacksAnSpielBundle\Entity\GameSubject $gameSubject
+     *
+     * @return Game
+     */
+    public function setGameSubject(\PacksAnSpielBundle\Entity\GameSubject $gameSubject = null)
+    {
+        $this->gameSubject = $gameSubject;
+
+        return $this;
+    }
+
+    /**
+     * Get gameSubject
+     *
+     * @return \PacksAnSpielBundle\Entity\GameSubject
+     */
+    public function getGameSubject()
+    {
+        return $this->gameSubject;
     }
 
     /**
@@ -230,30 +249,6 @@ class Game
     public function getLevel()
     {
         return $this->level;
-    }
-
-    /**
-     * Set grade
-     *
-     * @param string $grade
-     *
-     * @return Game
-     */
-    public function setGrade($grade = null)
-    {
-        $this->grade = $grade;
-
-        return $this;
-    }
-
-    /**
-     * Get grade
-     *
-     * @return string
-     */
-    public function getGrade()
-    {
-        return $this->grade;
     }
 
     /**
@@ -325,102 +320,6 @@ class Game
     public function getPasscode()
     {
         return $this->passcode;
-    }
-
-    /**
-     * Set gameDescription
-     *
-     * @param string $gameDescription
-     *
-     * @return Game
-     */
-    public function setGameDescription($gameDescription)
-    {
-        $this->game_description = $gameDescription;
-
-        return $this;
-    }
-
-    /**
-     * Get gameDescription
-     *
-     * @return string
-     */
-    public function getGameDescription()
-    {
-        return $this->game_description;
-    }
-
-    /**
-     * Set groupTextGameCorrectAnswer
-     *
-     * @param string $gameAnswer
-     *
-     * @return Game
-     */
-    public function setGameAnswer($gameAnswer)
-    {
-        $this->game_answer = $gameAnswer;
-
-        return $this;
-    }
-
-    /**
-     * Get groupTextGameCorrectAnswer
-     *
-     * @return string
-     */
-    public function getGameAnswer()
-    {
-        return $this->game_answer;
-    }
-
-    /**
-     * Set groupTextGameEnd
-     *
-     * @param string $groupTextGameEnd
-     *
-     * @return Game
-     */
-    public function setGroupTextGameEnd($groupTextGameEnd)
-    {
-        $this->group_text_game_end = $groupTextGameEnd;
-
-        return $this;
-    }
-
-    /**
-     * Get groupTextGameEnd
-     *
-     * @return string
-     */
-    public function getGroupTextGameEnd()
-    {
-        return $this->group_text_game_end;
-    }
-
-    public function getPlayedGames()
-    {
-        return 1;
-    }
-
-    public $activeGames;
-
-    public static function getCorrectLevelGrade($teamGrade, $levelId)
-    {
-        $grade = "";
-        if (in_array($levelId, [1, 2])) {
-            $grade = $teamGrade;
-        } elseif ($levelId == 3) {
-            if (in_array($teamGrade, ['w', 'j'])) {
-                $grade = "wj";
-            } else {
-                $grade = "pr";
-            }
-        } else {
-            $grade = "wjpr";
-        }
-        return $grade;
     }
 
 }

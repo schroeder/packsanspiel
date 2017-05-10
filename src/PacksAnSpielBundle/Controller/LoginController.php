@@ -26,7 +26,7 @@ class LoginController extends Controller
      */
     public function loginAction(Request $request)
     {
-        $gameStarted = false;
+        $gameStarted = true;
 
         if ($gameStarted != true) {
             return $this->render('PacksAnSpielBundle::index.html.twig');
@@ -38,10 +38,14 @@ class LoginController extends Controller
 
         $scannedQRCode = $request->get('qr');
         if ($scannedQRCode) {
-            try {
-                list($codeType, $scannedQRCode) = explode(':', $scannedQRCode);
-
-            } catch (\Exception $e) {
+            $data = explode(':', $scannedQRCode);
+            if (count($data) == 2) {
+                $codeType = $data[0];
+                $scannedQRCode = $data[1];
+            } else if (count($data) == 1) {
+                $codeType = 'member';
+                $scannedQRCode = $data[0];
+            } else {
                 $codeType = false;
                 $scannedQRCode = false;
             }
@@ -57,30 +61,6 @@ class LoginController extends Controller
             $team = false;
 
             switch ($codeType) {
-                case 'member':
-                    $memberId = $scannedQRCode;
-                    /* @var MemberRepository $repo */
-                    $repo = $em->getRepository("PacksAnSpielBundle:Member");
-                    /* @var Member $member */
-                    $member = $repo->findOneByPasscode($memberId);
-                    if (!$member) {
-                        $this->get('session')->set('member_list', $memberId);
-                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
-                    }
-                    $team = $member->getTeam();
-
-                    if ($team) {
-                        /* @var TeamRepository $repo */
-                        $repo = $em->getRepository("PacksAnSpielBundle:Team");
-                        /* @var Team $team */
-                        $team = $repo->findLeadingGroup($team->getPasscode());
-                    }
-
-                    if (!$team) {
-                        $this->get('session')->set('member_list', $memberId);
-                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
-                    }
-                    break;
                 case 'admin':
                     $memberId = $scannedQRCode;
                     /* @var MemberRepository $repo */
@@ -149,8 +129,32 @@ class LoginController extends Controller
                         $errorMessage = "Den Teilnehmer kenne ich leider nicht!";
                     }
                     break;
-                case
-                'joker':
+                case 'joker':
+                    break;
+                case 'member':
+                    $memberId = $scannedQRCode;
+                    /* @var MemberRepository $repo */
+                    $repo = $em->getRepository("PacksAnSpielBundle:Member");
+                    /* @var Member $member */
+                    $member = $repo->findOneByPasscode($memberId);
+                    if (!$member) {
+                        $this->get('session')->set('member_list', $memberId);
+                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
+                    }
+                    $team = $member->getTeam();
+
+                    if ($team) {
+                        /* @var TeamRepository $repo */
+                        $repo = $em->getRepository("PacksAnSpielBundle:Team");
+                        /* @var Team $team */
+                        $team = $repo->findLeadingGroup($team->getPasscode());
+                    }
+
+                    if (!$team) {
+                        $this->get('session')->set('member_list', $memberId);
+                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
+                    }
+                    break;
                 default:
                     $errorMessage = "Bitte Teilnehmerkarte oder Teamkarte in den Terminal führen!";
                     break;

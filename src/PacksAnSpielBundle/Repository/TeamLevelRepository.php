@@ -12,7 +12,7 @@ use PacksAnSpielBundle\Repository\MemberRepository;
 
 class TeamLevelRepository extends EntityRepository
 {
-    public function findCurrentTeamLevel($team, $level)
+    public function getCurrentTeamLevel($team, $level)
     {
         return $this->findOneBy(['team' => $team, 'level' => $level]);
     }

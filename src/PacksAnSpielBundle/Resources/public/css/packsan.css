@@ -36,6 +36,16 @@ body {
     min-height: 98%;
 }
 
+.box {
+    margin: 10px;
+}
+
+#logo {
+    background: none;
+    border: none;
+    border-bottom: 2px solid #ccccc5;
+}
+
 #v, #qr-canvas {
     display: none;
 }
@@ -82,17 +92,27 @@ body {
 
 .btn-group .btn.game-subject {
     height: 250px;
-    width: 48%;
+    width: 47%;
 }
 
 .btn-group > .btn.game-subject:first-child:not(:last-child):not(.dropdown-toggle),
 .btn-group > .btn.game-subject:not(:first-child):not(:last-child):not(.dropdown-toggle),
 .btn-group > .btn.game-subject:last-child:not(:first-child), .btn-group > .dropdown-toggle:not(:first-child) {
     background-color: #888a85;
-    width: 48%;
+    width: 47%;
     margin: 10px;
     height: 250px;
     border-radius: 6px !important;
+    font-size: 31px;
+    font-weight: 200;
+}
+
+.game-status-running {
+    background-color: #aa0000;
+}
+
+.alert {
+    margin: 5px;
     font-size: 31px;
     font-weight: 200;
 }

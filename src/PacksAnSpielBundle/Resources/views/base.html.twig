@@ -18,16 +18,42 @@
 <body>
 <div class="container-fluid fill panel">
     <div class="row">
-        <div class="col-md-8">{% block playground %}{% endblock %}</div>
-        <div class="col-md-4">{% block infobox %}{% endblock %}</div>
+        <div class="col-md-9">{% block playground %}{% endblock %}</div>
+        <div class="col-md-3">
+            <div id="infobox" class="box">
+                {% block infobox %}{% endblock %}
+                <div id="logo" class="panel">
+                    <img src="/bundles/packsanspiel/images/logo_spiel.png" width="100%" align="center"/>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 
 {% block javascripts %}{% endblock %}
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/grid.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/version.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/detector.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/formatinf.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/errorlevel.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/bitmat.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/datablock.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/bmparser.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/datamask.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/rsdecoder.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/gf256poly.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/gf256.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/decoder.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/qrcode.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/findpat.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/alignpat.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/databr.js') }}"></script>
 <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('assets/vendor/jquery-ui/jquery-ui.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/packsanspiel/js/play.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('bundles/packsanspiel/js/login.js') }}"></script>
 
 {% block javascript %}{% endblock %}
 

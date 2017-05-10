@@ -48,6 +48,7 @@ class GameLogic
             $teamLevelGame->setStartTime(GameLogic::now());
             $teamLevelGame->setTeamLevel($teamLevel);
             $this->em->persist($teamLevelGame);
+            $this->em->flush();
         }
         $team->setCurrentLevel($level);
         $this->em->persist($team);

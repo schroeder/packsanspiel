@@ -38,14 +38,14 @@ class Actionlog
     /**
      * @var string
      *
-     * @ORM\Column(name="log_text", type="string", length=45, nullable=true)
+     * @ORM\Column(name="log_text", type="string", nullable=true)
      */
     private $logText;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="timestamp", type="time", nullable=true)
+     * @ORM\Column(name="timestamp", type="datetime", nullable=true)
      */
     private $timestamp;
 

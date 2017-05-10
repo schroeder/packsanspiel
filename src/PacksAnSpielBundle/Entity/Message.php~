@@ -1,0 +1,67 @@
+<?php
+
+namespace PacksAnSpielBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Location
+ *
+ * @ORM\Table(name="message")
+ * @ORM\Entity
+ */
+class Message
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="message_text", type="text", nullable=true)
+     */
+    private $messageText;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="send_time", type="datetime", nullable=true)
+     */
+    private $sendTime;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="read_time", type="datetime", nullable=true)
+     */
+    private $readTime;
+
+
+    /**
+     * @var \PacksAnSpielBundle\Entity\Game
+     *
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Game")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="game", referencedColumnName="id")
+     * })
+     */
+    private $game;
+
+    /**
+     * @var \PacksAnSpielBundle\Entity\Team
+     *
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Team")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="team", referencedColumnName="id")
+     * })
+     */
+    private $team;
+
+
+}
