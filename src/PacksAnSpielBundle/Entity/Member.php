@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Member
  *
- * @ORM\Table(name="member", indexes={@ORM\Index(name="fk_member_team1_idx", columns={"team_id"})})
- * @ORM\Entity
+ * @ORM\Table(name="member")
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\MemberRepository")
  */
 class Member
 {
@@ -24,27 +24,58 @@ class Member
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     * @ORM\Column(name="passcode", type="string", length=45, nullable=true)
+     */
+    private $passcode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="stufe", type="string", length=45, nullable=true)
+     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
      */
-    private $stufe;
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * Der Stamm
+     *
+     * @ORM\Column(name="town", type="string", length=255, nullable=true)
+     */
+    private $group;
+
+    /**
+     * @var string
+     *
+     * Die Stufe
+     *
+     * @ORM\Column(name="grade", type="string", length=45, nullable=true)
+     */
+    private $grade;
+
+    /**
+     * @var string
+     *
+     * Das Dorf
+     *
+     * @ORM\Column(name="village", type="string", length=255, nullable=true)
+     */
+    private $village;
 
     /**
      * @var \PacksAnSpielBundle\Entity\Team
      *
      * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Team")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="team_id", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $team;
-
 
 
     /**
@@ -55,6 +86,51 @@ class Member
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set passcode
+     *
+     * @param string $passcode
+     *
+     * @return Member
+     */
+    public function setPasscode($passcode)
+    {
+        $this->passcode = $passcode;
+        return $this;
+    }
+
+    /**
+     * Get passcode
+     *
+     * @return string
+     */
+    public function getPasscode()
+    {
+        return $this->passcode;
+    }
+
+    /**
+     * Get full name
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstName . " " . $this->name;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -72,37 +148,99 @@ class Member
     }
 
     /**
-     * Get name
+     * Set first name
      *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set stufe
-     *
-     * @param string $stufe
+     * @param string $name
      *
      * @return Member
      */
-    public function setStufe($stufe)
+    public function setFirstName($name)
     {
-        $this->stufe = $stufe;
+        $this->firstName = $name;
 
         return $this;
     }
 
     /**
-     * Get stufe
+     * Get name
      *
      * @return string
      */
-    public function getStufe()
+    public function getFirstName()
     {
-        return $this->stufe;
+        return $this->firstName;
+    }
+
+    /**
+     * Set first name
+     *
+     * @param string $name
+     *
+     * @return Member
+     */
+    public function setGroup($name)
+    {
+        $this->group = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * Set grade
+     *
+     * @param string $grade
+     *
+     * @return Member
+     */
+    public function setGrade($stufe)
+    {
+        $this->grade = $stufe;
+
+        return $this;
+    }
+
+    /**
+     * Get grade
+     *
+     * @return string
+     */
+    public function getGrade()
+    {
+        return $this->grade;
+    }
+
+    /**
+     * Set grade
+     *
+     * @param string $grade
+     *
+     * @return Member
+     */
+    public function setVillage($village)
+    {
+        $this->village = $village;
+
+        return $this;
+    }
+
+    /**
+     * Get grade
+     *
+     * @return string
+     */
+    public function getVillage()
+    {
+        return $this->village;
     }
 
     /**

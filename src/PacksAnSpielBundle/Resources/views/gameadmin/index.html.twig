@@ -1,0 +1,47 @@
+{% extends 'PacksAnSpielBundle::gameadmin_base.html.twig' %}
+
+{% block login %}
+    <div id="playground">
+        <div class="jumbotron">
+            <div class="panel panel-warning">
+                <div class="panel-heading"><h3 class="panel-title">{{ game.name }}</h3></div>
+                <div class="panel-body">
+                    <div id="main">
+                        <div id="outdiv">
+                        </div>
+                        <div id="login_result">
+                            ZUM BEWERTEN KARTE DER GRUPPE EINSCANNEN!
+                        </div>
+                    </div>
+                    <canvas id="qr-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            if ("{{ error_message }}" != false) {
+                showLoginErrorMessage("{{ error_message }}");
+                setTimeout(setDefaultText, 3000);
+            }
+
+        });
+        function load() {
+            if (isCanvasSupported() && window.File && window.FileReader) {
+                initCanvas(800, 600);
+                qrcode.callback = codeReadOnGameAdminPage;
+                document.getElementById("main").style.display = "inline";
+                setwebcam();
+            }
+            else {
+                document.getElementById("main").style.display = "inline";
+                document.getElementById("main").innerHTML = '<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>' +
+                    '<br><p id="mp2">sorry your browser is not supported</p><br><br>';
+            }
+        }
+
+    </script>
+{% endblock %}

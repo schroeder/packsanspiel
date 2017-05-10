@@ -17,7 +17,7 @@ class TeamLevelGame
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
@@ -29,16 +29,16 @@ class TeamLevelGame
     private $playedPoints;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="start_time", type="string", length=45, nullable=true)
+     * @ORM\Column(name="start_time", type="integer", nullable=true)
      */
     private $startTime;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="finish_time", type="string", length=45, nullable=true)
+     * @ORM\Column(name="finish_time", type="integer", nullable=true)
      */
     private $finishTime;
 
@@ -55,7 +55,7 @@ class TeamLevelGame
     /**
      * @var \PacksAnSpielBundle\Entity\Game
      *
-     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Game")
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Game", fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="assigned_game", referencedColumnName="id")
      * })
@@ -82,7 +82,12 @@ class TeamLevelGame
      */
     private $teamLevel;
 
-
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="solved_by_leveljump", type="boolean", nullable=true)
+     */
+    private $solvedByLeveljump;
 
     /**
      * Set id

@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Game
  *
- * @ORM\Table(name="game", indexes={@ORM\Index(name="fk_game_game_subject1_idx", columns={"game_subject_id"}), @ORM\Index(name="fk_game_level1_idx", columns={"level_id"}), @ORM\Index(name="fk_game_location1_idx", columns={"location_id"})})
- * @ORM\Entity
+ * @ORM\Table(name="game", indexes={@ORM\Index(name="fk_game_level1_idx", columns={"level_id"}), @ORM\Index(name="fk_game_location1_idx", columns={"location_id"})})
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\GameRepository")
  */
 class Game
 {
@@ -20,6 +20,13 @@ class Game
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="identifier", type="string", length=45)
+     */
+    private $identifier;
 
     /**
      * @var string
@@ -43,26 +50,9 @@ class Game
     private $duration;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="gamecol", type="string", length=45, nullable=true)
-     */
-    private $gamecol;
-
-    /**
-     * @var \PacksAnSpielBundle\Entity\GameSubject
-     *
-     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\GameSubject")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="game_subject_id", referencedColumnName="id")
-     * })
-     */
-    private $gameSubject;
-
-    /**
      * @var \PacksAnSpielBundle\Entity\Level
      *
-     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Level")
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Level", fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="level_id", referencedColumnName="id")
      * })
@@ -72,14 +62,45 @@ class Game
     /**
      * @var \PacksAnSpielBundle\Entity\Location
      *
-     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Location")
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Location", fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="location_id", referencedColumnName="id")
      * })
      */
     private $location;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="grade", type="string", length=15, nullable=true)
+     */
+    private $grade;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="passcode", type="string", length=45, nullable=true)
+     */
+    private $passcode;
+
+    /**
+     * @var string
+     */
+    private $game_description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="game_answer", type="string", length=45, nullable=true)
+     */
+    private $game_answer;
 
     /**
      * Get id
@@ -164,51 +185,27 @@ class Game
     }
 
     /**
-     * Set gamecol
+     * Set identifier
      *
-     * @param string $gamecol
+     * @param string
      *
      * @return Game
      */
-    public function setGamecol($gamecol)
+    public function setIdentifier($identifier)
     {
-        $this->gamecol = $gamecol;
+        $this->identifier = $identifier;
 
         return $this;
     }
 
     /**
-     * Get gamecol
+     * Get identifier
      *
      * @return string
      */
-    public function getGamecol()
+    public function getIdentifier()
     {
-        return $this->gamecol;
-    }
-
-    /**
-     * Set gameSubject
-     *
-     * @param \PacksAnSpielBundle\Entity\GameSubject $gameSubject
-     *
-     * @return Game
-     */
-    public function setGameSubject(\PacksAnSpielBundle\Entity\GameSubject $gameSubject = null)
-    {
-        $this->gameSubject = $gameSubject;
-
-        return $this;
-    }
-
-    /**
-     * Get gameSubject
-     *
-     * @return \PacksAnSpielBundle\Entity\GameSubject
-     */
-    public function getGameSubject()
-    {
-        return $this->gameSubject;
+        return $this->identifier;
     }
 
     /**
@@ -236,6 +233,30 @@ class Game
     }
 
     /**
+     * Set grade
+     *
+     * @param string $grade
+     *
+     * @return Game
+     */
+    public function setGrade($grade = null)
+    {
+        $this->grade = $grade;
+
+        return $this;
+    }
+
+    /**
+     * Get grade
+     *
+     * @return string
+     */
+    public function getGrade()
+    {
+        return $this->grade;
+    }
+
+    /**
      * Set location
      *
      * @param \PacksAnSpielBundle\Entity\Location $location
@@ -258,4 +279,148 @@ class Game
     {
         return $this->location;
     }
+
+    /**
+     * Set status
+     *
+     * @param int $status
+     *
+     * @return Game
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set passcode
+     *
+     * @param string $passcode
+     *
+     * @return Member
+     */
+    public function setPasscode($passcode)
+    {
+        $this->passcode = $passcode;
+        return $this;
+    }
+
+    /**
+     * Get passcode
+     *
+     * @return string
+     */
+    public function getPasscode()
+    {
+        return $this->passcode;
+    }
+
+    /**
+     * Set gameDescription
+     *
+     * @param string $gameDescription
+     *
+     * @return Game
+     */
+    public function setGameDescription($gameDescription)
+    {
+        $this->game_description = $gameDescription;
+
+        return $this;
+    }
+
+    /**
+     * Get gameDescription
+     *
+     * @return string
+     */
+    public function getGameDescription()
+    {
+        return $this->game_description;
+    }
+
+    /**
+     * Set groupTextGameCorrectAnswer
+     *
+     * @param string $gameAnswer
+     *
+     * @return Game
+     */
+    public function setGameAnswer($gameAnswer)
+    {
+        $this->game_answer = $gameAnswer;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameCorrectAnswer
+     *
+     * @return string
+     */
+    public function getGameAnswer()
+    {
+        return $this->game_answer;
+    }
+
+    /**
+     * Set groupTextGameEnd
+     *
+     * @param string $groupTextGameEnd
+     *
+     * @return Game
+     */
+    public function setGroupTextGameEnd($groupTextGameEnd)
+    {
+        $this->group_text_game_end = $groupTextGameEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTextGameEnd
+     *
+     * @return string
+     */
+    public function getGroupTextGameEnd()
+    {
+        return $this->group_text_game_end;
+    }
+
+    public function getPlayedGames()
+    {
+        return 1;
+    }
+
+    public $activeGames;
+
+    public static function getCorrectLevelGrade($teamGrade, $levelId)
+    {
+        $grade = "";
+        if (in_array($levelId, [1, 2])) {
+            $grade = $teamGrade;
+        } elseif ($levelId == 3) {
+            if (in_array($teamGrade, ['w', 'j'])) {
+                $grade = "wj";
+            } else {
+                $grade = "pr";
+            }
+        } else {
+            $grade = "wjpr";
+        }
+        return $grade;
+    }
+
 }

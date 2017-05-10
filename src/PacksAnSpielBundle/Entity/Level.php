@@ -36,7 +36,6 @@ class Level
     private $number;
 
 
-
     /**
      * Get id
      *
@@ -93,5 +92,10 @@ class Level
     public function getNumber()
     {
         return $this->number;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->name;
     }
 }
