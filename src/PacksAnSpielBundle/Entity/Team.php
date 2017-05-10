@@ -3,15 +3,29 @@
 namespace PacksAnSpielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use PacksAnSpielBundle\Entity\Member;
+use PacksAnSpielBundle\Entity\Level;
+use PacksAnSpielBundle\Repository\TeamLevelRepository;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
  * Team
  *
  * @ORM\Table(name="team", indexes={@ORM\Index(name="fk_team_level1_idx", columns={"current_level"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\TeamRepository")
  */
-class Team
+class Team implements UserInterface, \Serializable
 {
+    const STATUS_UNUSED = 0;
+    const STATUS_IN_REGISTRATION = 1;
+    const STATUS_ACTIVE = 2;
+    const STATUS_BLOCKED = 3;
+    const STATUS_ADMIN = 4;
+    const STATUS_GAME = 5;
+
     /**
      * @var integer
      *
@@ -30,20 +44,41 @@ class Team
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="member_of_team", type="string", length=45, nullable=true)
+     * Dummy field for authorization, not really used!
      */
-    private $memberOfTeam;
+    private $username;
+
+    /**
+     * @var string
+     * Dummy field for authorization, not really used!
+     */
+    private $password;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="count_persons", type="string", length=45, nullable=true)
+     * @ORM\Column(name="parent_team", type="string", length=45, nullable=true)
      */
-    private $countPersons;
+    private $parentTeam;
+
+    private $childTeams;
 
     /**
-     * @var \PacksAnSpielBundle\Entity\Level
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="grade", type="string", length=15, nullable=true)
+     */
+    private $grade;
+
+    /**
+     * @var PacksAnSpielBundle\Entity\Level
      *
      * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Level")
      * @ORM\JoinColumns({
@@ -52,7 +87,25 @@ class Team
      */
     private $currentLevel;
 
+    /**
+     * @var Collection
+     *
+     * OneToMany(targetEntity="Member", mappedBy="team")
+     */
+    private $teamMembers;
 
+    /**
+     * @var Collection
+     *
+     * @OneToMany(targetEntity="Actionlog", mappedBy="team", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     */
+    private $logEntries;
+
+    public function __construct()
+    {
+        $this->teamMembers = new ArrayCollection();
+        $this->childTeams = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -74,7 +127,8 @@ class Team
     public function setPasscode($passcode)
     {
         $this->passcode = $passcode;
-
+        $this->username = $passcode;
+        $this->password = $passcode;
         return $this;
     }
 
@@ -91,49 +145,100 @@ class Team
     /**
      * Set memberOfTeam
      *
-     * @param string $memberOfTeam
+     * @param Team $memberOfTeam
      *
-     * @return Team
+     * @return PacksAnSpielBundle\Entity\Team
      */
-    public function setMemberOfTeam($memberOfTeam)
+    public function setParentTeam($parentTeam)
     {
-        $this->memberOfTeam = $memberOfTeam;
+        $this->parentTeam = $parentTeam;
 
         return $this;
+    }
+
+    /**
+     * Set grade
+     *
+     * @param string $grade
+     *
+     * @return Game
+     */
+    public function setGrade($grade = null)
+    {
+        $this->grade = $grade;
+
+        return $this;
+    }
+
+    /**
+     * Get grade
+     *
+     * @return string
+     */
+    public function getGrade()
+    {
+        return $this->grade;
     }
 
     /**
      * Get memberOfTeam
      *
-     * @return string
+     * @return PacksAnSpielBundle\Entity\Team
      */
-    public function getMemberOfTeam()
+    public function getParentTeam()
     {
-        return $this->memberOfTeam;
+        return $this->parentTeam;
     }
 
     /**
-     * Set countPersons
+     * Get memberOfTeam
      *
-     * @param string $countPersons
-     *
-     * @return Team
+     * @return ArrayCollection<PacksAnSpielBundle\Entity\Team>
      */
-    public function setCountPersons($countPersons)
+    public function getChildTeams()
     {
-        $this->countPersons = $countPersons;
+        return $this->childTeams;
+    }
 
-        return $this;
+    /**
+     * Get memberOfTeam
+     *
+     * @return ArrayCollection<PacksAnSpielBundle\Entity\Member>
+     */
+    public function getTeamMembers()
+    {
+        return $this->teamMembers;
+    }
+
+    /**
+     * Get memberOfTeam
+     *
+     * @return ArrayCollection<PacksAnSpielBundle\Entity\Actionlog>
+     */
+    public function getLogEntries()
+    {
+        return $this->logEntries;
+    }
+
+
+    /**
+     * Get countPersons
+     *
+     * @return integer
+     */
+    public function getCountMembers()
+    {
+        return $this->getTeamMembers() ? $this->getTeamMembers()->count() : 0;
     }
 
     /**
      * Get countPersons
      *
-     * @return string
+     * @return integer
      */
-    public function getCountPersons()
+    public function getCountGroups()
     {
-        return $this->countPersons;
+        return $this->getChildTeams()->count();
     }
 
     /**
@@ -143,7 +248,7 @@ class Team
      *
      * @return Team
      */
-    public function setCurrentLevel(\PacksAnSpielBundle\Entity\Level $currentLevel = null)
+    public function setCurrentLevel(Level $currentLevel = null)
     {
         $this->currentLevel = $currentLevel;
 
@@ -158,5 +263,81 @@ class Team
     public function getCurrentLevel()
     {
         return $this->currentLevel;
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function getUsername()
+    {
+        return $this->passcode;
+    }
+
+    public function getPassword()
+    {
+        return $this->passcode;
+    }
+
+    public function getRoles()
+    {
+        if ($this->getStatus() == Team::STATUS_ADMIN) {
+            return array('ROLE_ADMIN');
+        } elseif ($this->getStatus() == Team::STATUS_GAME) {
+            return array('ROLE_GAME');
+        }
+        return array('ROLE_USER');
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->passcode,
+        ));
+    }
+
+    public function __toString()
+    {
+        return $this->username;
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->passcode,
+            ) = unserialize($serialized);
+    }
+
+    /**
+     * Set status
+     *
+     * @param int $status
+     *
+     * @return Team
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

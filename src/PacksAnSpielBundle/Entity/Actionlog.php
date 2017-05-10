@@ -12,26 +12,40 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Actionlog
 {
+
+    const LOGLEVEL_INFO = 1;
+    const LOGLEVEL_WARN = 2;
+    const LOGLEVEL_CRIT = 3;
+
     /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="log_level", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $logLevel;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="log_text", type="string", length=45, nullable=true)
+     * @ORM\Column(name="log_text", type="string", nullable=true)
      */
     private $logText;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="timestamp", type="time", nullable=true)
+     * @ORM\Column(name="timestamp", type="datetime", nullable=true)
      */
     private $timestamp;
 
@@ -56,6 +70,15 @@ class Actionlog
     private $team;
 
 
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set id
@@ -72,13 +95,27 @@ class Actionlog
     }
 
     /**
-     * Get id
+     * Get log level
      *
      * @return integer
      */
-    public function getId()
+    public function getLogLevel()
     {
-        return $this->id;
+        return $this->logLevel;
+    }
+
+    /**
+     * Set log level
+     *
+     * @param integer $id
+     *
+     * @return Actionlog
+     */
+    public function setLogLevel($logLevel)
+    {
+        $this->logLevel = $logLevel;
+
+        return $this;
     }
 
     /**

@@ -3,12 +3,14 @@
 namespace PacksAnSpielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\OneToMany;
 
 /**
  * TeamLevel
  *
  * @ORM\Table(name="team_level", indexes={@ORM\Index(name="fk_team_level_team_idx", columns={"team_id"}), @ORM\Index(name="fk_team_level_level1_idx", columns={"level_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\TeamLevelRepository")
  */
 class TeamLevel
 {
@@ -22,16 +24,16 @@ class TeamLevel
     private $id;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="start_time", type="time", nullable=true)
+     * @ORM\Column(name="start_time", type="integer", nullable=true)
      */
     private $startTime;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="finish_time", type="time", nullable=true)
+     * @ORM\Column(name="finish_time", type="integer", nullable=true)
      */
     private $finishTime;
 
@@ -55,7 +57,12 @@ class TeamLevel
      */
     private $team;
 
-
+    /**
+     * @var Collection
+     *
+     * @OneToMany(targetEntity="TeamLevelGame", mappedBy="teamLevel")
+     */
+    private $teamLevelGames;
 
     /**
      * Get id
@@ -161,5 +168,43 @@ class TeamLevel
     public function getTeam()
     {
         return $this->team;
+    }
+
+
+    /**
+     *
+     * @return Collection<PacksAnSpielBundle\Entity\TeamLevelGame>
+     */
+    public function getTeamLevelGames()
+    {
+        return $this->teamLevelGames;
+    }
+
+    public function getTeamLevelInfo()
+    {
+        $gameSubjectInfoList = [];
+        $gameSubjectInfoList['status'] = 'open';
+        $gameSubjectInfoList['games'] = [];
+        $gameSubjectInfoList['level_duration'] = time() - $this->getStartTime();
+        /* @var TeamLevelGame $teamLevelGame */
+        foreach ($this->getTeamLevelGames() as $teamLevelGame) {
+            $gameSubjectInfo = [];
+            $gameSubjectInfo['game'] = $teamLevelGame->getAssignedGameSubject();
+            if ($teamLevelGame->getFinishTime() != null) {
+                $gameSubjectInfo['status'] = 'done';
+            } else if ($teamLevelGame->getStartTime() != null && $teamLevelGame->getFinishTime() == null) {
+
+                $gameSubjectInfo['status'] = 'running';
+                $gameSubjectInfoList['status'] = 'running';
+                $gameSubjectInfoList['current_game'] = $teamLevelGame->getAssignedGame();
+                $gameSubjectInfoList['current_team_level_game'] = $teamLevelGame;
+
+                $gameSubjectInfoList['game_duration'] = round((time() - $teamLevelGame->getStartTime()) / 60);
+            } else {
+                $gameSubjectInfo['status'] = 'open';
+            }
+            $gameSubjectInfoList['games'][] = $gameSubjectInfo;
+        }
+        return $gameSubjectInfoList;
     }
 }

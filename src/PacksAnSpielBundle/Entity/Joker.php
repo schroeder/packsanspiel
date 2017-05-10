@@ -22,6 +22,12 @@ class Joker
     private $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="created", type="integer", nullable=true)
+     */
+    private $created;
+    /**
      * @var string
      *
      * @ORM\Column(name="jokercode", type="string", length=32, nullable=true)
@@ -36,7 +42,6 @@ class Joker
     private $jokerUsed;
 
 
-
     /**
      * Get id
      *
@@ -45,6 +50,33 @@ class Joker
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get created
+     *
+     * @return integer
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set created
+     *
+     * @param integer $created
+     *
+     * @return Joker
+     */
+    public function setCreated($created = false)
+    {
+        if ($created == false) {
+            $created = time();
+        }
+        $this->created = $created;
+
+        return $this;
     }
 
     /**

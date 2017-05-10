@@ -6,6 +6,8 @@ security:
     providers:
         in_memory:
             memory: ~
+        user_db:
+            entity: { class: PacksAnSpielBundle\Entity\Team, property: passcode }
         fos_userbundle:
             id: fos_user.user_provider.username
 
@@ -25,19 +27,13 @@ security:
 
             logout:       true
             anonymous:    true
-            # activate different ways to authenticate
-
-            # http_basic: ~
-            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
 
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
+        ROLE_GAME:        ROLE_GAME
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     access_control:

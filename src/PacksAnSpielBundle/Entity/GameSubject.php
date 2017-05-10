@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GameSubject
  *
  * @ORM\Table(name="game_subject")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\GameSubjectRepository")
  */
 class GameSubject
 {
@@ -35,6 +35,19 @@ class GameSubject
      */
     private $description;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="done_color", type="string", length=45, nullable=true)
+     */
+    private $doneColor;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="todo_color", type="string", length=45, nullable=true)
+     */
+    private $todoColor;
 
 
     /**
@@ -93,5 +106,58 @@ class GameSubject
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set todo color
+     *
+     * @param string $todoColor
+     *
+     * @return GameSubject
+     */
+    public function setTodoColor($todoColor)
+    {
+        $this->todoColor = $todoColor;
+
+        return $this;
+    }
+
+    /**
+     * Get todoColor
+     *
+     * @return string
+     */
+    public function getTodoColor()
+    {
+        return $this->todoColor;
+    }
+
+    /**
+     * Set done color
+     *
+     * @param string $doneColor
+     *
+     * @return GameSubject
+     */
+    public function setDoneColor($doneColor)
+    {
+        $this->doneColor = $doneColor;
+
+        return $this;
+    }
+
+    /**
+     * Get doneColor
+     *
+     * @return string
+     */
+    public function getDoneColor()
+    {
+        return $this->doneColor;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->name;
     }
 }
