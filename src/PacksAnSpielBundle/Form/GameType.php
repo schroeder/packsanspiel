@@ -5,6 +5,7 @@ namespace PacksAnSpielBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 
 class GameType extends AbstractType
@@ -23,6 +24,10 @@ class GameType extends AbstractType
             ->add('gameSubject', null, array('label' => 'Themenbereich'))
             ->add('parentGame', null, array('label' => 'Spiel ist abgeleitet von Spiel'))
             ->add('level', null, array('label' => 'Level'))
+            ->add('grade', ChoiceType::class, array('label' => 'Stufe', 'choices' => array(
+                'Wölflinge' => 'woe',
+                'Jungpfadfinder' => 'juffi',
+                'Pfadfinder' => 'pfadi', 'Rover' => 'rover')))
             ->add('location', null, array('label' => 'Ort'))
             ->add('group_text_game_start', null, array('label' => 'Hinweistext für die Gruppe beim Spielstart'))
             ->add('group_text_game_question', null, array('label' => 'Frage zum Spielergebnis'))

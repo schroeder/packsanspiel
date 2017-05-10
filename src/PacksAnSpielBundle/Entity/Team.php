@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PacksAnSpielBundle\Entity\Member;
 use PacksAnSpielBundle\Entity\Level;
 use PacksAnSpielBundle\Repository\TeamLevelRepository;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
  * Team
@@ -53,16 +55,12 @@ class Team implements UserInterface, \Serializable
     private $password;
 
     /**
-     * @ManyToOne(targetEntity="Team", inversedBy="childTeams")
-     * @JoinColumn(name="parent_team", referencedColumnName="id")
+     * @var string
+     *
+     * @ORM\Column(name="parent_team", type="string", length=45, nullable=true)
      */
     private $parentTeam;
 
-    /**
-     * @var Collection
-     * One Category has Many Categories.
-     * @OneToMany(targetEntity="Team", mappedBy="parentTeam")
-     */
     private $childTeams;
 
     /**
@@ -71,6 +69,13 @@ class Team implements UserInterface, \Serializable
      * @ORM\Column(name="status", type="integer")
      */
     private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="grade", type="string", length=15, nullable=true)
+     */
+    private $grade;
 
     /**
      * @var PacksAnSpielBundle\Entity\Level
@@ -85,14 +90,14 @@ class Team implements UserInterface, \Serializable
     /**
      * @var Collection
      *
-     * @OneToMany(targetEntity="Member", mappedBy="team")
+     * OneToMany(targetEntity="Member", mappedBy="team")
      */
     private $teamMembers;
 
     /**
      * @var Collection
      *
-     * @OneToMany(targetEntity="Actionlog", mappedBy="team")
+     * @OneToMany(targetEntity="Actionlog", mappedBy="team", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
     private $logEntries;
 
@@ -152,6 +157,30 @@ class Team implements UserInterface, \Serializable
     }
 
     /**
+     * Set grade
+     *
+     * @param string $grade
+     *
+     * @return Game
+     */
+    public function setGrade($grade = null)
+    {
+        $this->grade = $grade;
+
+        return $this;
+    }
+
+    /**
+     * Get grade
+     *
+     * @return string
+     */
+    public function getGrade()
+    {
+        return $this->grade;
+    }
+
+    /**
      * Get memberOfTeam
      *
      * @return PacksAnSpielBundle\Entity\Team
@@ -199,7 +228,7 @@ class Team implements UserInterface, \Serializable
      */
     public function getCountMembers()
     {
-        return $this->getTeamMembers()->count();
+        return $this->getTeamMembers() ? $this->getTeamMembers()->count() : 0;
     }
 
     /**

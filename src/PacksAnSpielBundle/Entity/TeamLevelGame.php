@@ -17,7 +17,7 @@ class TeamLevelGame
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
@@ -55,7 +55,7 @@ class TeamLevelGame
     /**
      * @var \PacksAnSpielBundle\Entity\Game
      *
-     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Game")
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Game", fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="assigned_game", referencedColumnName="id")
      * })

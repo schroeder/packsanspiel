@@ -24,7 +24,7 @@ class Joker
     /**
      * @var integer
      *
-     * @ORM\Column(name="created", type="integer")
+     * @ORM\Column(name="created", type="integer", nullable=true)
      */
     private $created;
     /**

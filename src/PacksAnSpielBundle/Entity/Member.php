@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Member
  *
- * @ORM\Table(name="member", indexes={@ORM\Index(name="fk_member_team1_idx", columns={"team_id"})})
+ * @ORM\Table(name="member")
  * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\MemberRepository")
  */
 class Member
@@ -31,14 +31,14 @@ class Member
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="first_name", type="string", length=45, nullable=true)
+     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
      */
     private $firstName;
 
@@ -47,7 +47,7 @@ class Member
      *
      * Der Stamm
      *
-     * @ORM\Column(name="group", type="string", length=255, nullable=true)
+     * @ORM\Column(name="town", type="string", length=255, nullable=true)
      */
     private $group;
 
@@ -61,12 +61,19 @@ class Member
     private $grade;
 
     /**
+     * @var string
+     *
+     * Das Dorf
+     *
+     * @ORM\Column(name="village", type="string", length=255, nullable=true)
+     */
+    private $village;
+
+    /**
      * @var \PacksAnSpielBundle\Entity\Team
      *
      * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Team")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="team_id", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $team;
 
@@ -210,6 +217,30 @@ class Member
     public function getGrade()
     {
         return $this->grade;
+    }
+
+    /**
+     * Set grade
+     *
+     * @param string $grade
+     *
+     * @return Member
+     */
+    public function setVillage($village)
+    {
+        $this->village = $village;
+
+        return $this;
+    }
+
+    /**
+     * Get grade
+     *
+     * @return string
+     */
+    public function getVillage()
+    {
+        return $this->village;
     }
 
     /**

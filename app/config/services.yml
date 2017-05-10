@@ -6,6 +6,7 @@ parameters:
   packsan.game.logic.class: PacksAnSpielBundle\Game\GameLogic
   packsan.game.logger.class: PacksAnSpielBundle\Game\GameActionLogger
   packsan_admin.menu_listener.class: PacksAnSpielBundle\EventListener\AdminMenuItemListListener
+  packsan_admin.twig_extension.class: PacksAnSpielBundle\Extensions\TwigExtensions
 
 services:
 #  packsan.user.provider:
@@ -22,6 +23,12 @@ services:
   packsan.action.logger:
     class:        %packsan.game.logger.class%
     arguments:     [ "@doctrine.orm.entity_manager" ]
+
+  packsan.twig.extension:
+    class:        %packsan_admin.twig_extension.class%
+    arguments:     [ "@doctrine.orm.entity_manager" ]
+    tags:
+      -  { name: twig.extension }
 
   packsan_admin.menu_listener:
             class: %packsan_admin.menu_listener.class%

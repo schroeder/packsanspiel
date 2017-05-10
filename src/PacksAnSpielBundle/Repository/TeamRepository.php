@@ -128,4 +128,21 @@ class TeamRepository extends EntityRepository implements UserProviderInterface
         return $team;
     }
 
+    public function getCurrentTeamLevelGame($team)
+    {
+        $result = $this->_em->createQuery('SELECT t2.id FROM 
+                PacksAnSpielBundle\Entity\Team team, 
+                PacksAnSpielBundle\Entity\Team t2 
+                WHERE t1.passcode= :passcode 
+                AND t2.passcode=t1.parentTeam
+                AND t1.status > 1
+                AND t2.status > 1')->setParameter('passcode', $passcode)->execute();
+
+        $team->setStatus(Team::STATUS_ACTIVE);
+        $this->_em->persist($team);
+        $this->_em->flush();
+
+        return $team;
+    }
+
 }

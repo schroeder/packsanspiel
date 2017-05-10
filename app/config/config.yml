@@ -136,3 +136,15 @@ stfalcon_tinymce:
              plugins: ["code, link, preview, image, paste"]
              menubar: false
              toolbar1: "bold italic underline | undo redo | link unlink removeformat | insertfile cleanup |preview  | bullist numlist outdent indent | link image | preview"
+
+
+# Nelmio CORS Configuration
+nelmio_cors:
+    defaults:
+        allow_credentials: false
+        allow_origin: ['*']
+        allow_headers: ['*']
+        allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+        max_age: 3600
+        hosts: []
+        origin_regex: false
