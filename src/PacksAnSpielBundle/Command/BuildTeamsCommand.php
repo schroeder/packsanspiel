@@ -288,7 +288,7 @@ class BuildTeamsCommand extends ContainerAwareCommand
             $pos = 50;
             $group = "";
             $grade = "";
-            $firstNames = "";
+            $firstNames = [];
             /* @var Member $member */
             if ($memberList) {
                 foreach ($memberList->toArray() as $member) {
@@ -305,7 +305,7 @@ class BuildTeamsCommand extends ContainerAwareCommand
                         $group = $member->getGroup();
                     }
                     $pdf->Text(30, $pos, utf8_decode($member->getFullName()));
-                    $firstNames .= utf8_decode($member->getFirstName()) . ", ";
+                    $firstNames[] = utf8_decode($member->getFirstName());
 
                     $pos += 6;
 
@@ -319,7 +319,10 @@ class BuildTeamsCommand extends ContainerAwareCommand
                 $pdf->SetFontSize(14);
             }
 
-            $jokerText = $this->getContainer()->get('templating')->render('PacksAnSpielBundle::register/welcome.txt.twig', ['first_names' => $firstNames, "grade" => $gameLogic->getGradename($grade)]);
+            $firstNamesString = join(' und ', array_filter(array_merge(array(join(', ', array_slice($firstNames, 0, -1))), array_slice($firstNames, -1)), 'strlen'));
+
+
+            $jokerText = $this->getContainer()->get('templating')->render('PacksAnSpielBundle::register/welcome.txt.twig', ['first_names' => $firstNamesString, "grade" => $gameLogic->getGradename($grade)]);
 
             $pdf->SetXY(20, 110);
             $pdf->SetFontSize(9);
