@@ -110,7 +110,7 @@ class ImportGamesCommand extends ContainerAwareCommand
                             //$location = $locationRepository->findById(1);
                             //$game->setLocation($data[10]);
                         }
-                        $game->setStatus(1);
+                        $game->setStatus(Game::STATUS_INACTIVE);
                         $game->setGrade($grade);
                         $game->setPasscode(md5($data[0]));
                         $game->setGameAnswer($data[7]);

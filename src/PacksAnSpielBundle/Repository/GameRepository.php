@@ -41,22 +41,34 @@ class GameRepository extends EntityRepository
                             AND g.id NOT IN (
                                 SELECT team_level_game.assigned_game 
                                 FROM team_level_game, team_level 
-                                WHERE team_level.id=team_level_game.team_level_id 
+                                WHERE team_level.id=team_level_game.team_level_id
+                                AND assigned_game IS NOT NULL
                                 AND team_level.team_id=" . $team->getId() . ") 
                             AND g.id NOT IN (
                                 SELECT team_level_game.assigned_game 
                                 FROM team_level_game 
                                 WHERE team_level_game.start_time IS NOT NULL 
+                                AND assigned_game IS NOT NULL
                                 AND team_level_game.finish_time IS NULL) 
                             LIMIT 1";
         $query = $this->_em->createNativeQuery($queryString, $rsm);
         $game = $query->execute();
+        if ($game && is_array($game) && count($game) == 1) {
+            return $game[0];
 
-        if (!$game) {
-
+        } else {
+            $queryString = "SELECT g.id FROM game g 
+                            WHERE g.status>0 
+                            AND g.grade='" . $grade . "' 
+                            AND g.level_id=" . $level->getId() . " 
+                            LIMIT 1";
+            $query = $this->_em->createNativeQuery($queryString, $rsm);
+            $game = $query->execute();
+            if ($game && is_array($game) && count($game) == 1) {
+                return $game[0];
+            }
         }
-
-        return $game;
+        return false;
     }
 
     public function getCurrentGame(Team $team)
