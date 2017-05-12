@@ -21,7 +21,7 @@ class GameLogic
         $this->em = $entityManager;
     }
 
-    function initializeFirstLevel(Team $team)
+    function initializeFirstLevel(Team $team, $preInit = false)
     {
         /* @var GameSubjectRepository $repository */
         $repository = $this->em->getRepository("PacksAnSpielBundle:GameSubject");
@@ -36,7 +36,9 @@ class GameLogic
 
         $teamLevel = new TeamLevel();
         $teamLevel->setTeam($team);
-        $teamLevel->setStartTime(GameLogic::now());
+        if (!$preInit) {
+            $teamLevel->setStartTime(GameLogic::now());
+        }
         $teamLevel->setLevel($level);
 
         $this->em->persist($teamLevel);
@@ -72,6 +74,24 @@ class GameLogic
             return $result[0];
         }
         return false;
+    }
+
+    public function getGradename($grade)
+    {
+        switch ($grade) {
+            case "w":
+                return "Wölfling";
+            case "j":
+                return "Jungpfadfinder";
+            case "p":
+                return "Pfadfinder";
+            case "r":
+                return "Rover";
+            case "l":
+                return "Leiter";
+            case "a":
+                return "Spielleiter";
+        }
     }
 
     static public function now()

@@ -90,7 +90,7 @@ class Team implements UserInterface, \Serializable
     /**
      * @var Collection
      *
-     * OneToMany(targetEntity="Member", mappedBy="team")
+     * @OneToMany(targetEntity="Member", mappedBy="team", fetch="EAGER")
      */
     private $teamMembers;
 

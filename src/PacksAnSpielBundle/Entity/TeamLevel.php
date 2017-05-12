@@ -192,7 +192,7 @@ class TeamLevel
             $gameSubjectInfo['game'] = $teamLevelGame->getAssignedGameSubject();
             if ($teamLevelGame->getFinishTime() != null) {
                 $gameSubjectInfo['status'] = 'done';
-            } else if ($teamLevelGame->getStartTime() != null && $teamLevelGame->getFinishTime() == null) {
+            } else if ($teamLevelGame->getStartTime() != null && $teamLevelGame->getFinishTime() == null && $teamLevelGame->getAssignedGame() != null) {
 
                 $gameSubjectInfo['status'] = 'running';
                 $gameSubjectInfoList['status'] = 'running';
