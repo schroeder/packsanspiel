@@ -4,7 +4,9 @@
     <div id="playground">
         <div class="jumbotron">
             <div class="panel panel-warning">
-                <div class="panel-heading"><h3 class="panel-title">{{ game.name }}</h3></div>
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ game.name }}</h3>
+                </div>
                 <div class="panel-body">
                     <div id="main">
                         <div id="outdiv">
@@ -17,11 +19,16 @@
                                 <p>Du wartest auf die Teams:</p>
                                 <ul>
                                     {% for team in teams %}
-                                        <li>{{ team.id }} ({{ team.grade }})</li>
+                                        <li>{{ team.id }} ({{ team.grade }}) mit
+                                            {% for member in team.teammembers %}
+                                                {{ member.fullname }},
+                                            {% endfor %}
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
                             <a href="/gameadmin" class="btn btn-info" role="button">Aktualisieren</a>
+                            <a href="/login" class="btn btn-warning pull-right" role="button">Abbrechen</a>
                         </div>
                     </div>
                     <canvas id="qr-canvas"></canvas>
