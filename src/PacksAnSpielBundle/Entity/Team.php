@@ -305,7 +305,9 @@ class Team implements UserInterface, \Serializable
 
     public function __toString()
     {
-        return $this->username;
+        var_dump($this->passcode);
+        die();
+        return $this->passcode;
     }
 
     /** @see \Serializable::unserialize() */

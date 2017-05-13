@@ -87,6 +87,37 @@ class GameRepository extends EntityRepository
         return false;
     }
 
+    public function getCurrentTeams($gameId)
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('PacksAnSpielBundle:Game', 'g');
+        $rsm->addEntityResult('PacksAnSpielBundle:TeamLevelGame', 'tlg');
+        $rsm->addEntityResult('PacksAnSpielBundle:TeamLevel', 'tl');
+        $rsm->addEntityResult('PacksAnSpielBundle:Team', 't');
+        $rsm->addFieldResult('t', 'id', 'id');
+        $rsm->addFieldResult('t', 'passcode', 'passcode');
+        $rsm->addFieldResult('t', 'grade', 'grade');
+
+        $queryString = "SELECT t.id, t.passcode, t.grade FROM game g 
+                        JOIN team_level_game tlg 
+                            ON tlg.assigned_game = g.id 
+                        JOIN team_level tl 
+                            ON tlg.team_level_id=tl.id 
+                        JOIN team t 
+                            ON tl.team_id=t.id 
+                        WHERE tlg.finish_time = NULL AND g.id=" . $gameId;
+
+        $query = $this->_em->createNativeQuery($queryString, $rsm);
+        $result = $query->execute();
+        $teamList = [];
+        if ($result) {
+            $teamList = $result;
+        }
+
+        return $teamList;
+    }
+
+
     public function countActiveGames($id)
     {
         return $this->getEntityManager()

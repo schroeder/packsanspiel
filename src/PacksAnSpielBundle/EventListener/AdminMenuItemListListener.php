@@ -22,6 +22,7 @@ class AdminMenuItemListListener
     protected function getMenu(Request $request)
     {
         $menuItems = array(
+            $menuItem00 = new MenuItemModel('Log-Buch', 'Log-Buch', 'todo', array(/* options */), 'iconclasses fa fa-film'),
             $menuItem01 = new MenuItemModel('Punktestand', 'Punktestand', 'todo', array(/* options */), 'iconclasses fa fa-send'),
             $menuItem02 = new MenuItemModel('Gruppen', 'Gruppen', 'todo', array(/* options */), 'iconclasses fa fa-group'),
             $menuItem03 = new MenuItemModel('Spiele', 'Spiele', 'todo', array(/* options */), 'iconclasses fa  fa-futbol-o'),
