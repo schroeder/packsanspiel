@@ -105,7 +105,7 @@ class GameRepository extends EntityRepository
                             ON tlg.team_level_id=tl.id 
                         JOIN team t 
                             ON tl.team_id=t.id 
-                        WHERE tlg.finish_time = NULL AND g.id=" . $gameId;
+                        WHERE tlg.finish_time IS NULL AND g.id=" . $gameId;
 
         $query = $this->_em->createNativeQuery($queryString, $rsm);
         $result = $query->execute();
