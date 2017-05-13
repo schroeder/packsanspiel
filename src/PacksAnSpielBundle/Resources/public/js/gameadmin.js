@@ -43,21 +43,7 @@ function captureToCanvas() {
 function codeReadOnGameAdminPage(a) {
     if (isValidMD5(a)) {
         console.log("[OnLogin] Found code: " + a);
-        url = window.location.href; //"/PacksAnSpiel/web/app_dev.php/gameadmin";
-
-        var jqxhr = $.post(url, {team: a}, function () {
-            console.log("success");
-        })
-            .done(function () {
-                console.log("second success");
-            })
-            .fail(function () {
-                console.log("error");
-            })
-            .always(function () {
-                console.log("finished");
-            });
-
+        window.location = "/gameadmin/check?qr=" + a;
     }
     else {
         showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");

@@ -10,6 +10,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use PacksAnSpielBundle\Repository\GameRepository;
 use PacksAnSpielBundle\Entity\Game;
+use PacksAnSpielBundle\Entity\Team;
 
 class ImportGamesCommand extends ContainerAwareCommand
 {
@@ -110,12 +111,19 @@ class ImportGamesCommand extends ContainerAwareCommand
                             //$location = $locationRepository->findById(1);
                             //$game->setLocation($data[10]);
                         }
-                        $game->setStatus(1);
+                        $game->setStatus(Game::STATUS_INACTIVE);
                         $game->setGrade($grade);
                         $game->setPasscode(md5($data[0]));
                         $game->setGameAnswer($data[7]);
 
                         $em->persist($game);
+
+                        $team = new Team();
+                        $team->setPasscode(md5($data[0]));
+                        $team->setStatus(Team::STATUS_GAME);
+                        $team->setGrade('g');
+                        $em->persist($team);
+
                         $em->flush();
                     }
                 }

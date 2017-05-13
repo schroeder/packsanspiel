@@ -50,7 +50,7 @@ body {
     display: none;
 }
 
-#login_result {
+#login_result, #gameadmin_result {
     font-size: 75px;
     text-align: center;
 }
@@ -115,5 +115,10 @@ body {
     margin: 5px;
     font-size: 31px;
     font-weight: 200;
+}
+
+#gameadmin_result a.btn {
+    font-size: 44px;
+    min-width: 200px;
 }
 
