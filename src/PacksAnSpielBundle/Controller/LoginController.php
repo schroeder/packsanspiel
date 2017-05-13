@@ -67,7 +67,7 @@ class LoginController extends Controller
                     $repo = $em->getRepository("PacksAnSpielBundle:Member");
                     /* @var Member $member */
                     $member = $repo->findAdminByPasscode($memberId);
-                    if ($member && $member->getGrade() == "admin") {
+                    if ($member && $member->getGrade() == "a") {
 
                         $team = $member->getTeam();
                         if ($team && in_array("ROLE_ADMIN", $team->getRoles())) {
@@ -99,12 +99,11 @@ class LoginController extends Controller
                     $game = $gameRepo->findGameByPasscode($gameId);
 
                     if ($game) {
-                        $gameAdminPasscode = $this->getParameter('packsan_game_admin_passcode');
 
                         /* @var TeamRepository $teamRepo */
                         $teamRepo = $em->getRepository("PacksAnSpielBundle:Team");
 
-                        $team = $teamRepo->findOneByPasscode($gameAdminPasscode);
+                        $team = $teamRepo->findOneByPasscode($game->getPasscode());
                         if ($team && in_array("ROLE_GAME", $team->getRoles())) {
                             $token = new UsernamePasswordToken($team, null, "main", $team->getRoles());
 
@@ -141,12 +140,13 @@ class LoginController extends Controller
                         $this->get('session')->set('member_list', $memberId);
                         return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
                     }
+
+                    /* @var Team $team */
                     $team = $member->getTeam();
 
-                    if ($team) {
+                    if ($team && $team->getParentTeam() != null) {
                         /* @var TeamRepository $repo */
                         $repo = $em->getRepository("PacksAnSpielBundle:Team");
-                        /* @var Team $team */
                         $team = $repo->findLeadingGroup($team->getPasscode());
                     }
 

@@ -43,9 +43,9 @@ class Actionlog
     private $logText;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="timestamp", type="datetime", nullable=true)
+     * @ORM\Column(name="timestamp", type="integer", nullable=true)
      */
     private $timestamp;
 

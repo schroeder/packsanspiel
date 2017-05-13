@@ -10,7 +10,18 @@
                         <div id="outdiv">
                         </div>
                         <div id="login_result">
-                            ZUM BEWERTEN KARTE DER GRUPPE EINSCANNEN!
+                            ZUM BEWERTEN KARTE EINES TEILNEHMERS EINSCANNEN!
+                        </div>
+                        <div>
+                            {% if teams %}
+                                <p>Du wartest auf die Teams:</p>
+                                <ul>
+                                    {% for team in teams %}
+                                        <li>{{ team.id }} ({{ team.grade }})</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <a href="/gameadmin" class="btn btn-info" role="button">Aktualisieren</a>
                         </div>
                     </div>
                     <canvas id="qr-canvas"></canvas>
