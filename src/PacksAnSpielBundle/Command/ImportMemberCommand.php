@@ -28,25 +28,15 @@ class ImportMemberCommand extends ContainerAwareCommand
                 InputOption::VALUE_REQUIRED,
                 'File to import',
                 false
-            )->addOption(
-                'rebuild-teams',
-                'r',
-                InputOption::VALUE_NONE,
-                '(Re)build the teams'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $file = $input->getOption('file');
-        $rebuildTeams = $input->getOption('rebuild-teams');
 
         $fs = new Filesystem();
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
-
-        if ($rebuildTeams) {
-            $output->writeln("<fg=yellow>Teams will be rebuild!</fg=yellow>");
-        }
 
         $output->writeln('Importing file ' . $file);
 
@@ -69,11 +59,11 @@ class ImportMemberCommand extends ContainerAwareCommand
                         $member = $memberRepository->findOneByPasscode($data[14]);
 
                         if (!$member) {
-                            $output->writeln('Importing member ' . $data[14]);
+                            $output->writeln('<fg=yellow>Importing member ' . $data[14] . '</fg=yellow>');
                             $member = new Member();
                             $member->setPasscode($data[14]);
                         } else {
-                            $output->writeln('Updating member ' . $data[14]);
+                            $output->writeln('<fg=blue>Updating member ' . $data[14] . '</fg=blue>');
                         }
 
                         $member->setName($data[2]);
@@ -127,66 +117,10 @@ class ImportMemberCommand extends ContainerAwareCommand
                 }
                 fclose($handle);
 
-                $teamListPool = [];
-
-                // TODO: Form team
-                foreach ($teamBuilderMemberList as $village => $villageList) {
-                    $output->writeln('Building teams for village ' . $village);
-                    foreach ($villageList as $group => $groupList) {
-                        $output->writeln('Building teams for group ' . $group);
-
-                        foreach ($groupList as $grade => $groupMember) {
-
-                            if (in_array($grade, ['w', 'j', 'p', 'r'])) {
-                                $output->writeln('Building teams for grade ' . $grade);
-
-                                $teamList = array_chunk($groupMember, 4);
-                                if (count($teamList[count($teamList) - 1]) < 3 && count($teamList) >= 3) {
-                                    foreach ($teamList[count($teamList) - 1] as $mid => $member) {
-                                        $teamList[$mid][] = $member;
-                                    }
-                                    unset($teamList[count($teamList) - 1]);
-                                }
-                                foreach ($teamList as $key => $memberList) {
-                                    if (count($memberList) < 3) {
-                                        if (!array_key_exists($grade, $teamListPool)) {
-                                            $teamListPool[$grade] = [];
-                                        }
-                                        $teamListPool[$grade][] = $teamList[$key];
-                                        unset($teamList[$key]);
-                                    } else {
-                                        $team = new Team();
-                                        $team->setGrade($grade);
-                                        $team->setStatus(0);
-                                        $team->setPasscode(md5(GameLogic::now() + rand(0, 299)));
-                                        $em->persist($team);
-                                        $em->flush();
-
-                                        foreach ($memberList as $member) {
-                                            $member->setTeam($team);
-                                            $em->persist($member);
-                                            $em->flush();
-                                        }
-
-                                        $gameLogic = $this->getContainer()->get('packsan.game.logic');
-                                        $gameLogic->initializeFirstLevel($team);
-                                    }
-
-                                }
-
-                            }
-                        }
-                        var_dump($teamListPool);
-                    }
-                }
-
-                // Assign first game
-
-
             }
         } catch (IOExceptionInterface $e) {
             $output->writeln("<fg=red>Cannot read file!</fg=red>");
         }
-        $output->write("<fg=green>Done!</fg=green>");
+        $output->writeln("<fg=green>Done!</fg=green>");
     }
 }

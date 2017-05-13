@@ -87,7 +87,7 @@ class AdminController extends Controller
         $member = $memberRepo->find($id);
 
 
-        $qrCodeMessage = 'member:' . $member->getPasscode();
+        $qrCodeMessage = $member->getPasscode();
 
         $qrCode = new QrCode();
         $qrCode->setText($qrCodeMessage);
@@ -105,7 +105,7 @@ class AdminController extends Controller
 
         $pdf->SetFont('Arial', '', 12);
         $pdf->Text(15, 36, "Name:");
-        $pdf->Text(45, 36, $member->getFullName());
+        $pdf->Text(45, 36, utf8_decode($member->getFullName()));
         $pdf->Text(15, 46, "Passcode:");
         $pdf->Text(45, 46, $member->getPasscode());
         $pdf->Text(15, 56, "Team:");
