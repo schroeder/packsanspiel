@@ -89,6 +89,10 @@ class DefaultController extends Controller
      */
     public function checkResultAction(Request $request)
     {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            return new RedirectResponse($this->generateUrl('login'));
+        }
+
         /* @var Team $currentTeam */
         $currentTeam = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -116,16 +120,15 @@ class DefaultController extends Controller
         $message = false;
         if ($solution) {
             if ($solution == $gameSubjectInfoList['current_game']->getGameAnswer()) {
-                echo "correct!";
                 $em = $doctrine->getEntityManager();
                 /* @var TeamLevelGame $teamLevelGame */
                 $teamLevelGame = $gameSubjectInfoList['current_team_level_game'];
                 $teamLevelGame->setFinishTime(GameLogic::now());
-                $teamLevelGame->setPlayedPoints(100);
+                $teamLevelGame->setPlayedPoints(GameLogic::getPlayedPoints($currentTeam->getCurrentLevel()->getNumber()));
                 $em->persist($teamLevelGame);
                 $em->flush();
 
-                die();
+                return new RedirectResponse($this->generateUrl('packsan'));
             } else {
                 $message = "Die Antwort war leider falsch!";
             }

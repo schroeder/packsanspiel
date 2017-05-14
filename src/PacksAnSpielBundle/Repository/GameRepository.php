@@ -131,4 +131,6 @@ class GameRepository extends EntityRepository
             ->createQuery('SELECT COUNT(g.assignedGame) AS activeGames FROM PacksAnSpielBundle\Entity\TeamLevelGame g WHERE g.assignedGame=' . $id . ' AND g.startTime IS NOT NULL AND g.finishTime IS NOT NULL')
             ->getSingleScalarResult();
     }
+
+
 }
