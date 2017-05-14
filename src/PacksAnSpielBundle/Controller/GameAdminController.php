@@ -201,7 +201,7 @@ class GameAdminController extends Controller
         $teamLevelGame = $gameSubjectInfoList['current_team_level_game'];
 
         $teamLevelGame->setFinishTime(GameLogic::now());
-        $teamLevelGame->getPlayedPoints(100);
+        $teamLevelGame->setPlayedPoints(GameLogic::getPlayedPoints($currentTeamLevel->getNumber()));
         $em->persist($teamLevelGame);
         $em->flush();
         $session->remove('team_id');

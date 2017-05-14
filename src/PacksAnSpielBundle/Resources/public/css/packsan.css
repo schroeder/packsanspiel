@@ -122,3 +122,8 @@ body {
     min-width: 200px;
 }
 
+.btn-group-justified > span.btn {
+    display: block;
+    height: 50%;
+    float: left;
+}
