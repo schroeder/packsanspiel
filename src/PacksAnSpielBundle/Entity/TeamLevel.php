@@ -186,12 +186,14 @@ class TeamLevel
         $gameSubjectInfoList['status'] = 'open';
         $gameSubjectInfoList['games'] = [];
         $gameSubjectInfoList['level_duration'] = time() - $this->getStartTime();
+        $countWonGames = 0;
         /* @var TeamLevelGame $teamLevelGame */
         foreach ($this->getTeamLevelGames() as $teamLevelGame) {
             $gameSubjectInfo = [];
             $gameSubjectInfo['game'] = $teamLevelGame->getAssignedGameSubject();
             if ($teamLevelGame->getFinishTime() != null) {
                 $gameSubjectInfo['status'] = 'done';
+                $countWonGames++;
             } else if ($teamLevelGame->getStartTime() != null && $teamLevelGame->getFinishTime() == null && $teamLevelGame->getAssignedGame() != null) {
 
                 $gameSubjectInfo['status'] = 'running';
@@ -204,6 +206,7 @@ class TeamLevel
                 $gameSubjectInfo['status'] = 'open';
             }
             $gameSubjectInfoList['games'][] = $gameSubjectInfo;
+            $gameSubjectInfoList['count_games_won'] = $countWonGames;
         }
         return $gameSubjectInfoList;
     }

@@ -45,3 +45,15 @@ $(".game-subject").click(function () {
      });
      */
 });
+
+
+function codeReadOnLevelJumpPage(a) {
+    if (isValidMD5(a)) {
+        console.log("[OnLevelJump] Found code: " + a);
+        window.location = "/play/jumplevel?qr=" + a;
+    }
+    else {
+        showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
+        setTimeout(setDefaultText, 3000);
+    }
+}
