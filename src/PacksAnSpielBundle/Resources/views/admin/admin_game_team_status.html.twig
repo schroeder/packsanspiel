@@ -33,6 +33,11 @@
                                     aria-label="Rendering engine: activate to sort column descending"
                                     style="width: 296px;">Spiel ID
                                 </th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-sort="ascending"
+                                    aria-label="Rendering engine: activate to sort column descending"
+                                    style="width: 296px;">Spiel Nr
+                                </th>
                                 <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                     aria-sort="ascending"
                                     aria-label="Browser: activate to sort column ascending" style="width: 361px;">
@@ -74,6 +79,7 @@
                             {% for info in game_team_list %}
                                 <tr role="row"
                                     class="{% if loop.index is divisibleby(2) %}even{% else %}odd{% endif %}">
+                                    <td class="sorting_1">{{ info.game_id }}</td>
                                     <td class="sorting_1">{{ info.identifier }}</td>
                                     <td>{{ info.level_id }}</td>
                                     <td>{{ info.name }}</td>
@@ -95,6 +101,7 @@
                             <tfoot>
                             <tr>
                                 <th>Spiel ID</th>
+                                <th>Spiel Nr</th>
                                 <th>Level</th>
                                 <th>Name</th>
                                 <th>Stufe</th>

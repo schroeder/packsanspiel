@@ -258,20 +258,21 @@ class AdminController extends Controller
     {
         $conn = $this->get('database_connection');
 
-        $queryString = "SELECT g.id, t.id as team_id, g.level_id, g.identifier, g.name, g.grade, 
+        $queryString = "SELECT g.id as game_id, t.id as team_id, g.level_id, g.identifier, g.name, g.grade, 
                             g.duration AS planned_duration, 
-                            UNIX_TIMESTAMP()-tlg.start_time AS game_duration, 
-                            UNIX_TIMESTAMP()-tl.start_time AS level_duration  
+                            (UNIX_TIMESTAMP()-tlg.start_time)/60 AS game_duration, 
+                            (UNIX_TIMESTAMP()-tl.start_time)/60 AS level_duration  
                         FROM game g
                         LEFT JOIN team_level_game tlg 
                             ON g.id=tlg.assigned_game 
                         LEFT JOIN team_level tl 
                             ON tlg.team_level_id=tl.id 
                         LEFT JOIN team t
-                            ON tl.team_id=t.id";
+                            ON tl.team_id=t.id
+                        WHERE tlg.finish_time IS NULL";
 
         if ($all) {
-            $queryString .= " WHERE t.id IS NOT NULL";
+            $queryString .= " AND t.id IS NOT NULL";
         }
         $result = $conn->executeQuery($queryString);
         $teamGameList = $result->fetchAll();
