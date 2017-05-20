@@ -125,7 +125,7 @@ class LoginController extends Controller
                         }
                     } else {
                         $logger->logAction("Failed admin login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_CRIT);
-                        $errorMessage = "Den Teilnehmer kenne ich leider nicht!";
+                        $errorMessage = "Das Spiel kenne ich leider nicht!";
                     }
                     break;
                 case 'joker':
@@ -138,7 +138,7 @@ class LoginController extends Controller
                     $member = $repo->findOneByPasscode($memberId);
                     if (!$member) {
                         $this->get('session')->set('member_list', $memberId);
-                        return new RedirectResponse($this->generateUrl('get_register') . "?action=init");
+                        return new RedirectResponse($this->generateUrl('login'));
                     }
 
                     /* @var Team $team */

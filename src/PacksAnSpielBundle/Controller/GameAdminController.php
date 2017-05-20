@@ -33,6 +33,11 @@ class GameAdminController extends Controller
             return new RedirectResponse($this->generateUrl('login'));
         }
 
+
+        /*
+         * TODO: forward to message if there is one for the game
+         * */
+
         $em = $this->getDoctrine();
 
         /* @var Session $session */
@@ -201,7 +206,7 @@ class GameAdminController extends Controller
         $teamLevelGame = $gameSubjectInfoList['current_team_level_game'];
 
         $teamLevelGame->setFinishTime(GameLogic::now());
-        $teamLevelGame->getPlayedPoints(100);
+        $teamLevelGame->setPlayedPoints(GameLogic::getPlayedPoints($currentTeamLevel->getLevel()->getNumber()));
         $em->persist($teamLevelGame);
         $em->flush();
         $session->remove('team_id');

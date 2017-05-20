@@ -19,10 +19,11 @@
                                         style="background-color: {{ item.game.todocolor }};"
                                         id="game-subject_{{ item.game.id }}">{{ item.game.name }}</button>
                             {% elseif item.status == 'done' %}
-                                <button type="button"
-                                        class="btn btn-default jumbotron game-subject game-subject{{ item.game.id }}"
-                                        style="background-color: {{ item.game.donecolor }};"
-                                        id="game-subject_{{ item.game.id }}">{{ item.game.name }}</button>
+                                <span class="btn btn-default jumbotron game-subject game-subject{{ item.game.id }}"
+                                      style="background-color: {{ item.game.donecolor }};"
+                                      id="game-subject_{{ item.game.id }}">{{ item.game.name }}
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                </span>
                             {% endif %}
                         {% endfor %}
                     </div>
