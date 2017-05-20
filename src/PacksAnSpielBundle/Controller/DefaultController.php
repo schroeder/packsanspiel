@@ -45,11 +45,25 @@ class DefaultController extends Controller
         /* @var Team $currentTeam */
         $currentTeam = $teamRepository->find($currentTeam->getId());
 
+        /*
+         * TODO: forward to message if there is one for the group
+         * */
+
         if ($currentTeam->getCurrentLevel() != null) {
             /* @var TeamLevel $currentTeamLevel */
             $currentTeamLevel = $teamLevelRepository->getCurrentTeamLevel($currentTeam, $currentTeam->getCurrentLevel());
 
             $gameSubjectInfoList = $currentTeamLevel->getTeamLevelInfo();
+            $errorMessage = false;
+
+            /*
+             * TODO: if two games played: Join with other team
+             * */
+            if ($gameSubjectInfoList['count_games_won'] >= 2) {
+                return $this->render('PacksAnSpielBundle::default/jump_level.html.twig',
+                    array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'error_message' => $errorMessage));
+
+            }
 
             if (isset($gameSubjectInfoList['current_game'])) {
 
@@ -87,8 +101,13 @@ class DefaultController extends Controller
     /**
      * @Route("/check_result", name="check_result")
      */
-    public function checkResultAction(Request $request)
+    public
+    function checkResultAction(Request $request)
     {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            return new RedirectResponse($this->generateUrl('login'));
+        }
+
         /* @var Team $currentTeam */
         $currentTeam = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -116,16 +135,15 @@ class DefaultController extends Controller
         $message = false;
         if ($solution) {
             if ($solution == $gameSubjectInfoList['current_game']->getGameAnswer()) {
-                echo "correct!";
                 $em = $doctrine->getEntityManager();
                 /* @var TeamLevelGame $teamLevelGame */
                 $teamLevelGame = $gameSubjectInfoList['current_team_level_game'];
                 $teamLevelGame->setFinishTime(GameLogic::now());
-                $teamLevelGame->setPlayedPoints(100);
+                $teamLevelGame->setPlayedPoints(GameLogic::getPlayedPoints($currentTeam->getCurrentLevel()->getNumber()));
                 $em->persist($teamLevelGame);
                 $em->flush();
 
-                die();
+                return new RedirectResponse($this->generateUrl('packsan'));
             } else {
                 $message = "Die Antwort war leider falsch!";
             }

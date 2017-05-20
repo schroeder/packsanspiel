@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use PacksAnSpielBundle\Repository\MemberRepository;
 use PacksAnSpielBundle\Entity\Member;
 use PacksAnSpielBundle\Repository\TeamRepository;
+use PacksAnSpielBundle\Repository\GameRepository;
 use PacksAnSpielBundle\Entity\Team;
 use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 use Endroid\QrCode\QrCode;
@@ -68,6 +69,44 @@ class AdminController extends Controller
             ]
         );
     }
+
+    /**
+     * @Route("/admin/game_team_status", name="admingameteamstatus")
+     */
+    public function listGameTeamStatusAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            return new RedirectResponse($this->generateUrl('login'));
+        }
+        //$paginator = $this->get('knp_paginator');
+
+        //$page = $request->query->getInt('page', 1);
+        //$limit = $request->query->getInt('limit', 10);
+
+
+        $em = $this->getDoctrine();
+
+        $teamList = [];
+
+        /* @var GameRepository $gameRepository */
+        $gameRepository = $em->getRepository("PacksAnSpielBundle:Game");
+
+        $fullTeamGameList = $this->getCurrentGameStatusList(true);
+
+        /* $teamList = $paginator->paginate(
+             $fullTeamGameList,
+             $page
+             $limit
+         );*/
+        return $this->render('PacksAnSpielBundle::admin/admin_game_team_status.html.twig', [
+                "game_team_list" => $fullTeamGameList,
+                /*"page" => $page,
+                "limit" => $limit,*/
+                "total_count" => count($fullTeamGameList)
+            ]
+        );
+    }
+
 
     /**
      * @Route("/admin/generate_member_passcode/{id}", name="admin_generate_member_passcode", requirements={"id" = "\d+"})
@@ -213,5 +252,32 @@ class AdminController extends Controller
 
         return new Response($pdf->Output(), 200, array(
             'Content-Type' => 'application/pdf'));
+    }
+
+    private function getCurrentGameStatusList($all = false)
+    {
+        $conn = $this->get('database_connection');
+
+        $queryString = "SELECT g.id as game_id, t.id as team_id, g.level_id, g.identifier, g.name, g.grade, 
+                            g.duration AS planned_duration, 
+                            (UNIX_TIMESTAMP()-tlg.start_time)/60 AS game_duration, 
+                            (UNIX_TIMESTAMP()-tl.start_time)/60 AS level_duration  
+                        FROM game g
+                        LEFT JOIN team_level_game tlg 
+                            ON g.id=tlg.assigned_game 
+                        LEFT JOIN team_level tl 
+                            ON tlg.team_level_id=tl.id 
+                        LEFT JOIN team t
+                            ON tl.team_id=t.id
+                        WHERE tlg.finish_time IS NULL";
+
+        if ($all) {
+            $queryString .= " AND t.id IS NOT NULL";
+        }
+        $result = $conn->executeQuery($queryString);
+        $teamGameList = $result->fetchAll();
+
+        return $teamGameList;
+
     }
 }

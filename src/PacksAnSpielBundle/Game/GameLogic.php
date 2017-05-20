@@ -64,6 +64,11 @@ class GameLogic
         // TODO
     }
 
+    static public function getPlayedPoints($level = 1)
+    {
+        return rand(80, 100) * $level;
+    }
+
     public function getLevel($number = 1)
     {
         /* @var GameSubjectRepository $repository */
