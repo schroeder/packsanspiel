@@ -30,7 +30,7 @@ class AdminMenuItemListListener
             $menuItem05 = new MenuItemModel('AnzeigeStandLevel', 'Anzeige Stand Level', 'todo', array(/* options */), 'iconclasses fa fa-flag'),
             $menuItem06 = new MenuItemModel('PasscodeGenerieren', 'Passcode generieren', 'todo', array(/* options */), 'iconclasses fa fa-qrcode')
         );
-        $menuItem03->addChild(new MenuItemModel('MitgliederListe', 'Liste', 'todo', array(/* options */), 'iconclasses fa fa-list'));
+        $menuItem03->addChild(new MenuItemModel('MitgliederListe', 'Liste', 'group_index', array(/* options */), 'iconclasses fa fa-list'));
         $menuItem03->addChild(new MenuItemModel('MitgliederVerwalten', 'Mitglieder verwalten', 'todo', array(/* options */), 'iconclasses fa fa-edit'));
         $menuItem03->addChild(new MenuItemModel('MitgliederNachrichtSchicken', 'Nachricht schicken', 'todo', array(/* options */), 'iconclasses fa fa-commenting'));
         $menuItem04->addChild(new MenuItemModel('SpieleListe', 'Liste', 'game_index', array(/* options */), 'iconclasses fa fa-list'));
