@@ -33,13 +33,13 @@ Symfony
 * run 
     composer install
 * run
-    php app/console assetic:dump --env=prod
+    php bin/console assetic:dump --env=prod
 * run
-    php app/console assets:install --symlink --relative web --env=prod
+    php bin/console assets:install --symlink --relative web --env=prod
 * run
-    php app/console doctrine:schema:update --force --env=prod
+    php bin/console doctrine:schema:update --force --env=prod
 * run
-    php app/console cache:clear --env=prod
+    php bin/console cache:clear --env=prod
 
 Test
 ----
