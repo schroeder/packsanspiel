@@ -84,11 +84,10 @@ fos_user:
 
 endroid_qr_code:
     size: 150
-    padding: 10
-    extension: png
+    margin: 10
     error_correction_level: high
-    foreground_color: { r: 0, g: 0, b: 0, a: 0 }
-    background_color: { r: 255, g: 255, b: 255, a: 0 }
+    foreground_color: { r: 0, g: 0, b: 0 }
+    background_color: { r: 255, g: 255, b: 255 }
     label: "Pack's An Joker"
     label_font_size: 16
 
@@ -137,14 +136,3 @@ stfalcon_tinymce:
              menubar: false
              toolbar1: "bold italic underline | undo redo | link unlink removeformat | insertfile cleanup |preview  | bullist numlist outdent indent | link image | preview"
 
-
-# Nelmio CORS Configuration
-nelmio_cors:
-    defaults:
-        allow_credentials: false
-        allow_origin: ['*']
-        allow_headers: ['*']
-        allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-        max_age: 3600
-        hosts: []
-        origin_regex: false
