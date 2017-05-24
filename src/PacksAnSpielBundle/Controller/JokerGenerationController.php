@@ -21,13 +21,6 @@ class JokerGenerationController extends Controller
     public function indexAction(Request $request)
     {
         // http://blog.michaelperrin.fr/2016/02/17/generating-pdf-files-with-symfony/
-        // TODO: Put Joker in db
-        /* TODO: process:
-         * if cookie set: Show message
-         * if not: Show questionaire
-         * POST: Correct : Generate joker, store, Show Joker, PDF to doenload, set cookie
-         * Not correct: Show message
-        */
         $finalQuestion = false;
         $errorMessage = false;
         $response = new Response();
@@ -80,7 +73,6 @@ class JokerGenerationController extends Controller
         $jokerText = $this->render('PacksAnSpielBundle::joker_generation/joker.txt.twig',
             array('qrcode_message' => $qrCodeMessage));
 
-        // TODO check if it is ok.
         $pdf = new FPDF();
         $pdf->AddPage();
 

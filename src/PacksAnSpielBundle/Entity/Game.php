@@ -35,7 +35,7 @@ class Game
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
 
@@ -102,7 +102,7 @@ class Game
     /**
      * @var string
      *
-     * @ORM\Column(name="game_answer", type="string", length=45, nullable=true)
+     * @ORM\Column(name="game_answer", type="string", length=255, nullable=true)
      */
     private $game_answer;
 

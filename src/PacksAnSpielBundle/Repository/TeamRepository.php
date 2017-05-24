@@ -49,6 +49,17 @@ class TeamRepository extends EntityRepository implements UserProviderInterface
         return false;
     }
 
+    public function teamAlreadyUsedJoker($teamId)
+    {
+        $result = $this->_em->createQuery('SELECT tlg.id FROM PacksAnSpielBundle\Entity\TeamLevelGame tlg, 
+            PacksAnSpielBundle\Entity\TeamLevel tl 
+            WHERE tlg.teamLevel=tl.id AND tl.team=:teamId AND tlg.usedJoker IS NOT NULL')->setParameter('teamId', $teamId)->execute();
+        if (count($result) == 1) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Loads the user for the given username.
      *

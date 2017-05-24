@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\View\View;
 use PacksAnSpielBundle\Repository\MemberRepository;
 use PacksAnSpielBundle\Entity\Member;
+use PacksAnSpielBundle\Entity\Joker;
 
 
 class PlayGameController extends Controller
@@ -131,8 +132,10 @@ class PlayGameController extends Controller
                 /* @var Member $member */
                 $member = $repo->findOneByPasscode($jumpLevelTeamPasscode);
 
-                /* @var Team $team */
-                $levelJumpTeam = $member->getTeam();
+                if ($member) {
+                    /* @var Team $team */
+                    $levelJumpTeam = $member->getTeam();
+                }
             }
 
         }
@@ -177,6 +180,12 @@ class PlayGameController extends Controller
                 $em->persist($currentTeam);
                 $em->persist($levelJumpTeam);
 
+                /* @var Member $teamMember */
+                foreach ($levelJumpTeam->getTeamMembers() as $teamMember) {
+                    $teamMember->setTeam($currentTeam);
+                    $em->persist($teamMember);
+                }
+
                 $newTeamLevel = new TeamLevel();
 
                 $newTeamLevel->setTeam($currentTeam);
@@ -207,6 +216,98 @@ class PlayGameController extends Controller
 
         return $this->render('PacksAnSpielBundle::default/jump_level.html.twig',
             array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'error_message' => $errorMessage));
+    }
+
+    /**
+     * @Route("/play/joker", name="playjoker")
+     */
+    public function playJokerAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            return new RedirectResponse($this->generateUrl('login'));
+        }
+
+        $errorMessage = false;
+
+        $jokerId = $request->get('qr');
+        $jokerInfo = (explode(":", $jokerId));
+
+        /* @var Team $currentTeam */
+        $currentTeam = $this->get('security.token_storage')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        /* @var GameSubjectRepository $gameSubjectRepository */
+        $gameSubjectRepository = $em->getRepository("PacksAnSpielBundle:GameSubject");
+
+        /* @var GameRepository $gameRepository */
+        $gameRepository = $em->getRepository("PacksAnSpielBundle:Game");
+
+        /* @var TeamRepository $teamRepository */
+        $teamRepository = $em->getRepository("PacksAnSpielBundle:Team");
+
+        /* @var TeamLevelRepository $teamLevelRepository */
+        $teamLevelRepository = $em->getRepository("PacksAnSpielBundle:TeamLevel");
+
+        /* @var Team $currentTeam */
+        $currentTeam = $teamRepository->find($currentTeam->getId());
+
+        /* @var TeamLevel $currentTeamLevel */
+        $currentTeamLevel = $teamLevelRepository->getCurrentTeamLevel($currentTeam, $currentTeam->getCurrentLevel());
+
+        $gameSubjectInfoList = $currentTeamLevel->getTeamLevelInfo();
+
+        /* @var JokerRepository $jokerRepository */
+        $jokerRepository = $em->getRepository("PacksAnSpielBundle:Joker");
+
+        /* @var Joker $joker */
+        $joker = $jokerRepository->findOneByJokercode($jokerId);
+
+        if ($jokerInfo[0] == 'joker') {
+            $jokerId = $jokerInfo[1];
+        } else {
+        }
+
+        if (!$joker || $joker->getJokerUsed() == true) {
+            $errorMessage = "Schade, leider wurde der Joker schon eingesetzt!";
+        }
+
+        if ($teamRepository->teamAlreadyUsedJoker($currentTeam->getId())
+        ) {
+            $errorMessage = "Schade, leider habt ihr schon einen Joker gespielt!";
+        }
+        if ($currentTeam->getCurrentLevel()->getNumber() > 2) {
+            $errorMessage = "Schade, leider könnt ihr die Joker nur in den ersten zwei Level spielen!";
+        }
+
+        if ($errorMessage != false) {
+            return $this->render('PacksAnSpielBundle::joker/message.html.twig',
+                array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'error_message' => $errorMessage));
+
+        }
+
+        $gameSubjectList = [];
+        /* @var TeamLevelGame $teamLevelGame */
+        foreach ($currentTeamLevel->getTeamLevelGames() as $teamLevelGame) {
+            $gameSubject = $teamLevelGame->getAssignedGameSubject();
+            $game = false;
+            if ($teamLevelGame->getAssignedGame() == null) {
+
+
+                $teamLevelGame->setFinishTime(GameLogic::now());
+                $teamLevelGame->setPlayedPoints(GameLogic::getPlayedPoints());
+                $teamLevelGame->setUsedJoker($joker);
+                $em->persist($teamLevelGame);
+
+                $joker->setJokerUsed(true);
+                $em->persist($joker);
+                $em->flush();
+
+                return $this->render('PacksAnSpielBundle::joker/success.html.twig',
+                    array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam));
+
+            }
+        }
     }
 
     /**

@@ -14,6 +14,9 @@ use PacksAnSpielBundle\Entity\Team;
 
 class ImportGamesCommand extends ContainerAwareCommand
 {
+    /*
+     * TODO: Run final import
+     * */
     protected function configure()
     {
         $this
@@ -102,8 +105,8 @@ class ImportGamesCommand extends ContainerAwareCommand
                         $game->setLevel($level);
 
                         $location = false;
-                        if ($data[9] != "" && is_int($data[9])) {
-                            $location = $locationRepository->findOneByName($data[10]);
+                        if ($data[10] != "") {
+                            $location = $locationRepository->findOneByName(strtolower($data[10]));
                         }
                         if ($location) {
                             $game->setLocation($location);
@@ -111,12 +114,13 @@ class ImportGamesCommand extends ContainerAwareCommand
                             //$location = $locationRepository->findById(1);
                             //$game->setLocation($data[10]);
                         }
-                        $game->setStatus(Game::STATUS_INACTIVE);
+                        $game->setStatus(Game::STATUS_ACTIVE);
                         $game->setGrade($grade);
                         $game->setPasscode(md5($data[0]));
                         $game->setGameAnswer($data[7]);
 
                         $em->persist($game);
+                        $em->flush();
 
                         $team = new Team();
                         $team->setPasscode(md5($data[0]));

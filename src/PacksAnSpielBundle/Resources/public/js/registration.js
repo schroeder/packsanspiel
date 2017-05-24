@@ -113,7 +113,7 @@ function setDefaultText() {
 }
 
 function isValidMD5(s) {
-    /* TODO: check for valid type:md5
+    /* Should check for valid type:md5
      s.toString().match("(.*):[a-fA-F0-9]{32}")
      * */
     return true;

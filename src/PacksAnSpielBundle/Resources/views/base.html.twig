@@ -31,31 +31,31 @@
 </div>
 
 
-{% block javascripts %}{% endblock %}
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/grid.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/version.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/detector.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/formatinf.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/errorlevel.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/bitmat.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/datablock.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/bmparser.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/datamask.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/rsdecoder.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/gf256poly.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/gf256.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/decoder.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/qrcode.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/findpat.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/alignpat.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/databr.js') }}"></script>
-<script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/vendor/jquery-ui/jquery-ui.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/packsanspiel/js/play.js') }}"></script>
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/grid.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/version.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/detector.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/formatinf.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/errorlevel.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/bitmat.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/datablock.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/bmparser.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/datamask.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/rsdecoder.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/gf256poly.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/gf256.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/decoder.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/qrcode.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/findpat.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/alignpat.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/jsqrcode/src/databr.js') }}"></script>
+    <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/packsanspiel/js/play.js') }}"></script>
 
-<script type="text/javascript" src="{{ asset('bundles/packsanspiel/js/login.js') }}"></script>
-
-{% block javascript %}{% endblock %}
+    <script type="text/javascript" src="{{ asset('bundles/packsanspiel/js/login.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/packsanspiel/js/joker.js') }}"></script>
+{% endblock %}
 
 <script>
     $("#projects").accordion();

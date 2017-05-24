@@ -11,6 +11,11 @@ use PacksAnSpielBundle\Entity\Member;
 
 class ResetGameCommand extends ContainerAwareCommand
 {
+
+    /*
+     * TODO: Run final joker import
+     *
+     * */
     protected function configure()
     {
         $this
@@ -20,7 +25,7 @@ class ResetGameCommand extends ContainerAwareCommand
                 'reset',
                 null,
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Reset member, teams, games, played',
+                'Reset member, teams, games, played, log',
                 []
             );
     }
@@ -62,6 +67,15 @@ class ResetGameCommand extends ContainerAwareCommand
                 case "played": {
                     $output->write("<fg=blue>Reset played games</fg=blue> ", false);
                     if ($this->truncateTable(["PacksAnSpielBundle\Entity\TeamLevelGame", "PacksAnSpielBundle\Entity\TeamLevel"])) {
+                        $output->write("<fg=green>OK</fg=green>", true);
+                    } else {
+                        $output->write("<fg=red>Failed</fg=red>", true);
+                    }
+                }
+                    break;
+                case "log": {
+                    $output->write("<fg=blue>Reset log</fg=blue> ", false);
+                    if ($this->truncateTable(["PacksAnSpielBundle\Entity\Actionlog"])) {
                         $output->write("<fg=green>OK</fg=green>", true);
                     } else {
                         $output->write("<fg=red>Failed</fg=red>", true);

@@ -97,7 +97,6 @@ class LoginController extends Controller
 
                     /* @var Game $game */
                     $game = $gameRepo->findGameByPasscode($gameId);
-
                     if ($game) {
 
                         /* @var TeamRepository $teamRepo */

@@ -17,6 +17,9 @@ use PacksAnSpielBundle\Game\GameLogic;
 
 class ImportMemberCommand extends ContainerAwareCommand
 {
+    /*
+     * TODO: Run final import
+     * */
     protected function configure()
     {
         $this
