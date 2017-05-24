@@ -279,6 +279,9 @@ class BuildTeamsCommand extends ContainerAwareCommand
 
         /* @var Team $team */
         foreach ($teamList as $team) {
+            if (!in_array($team->getGrade(), ['w', 'j', 'p', 'r'])) {
+                continue;
+            }
             $output->writeln("<fg=blue>  Team " . $team->getId() . "</fg=blue>");
             $pdf->AddPage();
 
