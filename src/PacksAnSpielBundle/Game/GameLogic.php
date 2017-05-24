@@ -25,13 +25,12 @@ class GameLogic
     {
         /* @var GameSubjectRepository $repository */
         $repository = $this->em->getRepository("PacksAnSpielBundle:GameSubject");
-        // TODO: Replace by better function
         $gameSubjectList = $repository->getFourRandomGameSubjects();
 
         $level = $this->getLevel(1);
 
         if ($level == false) {
-            // TODO handle error
+            return false;
         }
 
         $teamLevel = new TeamLevel();
@@ -57,11 +56,6 @@ class GameLogic
         $this->em->flush();
 
         return true;
-    }
-
-    public function mergeAndUpgradeTeamLevel(Team $team1, Team $team2)
-    {
-        // TODO
     }
 
     static public function getPlayedPoints($level = 1)

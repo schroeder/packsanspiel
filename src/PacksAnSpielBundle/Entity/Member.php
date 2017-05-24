@@ -72,7 +72,7 @@ class Member
     /**
      * @var \PacksAnSpielBundle\Entity\Team
      *
-     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Team", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="PacksAnSpielBundle\Entity\Team", fetch="EAGER", inversedBy="teamMembers")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $team;

@@ -40,25 +40,25 @@ function captureToCanvas() {
     }
 }
 
-function codeReadOnGameAdminPage(a) {
+function codeReadOnJokerPage(a) {
     if (isValidMD5(a)) {
-        console.log("[OnLogin] Found code: " + a);
-        window.location = "/gameadmin/check?qr=" + a;
+        console.log("[OnJoker] Found code: " + a);
+        window.location = "/play/joker?qr=" + a;
     }
     else {
-        showLoginErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
-        setTimeout(setDefaultText, 3000);
+        showJokerErrorMessage("DAS HAT LEIDER NICHT GEKLAPPT!");
+        setTimeout(setDefaulJokertText, 3000);
     }
 }
 
-function showLoginErrorMessage(message) {
+function showJokerErrorMessage(message) {
     document.getElementById("login_result").innerHTML = message;
     document.getElementById("login_result").style.backgroundColor = "#CC0000";
     document.getElementById("login_result").style.color = "#EEEEEC";
 }
 
-function setDefaultText() {
-    document.getElementById("login_result").innerHTML = "ZUM EINLOGGEN KARTE IN DEN SCHLITZ FÜHREN!";
+function setDefaulJokertText() {
+    document.getElementById("login_result").innerHTML = "BITTE JOKER IN DEN SCHLITZ FÜHREN!";
     document.getElementById("login_result").style.backgroundColor = "#EEEEEC";
     document.getElementById("login_result").style.color = "#000";
     setTimeout(captureToCanvas, 500);

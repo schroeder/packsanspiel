@@ -48,9 +48,14 @@
     <div id="welcome" class="panel panel-info">
         <div class="panel-heading"><h3 class="panel-title">Eure Aktionen</h3></div>
         <div class="panel-body">
-            <a href="{{ path('logout') }}" class="btn btn-primary btn-lg"
-               role="button">Abbrechen
-            </a>
+            {% if can_set_joker %}
+                <p><a href="{{ path('enter_joker') }}" class="btn btn-primary btn-lg"
+                      role="button">Joker einsetzen
+                    </a></p>
+            {% endif %}
+            <p><a href="{{ path('logout') }}" class="btn btn-primary btn-lg"
+                  role="button">Abbrechen
+                </a></p>
         </div>
     </div>
     </div>

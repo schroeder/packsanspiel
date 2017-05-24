@@ -38,7 +38,6 @@ class StartGameCommand extends ContainerAwareCommand
         if ($start) {
             $output->writeln('<fg=green>Staring the game</fg=green>');
 
-            // TODO: set team status
             $em = $this->getContainer()->get('doctrine')->getEntityManager();
 
             $output->writeln('<fg=blue>  Activating teams</fg=blue>');

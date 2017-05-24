@@ -97,7 +97,7 @@ class Team implements UserInterface, \Serializable
     /**
      * @var Collection
      *
-     * @OneToMany(targetEntity="Actionlog", mappedBy="team", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @OneToMany(targetEntity="Actionlog", mappedBy="team", cascade={"persist", "remove", "merge"}, orphanRemoval=true, mappedBy="logEntries")
      */
     private $logEntries;
 
@@ -228,6 +228,7 @@ class Team implements UserInterface, \Serializable
      */
     public function getCountMembers()
     {
+        /* TODO: Count correct members */
         return $this->getTeamMembers() ? $this->getTeamMembers()->count() : 0;
     }
 

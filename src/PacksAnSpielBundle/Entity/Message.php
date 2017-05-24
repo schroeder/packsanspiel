@@ -8,7 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Location
  *
  * @ORM\Table(name="message")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PacksAnSpielBundle\Repository\MessageRepository")
+ *
  */
 class Message
 {
@@ -31,14 +32,14 @@ class Message
     /**
      * @var string
      *
-     * @ORM\Column(name="send_time", type="datetime", nullable=true)
+     * @ORM\Column(name="send_time", type="integer", nullable=true)
      */
     private $sendTime;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="read_time", type="datetime", nullable=true)
+     * @ORM\Column(name="read_time", type="integer", nullable=true)
      */
     private $readTime;
 

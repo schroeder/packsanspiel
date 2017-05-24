@@ -21,6 +21,8 @@ use PacksAnSpielBundle\Repository\GameRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 use PacksAnSpielBundle\Entity\Actionlog;
 use PacksAnSpielBundle\Game\GameActionLogger;
+use PacksAnSpielBundle\Entity\Message;
+use PacksAnSpielBundle\Repository\MessageRepository;
 
 class GameAdminController extends Controller
 {
@@ -33,17 +35,22 @@ class GameAdminController extends Controller
             return new RedirectResponse($this->generateUrl('login'));
         }
 
-
-        /*
-         * TODO: forward to message if there is one for the game
-         * */
-
-        $em = $this->getDoctrine();
-
         /* @var Session $session */
         $session = $request->getSession();
         $gameId = $session->get('game_id');
         $gamePasscode = $session->get('game_passcode');
+
+        $em = $this->getDoctrine();
+
+        /* @var MessageRepository $messageRepository */
+        $messageRepository = $em->getRepository("PacksAnSpielBundle:Message");
+
+        /* @var Message $message */
+        $message = $messageRepository->findOneByGame($gameId);
+
+        if ($message) {
+            return new RedirectResponse($this->generateUrl('show_game_message'));
+        }
 
         /* @var GameRepository $gameRepo */
         $gameRepo = $em->getRepository("PacksAnSpielBundle:Game");

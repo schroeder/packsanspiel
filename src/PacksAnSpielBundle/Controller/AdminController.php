@@ -135,7 +135,6 @@ class AdminController extends Controller
 
         $qrCode->save($temp_file);
 
-        // TODO check if it is ok.
         $pdf = new FPDF();
         $pdf->AddPage();
 
@@ -228,7 +227,6 @@ class AdminController extends Controller
 
         $qrCode->save($temp_file);
 
-        // TODO check if it is ok.
         $pdf = new FPDF();
         $pdf->AddPage();
 

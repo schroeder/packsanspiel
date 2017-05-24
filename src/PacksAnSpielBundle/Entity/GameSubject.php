@@ -109,7 +109,7 @@ class GameSubject
     }
 
     /**
-     * Set todo color
+     * Set to-do color
      *
      * @param string $todoColor
      *
