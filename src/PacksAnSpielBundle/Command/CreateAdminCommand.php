@@ -58,25 +58,4 @@ class CreateAdminCommand extends ContainerAwareCommand
         }
         $output->writeln("<fg=green>Done!</fg=green>");
     }
-
-    private function truncateTable($classList)
-    {
-        $em = $this->getContainer()->get('doctrine')->getEntityManager();
-
-        try {
-            $connection = $em->getConnection();
-            $connection->beginTransaction();
-            foreach ($classList as $className) {
-                $cmd = $em->getClassMetadata($className);
-                $connection->query('SET FOREIGN_KEY_CHECKS=0');
-                $connection->query('DELETE FROM ' . $cmd->getTableName());
-                $connection->query('SET FOREIGN_KEY_CHECKS=1');
-            }
-            $connection->commit();
-        } catch (\Exception $e) {
-            $connection->rollback();
-            return false;
-        }
-        return true;
-    }
 }
