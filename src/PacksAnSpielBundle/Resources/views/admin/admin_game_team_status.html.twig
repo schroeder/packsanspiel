@@ -78,7 +78,7 @@
 
                             {% for info in game_team_list %}
                                 <tr role="row"
-                                    class="{% if loop.index is divisibleby(2) %}even{% else %}odd{% endif %}">
+                                    class="{% if loop.index is divisible by(2) %}even{% else %}odd{% endif %}">
                                     <td class="sorting_1">{{ info.game_id }}</td>
                                     <td class="sorting_1">{{ info.identifier }}</td>
                                     <td>{{ info.level_id }}</td>
