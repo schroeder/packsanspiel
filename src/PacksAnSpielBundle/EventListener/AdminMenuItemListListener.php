@@ -23,7 +23,7 @@ class AdminMenuItemListListener
     {
         $menuItems = array(
             $menuItem00 = new MenuItemModel('Übersicht', 'Übersicht', 'admingameteamstatus', array(/* options */), 'iconclasses fa fa-bullseye'),
-            $menuItem01 = new MenuItemModel('Log-Buch', 'Log-Buch', 'todo', array(/* options */), 'iconclasses fa fa-film'),
+            $menuItem01 = new MenuItemModel('Log-Buch', 'Log-Buch', 'actionlog_index', array(/* options */), 'iconclasses fa fa-film'),
             $menuItem02 = new MenuItemModel('Punktestand', 'Punktestand', 'todo', array(/* options */), 'iconclasses fa fa-send'),
             $menuItem03 = new MenuItemModel('Gruppen', 'Gruppen', 'todo', array(/* options */), 'iconclasses fa fa-group'),
             $menuItem04 = new MenuItemModel('Spiele', 'Spiele', 'todo', array(/* options */), 'iconclasses fa  fa-futbol-o'),
