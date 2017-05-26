@@ -13,9 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Actionlog
 {
 
-    const LOGLEVEL_INFO = 1;
-    const LOGLEVEL_WARN = 2;
-    const LOGLEVEL_CRIT = 3;
+    const LOGLEVEL_TEAM_INFO = 1;
+    const LOGLEVEL_TEAM_WARN = 2;
+    const LOGLEVEL_TEAM_CRIT = 3;
+    const LOGLEVEL_GAME_INFO = 4;
+    const LOGLEVEL_GAME_WARN = 5;
+    const LOGLEVEL_GAME_CRIT = 6;
 
     /**
      * @var integer
