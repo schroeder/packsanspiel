@@ -35,6 +35,9 @@ class GameAdminController extends Controller
             return new RedirectResponse($this->generateUrl('login'));
         }
 
+        /* @var GameActionLogger $logger */
+        $logger = $this->get('packsan.action.logger');
+
         /* @var Session $session */
         $session = $request->getSession();
         $gameId = $session->get('game_id');
@@ -59,6 +62,8 @@ class GameAdminController extends Controller
         $game = $gameRepo->findGameByPasscode($gamePasscode);
 
         $teams = $gameRepo->getCurrentTeams($gameId);
+
+        $logger->logAction("Show game page.", Actionlog::LOGLEVEL_GAME_INFO, $game);
 
         return $this->render('PacksAnSpielBundle::gameadmin/index.html.twig',
             array('error_message' => '', 'game' => $game, 'teams' => $teams));
@@ -93,6 +98,7 @@ class GameAdminController extends Controller
         /* @var Member $member */
         $member = $memberRepository->findOneByPasscode($scannedQRCode);
         if (!$member) {
+            $logger->logAction("Wrong team at game.", Actionlog::LOGLEVEL_GAME_WARN, $game);
             $errorMessage = "Leider konnte ich das Team nicht finden!";
             return $this->render('PacksAnSpielBundle::gameadmin/error.html.twig',
                 array('error_message' => '', 'game' => $game, 'error_message' => $errorMessage));
@@ -108,6 +114,7 @@ class GameAdminController extends Controller
         }
 
         if (!$team) {
+            $logger->logAction("Cannot find team.", Actionlog::LOGLEVEL_GAME_CRIT, $game);
             $errorMessage = "Leider konnte ich das Team nicht finden!";
             return $this->render('PacksAnSpielBundle::gameadmin/error.html.twig',
                 array('error_message' => '', 'game' => $game, 'error_message' => $errorMessage));
@@ -126,7 +133,7 @@ class GameAdminController extends Controller
         }
 
         if (!$teamGame) {
-            $logger->logAction("Team tried to play wrong game ", Actionlog::LOGLEVEL_WARN, $team, $game);
+            $logger->logAction("Team tried to play wrong game ", Actionlog::LOGLEVEL_GAME_WARN, $team, $game);
 
             $errorMessage = "Das Team muss sich ein neuen Spiel an einem Terminal abholen!\n";
             return $this->render('PacksAnSpielBundle::gameadmin/error.html.twig',
@@ -134,7 +141,7 @@ class GameAdminController extends Controller
         }
 
         if ($teamGame->getId() != $game->getId()) {
-            $logger->logAction("Team tried to play wrong game ", Actionlog::LOGLEVEL_WARN, $team, $game);
+            $logger->logAction("Team tried to play wrong game ", Actionlog::LOGLEVEL_GAME_WARN, $team, $game);
 
             $errorMessage = "Das Team soll dieses Spiel nicht spielen!\n";
             $errorMessage .= "Schick es bitte zu \"" . $teamGame->getName() . "\" (" . $teamGame->getIdentifier() . ")";
@@ -152,7 +159,7 @@ class GameAdminController extends Controller
         $em->persist($teamLevelGame);
         $em->flush();
 
-        $logger->logAction("Team started game", Actionlog::LOGLEVEL_INFO, $team, $game);
+        $logger->logAction("Team started game", Actionlog::LOGLEVEL_GAME_INFO, $team, $game);
 
         return $this->render('PacksAnSpielBundle::gameadmin/play.html.twig',
             array('error_message' => '', 'game' => $game));
@@ -217,7 +224,7 @@ class GameAdminController extends Controller
         $em->persist($teamLevelGame);
         $em->flush();
         $session->remove('team_id');
-        $logger->logAction("Team finished game", Actionlog::LOGLEVEL_INFO, $team, $game);
+        $logger->logAction("Team finished game", Actionlog::LOGLEVEL_GAME_INFO, $team, $game);
 
         return $this->render('PacksAnSpielBundle::gameadmin/success.html.twig',
             array('success_message' => 'Das Spiel wurde erfolgreich bestanden!', 'game' => $game));
