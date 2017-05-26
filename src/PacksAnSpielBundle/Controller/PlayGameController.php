@@ -174,7 +174,7 @@ class PlayGameController extends Controller
 
                 $newLevelNumber = $currentTeam->getCurrentLevel()->getNumber() + 1;
 
-                if ($newLevelNumber == 8) {
+                if ($newLevelNumber == 7) {
                     return new RedirectResponse($this->generateUrl('playgamefinished'));
                 }
 
@@ -291,7 +291,6 @@ class PlayGameController extends Controller
         if ($errorMessage != false) {
             return $this->render('PacksAnSpielBundle::joker/message.html.twig',
                 array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'error_message' => $errorMessage));
-
         }
 
         $gameSubjectList = [];
@@ -323,6 +322,7 @@ class PlayGameController extends Controller
      */
     public function gameFinishedAction(Request $request)
     {
+        return $this->render('PacksAnSpielBundle::play/success.html.twig', array());
         /*
          * TODO: Erfolgsnachricht, Feuerwerk!
          *

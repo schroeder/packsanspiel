@@ -89,7 +89,7 @@ class DefaultController extends Controller
                 $teamCanSetJoker = true;
             }
 
-            if ($gameSubjectInfoList['count_games_won'] >= 2) {
+            if ($gameSubjectInfoList['count_games_won'] >= 1) {
                 $logger->logAction("Team can jump to level " . $currentTeam->getCurrentLevel()->getNumber(), Actionlog::LOGLEVEL_TEAM_INFO, $currentTeam);
                 return $this->render('PacksAnSpielBundle::default/jump_level.html.twig',
                     array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'error_message' => $errorMessage));
