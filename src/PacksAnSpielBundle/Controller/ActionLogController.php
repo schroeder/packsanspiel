@@ -76,16 +76,16 @@ class ActionLogController extends Controller
 
             // if none was set
             if (null == $data['gameId'] && null == $data['teamId'] & null == $data['logLevel']) {
-                $actionLogs = $em->getRepository('PacksAnSpielBundle:ActionLog')->findAll();
+                return $this->render('PacksAnSpielBundle::admin/actionlog/index.html.twig', array(
+                    'logs' => array(array('timestamp' => 'no data', 'game' => 'no data', 'group' => 'no data', 'text' => 'no data', 'loglvl' => 'NONE')),
+                    'form' => $form->createView()
+                ));
             }
         }
 
         // if actionLogs still empty (e.g. GET request)
         if (empty($actionLogs)) {
-            return $this->render('PacksAnSpielBundle::admin/actionlog/index.html.twig', array(
-                'logs' => array(array('timestamp' => 'no data', 'game' => 'no data', 'group' => 'no data', 'text' => 'no data', 'loglvl' => 'NONE')),
-                'form' => $form->createView()
-            ));
+            $actionLogs = $em->getRepository('PacksAnSpielBundle:ActionLog')->findAll();
         }
 
         $logs = [];
