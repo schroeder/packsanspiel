@@ -20,6 +20,7 @@ use PacksAnSpielBundle\Entity\Game;
 use PacksAnSpielBundle\Entity\Level;
 use PacksAnSpielBundle\Game\GameLogic;
 use FPDF;
+use Endroid\QrCode\QrCode;
 
 class CreateGamePdfCommand extends ContainerAwareCommand
 {
@@ -75,6 +76,15 @@ class CreateGamePdfCommand extends ContainerAwareCommand
             $pdf->SetFontSize(9);
             $pdf->MultiCell(180, 5, $jokerText, false, 'L');
 
+            $qrCodeMessage = 'https://packsanspiel.isozaponol.de/login?qr=game:' . $game->getPasscode();
+
+            /* @var QrCode $qrCode */
+            $qrCode = new QrCode();
+            $qrCode->setText($qrCodeMessage);
+
+            $temp_file = tempnam(sys_get_temp_dir(), 'packs_an_game_') . '.png';
+            $qrCode->writeFile($temp_file);
+            $pdf->Image($temp_file, 130, 180, 60, 60);
 
             $location = $game->getLocation();
             $gameIdentifier = $game->getIdentifier();
@@ -90,7 +100,6 @@ class CreateGamePdfCommand extends ContainerAwareCommand
             $pdf->Text(45, 267, utf8_decode($game->getGameAnswer()));
 
             $pdf->Image($logo_file, 150, 10, 50, 50);
-
         }
 
 
