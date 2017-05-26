@@ -336,24 +336,26 @@ class BuildTeamsCommand extends ContainerAwareCommand
             $currentTeamLevel = $teamLevelRepository->getCurrentTeamLevel($team, $team->getCurrentLevel());
             $gameSubjectInfoList = $currentTeamLevel->getTeamLevelInfo();
 
-            /* @var TeamLevelGame $teamLevelGame */
-            $game = $gameSubjectInfoList['current_game'];
-            $gameSubject = $gameSubjectInfoList['current_team_level_game']->getAssignedGameSubject();
-            if ($game) {
-                $location = $game->getLocation();
-                $gameSubjectText = $gameSubject->getName();
-                $gameIdentifier = $game->getIdentifier();
-
-                $pdf->SetFontSize(12);
-                $pdf->Text(45, 200, "Euer erstes Spiel steht unter dem Motto:");
-                $pdf->Text(45, 230, "Geht bitte zum Spielort und sucht euer Spiel!");
+            $pdf->SetFontSize(12);
+            $pdf->Text(45, 200, "Euer erstes Spiel steht unter dem Motto:");
+            $pdf->Text(45, 230, "Geht bitte zum Spielort und sucht euer Spiel!");
 
 
-                $pdf->SetFontSize(20);
-                $pdf->Text(45, 207, utf8_decode($gameSubjectText));
-                $pdf->Text(45, 214, "(" . utf8_decode($gameIdentifier . ")"));
-                $pdf->Text(45, 237, utf8_decode($location));
+            if (array_key_exists('current_game', $gameSubjectInfoList)) {
+                /* @var TeamLevelGame $teamLevelGame */
+                $game = $gameSubjectInfoList['current_game'];
+                $gameSubject = $gameSubjectInfoList['current_team_level_game']->getAssignedGameSubject();
+                if ($game) {
+                    $location = $game->getLocation();
+                    $gameSubjectText = $gameSubject->getName();
+                    $gameIdentifier = $game->getIdentifier();
 
+                    $pdf->SetFontSize(20);
+                    $pdf->Text(45, 207, utf8_decode($gameSubjectText));
+                    $pdf->Text(45, 214, "(" . utf8_decode($gameIdentifier . ")"));
+                    $pdf->Text(45, 237, utf8_decode($location));
+
+                }
             }
             $pdf->Image($logo_file, 150, 10, 50, 50);
 

@@ -210,4 +210,19 @@ class TeamLevel
         }
         return $gameSubjectInfoList;
     }
+
+    public function getPlayedLevelGameIdentifiers()
+    {
+        $playedLevelGameIdentifiers = [];
+
+        foreach ($this->getTeamLevelGames() as $teamLevelGame) {
+            if ($teamLevelGame->getStartTime() != null && $teamLevelGame->getAssignedGame() != null) {
+
+                list ($identifier, $no) = explode('.', $teamLevelGame->getAssignedGame()->getIdentifier());
+
+                $playedLevelGameIdentifiers[] = $identifier;
+            }
+        }
+        return $playedLevelGameIdentifiers;
+    }
 }
