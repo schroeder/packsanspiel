@@ -2,15 +2,19 @@
 
 namespace PacksAnSpielBundle\Controller;
 
-use PacksAnSpielBundle\Entity\Game;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use PacksAnSpielBundle\Entity\Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Spiritix\HtmlToPdf\Converter;
 use Spiritix\HtmlToPdf\Input\StringInput;
 use Spiritix\HtmlToPdf\Output\EmbedOutput;
+use PacksAnSpielBundle\Entity\Game;
 
 /**
  * Game controller.
@@ -69,6 +73,43 @@ class GameController extends Controller
 
         return $this->render('PacksAnSpielBundle::admin/game/new.html.twig', array(
             'game' => $game,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * Sends a message to a Game.
+     *
+     * @Route("/send", name="game_message")
+     */
+    public function sendMessageAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $currentTime = new \DateTime('now');
+
+        $message = new Message();
+        $message->setSendTime($currentTime->getTimestamp());
+        $message->setTeam(null);
+
+        $form = $this->createFormBuilder()
+            ->add('gameId', IntegerType::class, array('label' => false, 'required' => true))
+            ->add('messageText', TextareaType::class)
+            ->add('save', SubmitType::class, array('label' => 'Nachricht senden'))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
+
+            $data = $form->getData();
+            $game = $em->getRepository('PacksAnSpielBundle:Game')->find($data['gameId']);
+            $message->setGame($game);
+            $message->setMessageText($data['messageText']);
+
+            $em->persist($message);
+            $em->flush($message);
+        }
+
+        return $this->render('PacksAnSpielBundle::admin/game/message.html.twig', array(
             'form' => $form->createView(),
         ));
     }
