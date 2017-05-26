@@ -84,7 +84,7 @@ class ImportGamesCommand extends ContainerAwareCommand
             $row = 1;
             if (($handle = fopen($file, "r")) !== false) {
                 while (($data = fgetcsv($handle, 1000, ",")) !== false) {
-                    if ($data[0] != "" && $data[0] != "Spielnummer") {
+                    if ($data[0] != "" && $data[0] != "Spielnummer" && $data[0] != "Spielnr" && $data[3] != 0) {
 
                         $game = $gameRepository->findOneByIdentifier($data[0]);
 
@@ -118,6 +118,18 @@ class ImportGamesCommand extends ContainerAwareCommand
                         $game->setGrade($grade);
                         $game->setPasscode(md5($data[0]));
                         $game->setGameAnswer($data[7]);
+
+                        if ($data[3] != "" && is_int($data[3])) {
+                            $game->setMaxPlayRounds($data[3]);
+                        } else {
+                            $game->setMaxPlayRounds(1);
+                        }
+
+                        if ($data[11] != "" && is_int($data[11])) {
+                            $game->setPriority($data[11]);
+                        } else {
+                            $game->setPriority(1);
+                        }
 
                         $em->persist($game);
                         $em->flush();
