@@ -143,6 +143,33 @@ class GameRepository extends EntityRepository
         return $teamList;
     }
 
+    public function getAllUnassignedGames()
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('PacksAnSpielBundle:Game', 'g');
+        $rsm->addFieldResult('g', 'id', 'id');
+        $rsm->addFieldResult('g', 'grade', 'grade');
+        $rsm->addFieldResult('g', 'identifier', 'identifier');
+        $rsm->addFieldResult('g', 'name', 'name');
+
+        $queryString = "SELECT g.id, g.grade,g.identifier,g.name,g.location_id,g.level_id 
+                    FROM game g
+                    WHERE id NOT in (
+                        SELECT tlg.assigned_game 
+                        FROM team_level_game tlg 
+                        WHERE tlg.assigned_game IS NOT NULL) 
+                    ORDER BY g.level_id, g.location_id";
+
+        $query = $this->_em->createNativeQuery($queryString, $rsm);
+        $gameIdList = $query->getArrayResult();
+        $gameList = [];
+        foreach ($gameIdList as $game) {
+            $gameList[] = $this->find($game['id']);
+        }
+        return $gameList;
+
+    }
+
 
     public
     function countActiveGames($id)

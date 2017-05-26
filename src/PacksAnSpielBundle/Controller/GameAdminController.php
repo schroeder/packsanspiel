@@ -63,7 +63,7 @@ class GameAdminController extends Controller
 
         $teams = $gameRepo->getCurrentTeams($gameId);
 
-        $logger->logAction("Show game page.", Actionlog::LOGLEVEL_GAME_INFO, $game);
+        $logger->logAction("Show game page.", Actionlog::LOGLEVEL_GAME_INFO, null, $game);
 
         return $this->render('PacksAnSpielBundle::gameadmin/index.html.twig',
             array('error_message' => '', 'game' => $game, 'teams' => $teams));
@@ -98,7 +98,7 @@ class GameAdminController extends Controller
         /* @var Member $member */
         $member = $memberRepository->findOneByPasscode($scannedQRCode);
         if (!$member) {
-            $logger->logAction("Wrong team at game.", Actionlog::LOGLEVEL_GAME_WARN, $game);
+            $logger->logAction("Wrong team at game.", Actionlog::LOGLEVEL_GAME_WARN, null, $game);
             $errorMessage = "Leider konnte ich das Team nicht finden!";
             return $this->render('PacksAnSpielBundle::gameadmin/error.html.twig',
                 array('error_message' => '', 'game' => $game, 'error_message' => $errorMessage));
@@ -114,7 +114,7 @@ class GameAdminController extends Controller
         }
 
         if (!$team) {
-            $logger->logAction("Cannot find team.", Actionlog::LOGLEVEL_GAME_CRIT, $game);
+            $logger->logAction("Cannot find team.", Actionlog::LOGLEVEL_GAME_CRIT, null, $game);
             $errorMessage = "Leider konnte ich das Team nicht finden!";
             return $this->render('PacksAnSpielBundle::gameadmin/error.html.twig',
                 array('error_message' => '', 'game' => $game, 'error_message' => $errorMessage));
