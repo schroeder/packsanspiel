@@ -70,7 +70,7 @@ class CreateGamePdfCommand extends ContainerAwareCommand
 
             $jokerText = $this->getContainer()->get('templating')->render('PacksAnSpielBundle::register/game.txt.twig', ["game" => $game]);
 
-            $pdf->SetXY(20, 110);
+            $pdf->SetXY(20, 50);
             $pdf->SetFontSize(9);
             $pdf->MultiCell(180, 5, $jokerText, false, 'L');
 
@@ -79,12 +79,14 @@ class CreateGamePdfCommand extends ContainerAwareCommand
             $gameIdentifier = $game->getIdentifier();
 
             $pdf->SetFontSize(12);
-            $pdf->Text(45, 200, "Euer erstes Spiel steht unter dem Motto:");
-            $pdf->Text(45, 230, "Geht bitte zum Spielort und sucht euer Spiel!");
+            $pdf->Text(45, 200, utf8_decode("Dein Spiel heißt:"));
+            $pdf->Text(45, 230, utf8_decode("Dein Spielort lautet:"));
+            $pdf->Text(45, 260, utf8_decode("Das Lösungswort lautet:"));
 
 
-            $pdf->Text(45, 214, "(" . utf8_decode($gameIdentifier . ")"));
+            $pdf->Text(45, 207, utf8_decode($game->getName() . " (" . $gameIdentifier . ")"));
             $pdf->Text(45, 237, utf8_decode($location));
+            $pdf->Text(45, 267, utf8_decode($game->getGameAnswer()));
 
             $pdf->Image($logo_file, 150, 10, 50, 50);
 

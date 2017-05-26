@@ -19,6 +19,7 @@ use PacksAnSpielBundle\Game\GameLogic;
 use PacksAnSpielBundle\Repository\GameRepository;
 use PacksAnSpielBundle\Repository\MessageRepository;
 use PacksAnSpielBundle\Entity\Message;
+use PacksAnSpielBundle\Entity\Game;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use PacksAnSpielBundle\Entity\Actionlog;
@@ -162,33 +163,51 @@ class DefaultController extends Controller
 
         $solution = $request->get('solution');
 
-        $message = false;
-        if ($solution) {
-            if ($solution == $gameSubjectInfoList['current_game']->getGameAnswer()) {
-                $em = $doctrine->getEntityManager();
-                /* @var TeamLevelGame $teamLevelGame */
-                $teamLevelGame = $gameSubjectInfoList['current_team_level_game'];
-                $teamLevelGame->setFinishTime(GameLogic::now());
-                $teamLevelGame->setPlayedPoints(GameLogic::getPlayedPoints($currentTeam->getCurrentLevel()->getNumber()));
-                $em->persist($teamLevelGame);
-                $em->flush();
+        if (array_key_exists('current_game', $gameSubjectInfoList)) {
 
-                return new RedirectResponse($this->generateUrl('packsan'));
-            } else {
-                $message = "Die Antwort war leider falsch!";
+            $message = false;
+            if ($solution) {
+                if ($solution == $gameSubjectInfoList['current_game']->getGameAnswer()) {
+                    $em = $doctrine->getEntityManager();
+                    /* @var TeamLevelGame $teamLevelGame */
+                    $teamLevelGame = $gameSubjectInfoList['current_team_level_game'];
+                    $teamLevelGame->setFinishTime(GameLogic::now());
+                    $teamLevelGame->setPlayedPoints(GameLogic::getPlayedPoints($currentTeam->getCurrentLevel()->getNumber()));
+                    $em->persist($teamLevelGame);
+                    $em->flush();
+
+                    /* @var Game $game */
+                    $game = $teamLevelGame->getAssignedGame();
+
+                    /* @var GameRepository $gameRepository */
+                    $gameRepository = $doctrine->getRepository("PacksAnSpielBundle:Game");
+
+                    $playedRoundsOfGame = $gameRepository->checkPlayedRoundsOfGame($teamLevelGame->getAssignedGame()->getId());
+
+                    if ($playedRoundsOfGame >= $game->getMaxPlayRounds()) {
+                        $game->setStatus(Game::STATUS_INACTIVE);
+                        $em->persist($game);
+                        $em->flush();
+                    }
+
+                    return new RedirectResponse($this->generateUrl('packsan'));
+                } else {
+                    $message = "Die Antwort war leider falsch!";
+                }
             }
+
+
+            $resultOptions[] = $wordRepository->getOneRandom()->getName();
+            $resultOptions[] = $wordRepository->getOneRandom()->getName();
+            $resultOptions[] = $wordRepository->getOneRandom()->getName();
+            $resultOptions[] = $gameSubjectInfoList['current_game']->getGameAnswer();
+            shuffle($resultOptions);
+            $gameSubjectInfoList['result_options'] = $resultOptions;
+            return $this->render('PacksAnSpielBundle::default/enter_result.html.twig',
+                array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'message' => $message));
         }
+        return new RedirectResponse($this->generateUrl('packsan'));
 
-
-        $resultOptions[] = $wordRepository->getOneRandom()->getName();
-        $resultOptions[] = $wordRepository->getOneRandom()->getName();
-        $resultOptions[] = $wordRepository->getOneRandom()->getName();
-        $resultOptions[] = $gameSubjectInfoList['current_game']->getGameAnswer();
-        shuffle($resultOptions);
-        $gameSubjectInfoList['result_options'] = $resultOptions;
-
-        return $this->render('PacksAnSpielBundle::default/enter_result.html.twig',
-            array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'message' => $message));
     }
 
     /**
