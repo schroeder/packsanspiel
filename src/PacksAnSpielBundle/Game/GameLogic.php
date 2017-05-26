@@ -75,11 +75,11 @@ class GameLogic
         return false;
     }
 
-    public function getGradename($grade)
+    static public function getGradename($grade)
     {
         switch ($grade) {
             case "w":
-                return "Wölfling";
+                return "Wölflings";
             case "j":
                 return "Jungpfadfinder";
             case "p":
