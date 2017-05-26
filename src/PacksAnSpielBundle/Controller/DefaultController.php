@@ -23,6 +23,7 @@ use PacksAnSpielBundle\Entity\Game;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use PacksAnSpielBundle\Entity\Actionlog;
+use PacksAnSpielBundle\Game\GameActionLogger;
 
 class DefaultController extends Controller
 {
@@ -73,11 +74,10 @@ class DefaultController extends Controller
 
             if (!$currentTeamLevel) {
 
-                $logger->logAction("Cannot find current team level", Actionlog::LOGLEVEL_INFO, $currentTeam);
+                $logger->logAction("Team-Level kann nicht gefunden werden!", Actionlog::LOGLEVEL_GAME_INFO, $currentTeam);
 
                 return $this->render('PacksAnSpielBundle::message/error.html.twig',
                     array('message' => "Irgendwas ist schief gelaufen!"));
-
             }
 
             $gameSubjectInfoList = $currentTeamLevel->getTeamLevelInfo();
@@ -89,7 +89,8 @@ class DefaultController extends Controller
                 $teamCanSetJoker = true;
             }
 
-            if ($gameSubjectInfoList['count_games_won'] >= 2) {
+            if ($gameSubjectInfoList['count_games_won'] >= 1) {
+                $logger->logAction("Team can jump to level " . $currentTeam->getCurrentLevel()->getNumber(), Actionlog::LOGLEVEL_TEAM_INFO, $currentTeam);
                 return $this->render('PacksAnSpielBundle::default/jump_level.html.twig',
                     array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'error_message' => $errorMessage));
 
@@ -97,12 +98,13 @@ class DefaultController extends Controller
 
             if (isset($gameSubjectInfoList['current_game'])) {
 
-
                 if ($gameSubjectInfoList['current_game'] && $gameSubjectInfoList['game_duration'] < 5 * 60) {
+                    $logger->logAction("Team cannot set answer yet.", Actionlog::LOGLEVEL_TEAM_WARN, $currentTeam);
                     return $this->render('PacksAnSpielBundle::default/currently_playing.html.twig',
                         array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam));
 
                 } elseif ($gameSubjectInfoList['current_game']) {
+                    $logger->logAction("Team can answer game question.", Actionlog::LOGLEVEL_TEAM_INFO, $currentTeam);
 
                     /* @var WordRepository $wordRepository */
                     $wordRepository = $doctrine->getRepository("PacksAnSpielBundle:Word");
@@ -132,8 +134,7 @@ class DefaultController extends Controller
     /**
      * @Route("/check_result", name="check_result")
      */
-    public
-    function checkResultAction(Request $request)
+    public function checkResultAction(Request $request)
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             return new RedirectResponse($this->generateUrl('login'));
@@ -165,9 +166,13 @@ class DefaultController extends Controller
 
         if (array_key_exists('current_game', $gameSubjectInfoList)) {
 
+            /* @var GameActionLogger $logger */
+            $logger = $this->get('packsan.action.logger');
+
             $message = false;
             if ($solution) {
                 if ($solution == $gameSubjectInfoList['current_game']->getGameAnswer()) {
+                    $logger->logAction("Team gave correct answer", Actionlog::LOGLEVEL_TEAM_INFO, $currentTeam, $gameSubjectInfoList['current_game']);
                     $em = $doctrine->getEntityManager();
                     /* @var TeamLevelGame $teamLevelGame */
                     $teamLevelGame = $gameSubjectInfoList['current_team_level_game'];
@@ -192,6 +197,7 @@ class DefaultController extends Controller
 
                     return new RedirectResponse($this->generateUrl('packsan'));
                 } else {
+                    $logger->logAction("Team gave wrong answer", Actionlog::LOGLEVEL_TEAM_WARN, $currentTeam, $gameSubjectInfoList['current_game']);
                     $message = "Die Antwort war leider falsch!";
                 }
             }
@@ -220,6 +226,9 @@ class DefaultController extends Controller
             return new RedirectResponse($this->generateUrl('login'));
         }
 
+        /* @var GameActionLogger $logger */
+        $logger = $this->get('packsan.action.logger');
+
         /* @var Team $currentTeam */
         $currentTeam = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -235,11 +244,14 @@ class DefaultController extends Controller
             $currentTeam->getCurrentLevel()->getNumber() <= 2 &&
             !$teamRepository->teamAlreadyUsedJoker($currentTeam->getId())
         ) {
+            $logger->logAction("Team played joker", Actionlog::LOGLEVEL_TEAM_INFO, $currentTeam);
+
             return $this->render('PacksAnSpielBundle::joker/index.html.twig',
                 array('team' => $currentTeam));
 
 
         } else {
+            $logger->logAction("Team played invalid joker", Actionlog::LOGLEVEL_TEAM_CRIT, $currentTeam);
             return new RedirectResponse($this->generateUrl('login'));
         }
     }

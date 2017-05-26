@@ -52,7 +52,7 @@ class LoginController extends Controller
 
             if (!$codeType || !$scannedQRCode || $codeType == "" || $scannedQRCode == "") {
                 $errorMessage = "Invalid code";
-                $logger->logAction("Failed login try with qr code $scannedQRCode, error: \"$errorMessage\"", Actionlog::LOGLEVEL_WARN);
+                $logger->logAction("Failed login try with qr code $scannedQRCode, error: \"$errorMessage\"", Actionlog::LOGLEVEL_TEAM_WARN);
                 return $this->render('PacksAnSpielBundle::login/index.html.twig', ["error_message" => $errorMessage]);
             }
 
@@ -78,14 +78,14 @@ class LoginController extends Controller
 
                             $event = new InteractiveLoginEvent($request, $token);
                             $this->get("event_dispatcher")->dispatch("security . interactive_login", $event);
-                            $logger->logAction("Admin logged in . ", Actionlog::LOGLEVEL_INFO, $team);
+                            $logger->logAction("Admin logged in . ", Actionlog::LOGLEVEL_TEAM_INFO, $team);
 
                             return new RedirectResponse($this->generateUrl('admin'));
                         } else {
                             $team = false;
                         }
                     } else {
-                        $logger->logAction("Failed admin login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_CRIT);
+                        $logger->logAction("Failed admin login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_TEAM_CRIT);
                         $errorMessage = "Den Teilnehmer kenne ich leider nicht!";
                     }
                     break;
@@ -116,14 +116,14 @@ class LoginController extends Controller
 
                             $event = new InteractiveLoginEvent($request, $token);
                             $this->get("event_dispatcher")->dispatch("security . interactive_login", $event);
-                            $logger->logAction("Game logged in . ", Actionlog::LOGLEVEL_INFO, $team);
+                            $logger->logAction("Game logged in . ", Actionlog::LOGLEVEL_TEAM_INFO, $team);
 
                             return new RedirectResponse($this->generateUrl('gameadmin'));
                         } else {
                             $team = false;
                         }
                     } else {
-                        $logger->logAction("Failed admin login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_CRIT);
+                        $logger->logAction("Failed admin login try with qr code $scannedQRCode!", Actionlog::LOGLEVEL_TEAM_CRIT);
                         $errorMessage = "Das Spiel kenne ich leider nicht!";
                     }
                     break;
@@ -168,19 +168,19 @@ class LoginController extends Controller
 
                     $event = new InteractiveLoginEvent($request, $token);
                     $this->get("event_dispatcher")->dispatch("security . interactive_login", $event);
-                    $logger->logAction("Team logged in . ", Actionlog::LOGLEVEL_INFO, $team);
+                    $logger->logAction("Team logged in . ", Actionlog::LOGLEVEL_TEAM_INFO, $team);
 
                     if ($team->getCurrentLevel() == false) {
 
                         /* @var GameLogic $gameLogic */
                         $gameLogic = $this->get('packsan.game.logic');
                         $gameLogic->initializeFirstLevel($team);
-                        $logger->logAction("Moved Team into first level. ", Actionlog::LOGLEVEL_INFO, $team);
+                        $logger->logAction("Moved Team into first level. ", Actionlog::LOGLEVEL_TEAM_INFO, $team);
                     }
 
                     return new RedirectResponse($this->generateUrl('packsan'));
                 } catch (\Exception $e) {
-                    $logger->logAction("Unable to log in team . ", Actionlog::LOGLEVEL_CRIT, $team);
+                    $logger->logAction("Unable to log in team . ", Actionlog::LOGLEVEL_TEAM_CRIT, $team);
                     $errorMessage = "Ich kann euch leider nicht einloggen!";
                 }
             }

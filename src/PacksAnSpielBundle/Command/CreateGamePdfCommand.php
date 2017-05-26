@@ -67,8 +67,9 @@ class CreateGamePdfCommand extends ContainerAwareCommand
             $firstNames = [];
             /* @var Member $member */
 
+            $grade = utf8_decode(GameLogic::getGradename($game->getGrade()));
 
-            $jokerText = $this->getContainer()->get('templating')->render('PacksAnSpielBundle::register/game.txt.twig', ["game" => $game]);
+            $jokerText = $this->getContainer()->get('templating')->render('PacksAnSpielBundle::register/game.txt.twig', ["game" => $game, "grade" => $grade]);
 
             $pdf->SetXY(20, 50);
             $pdf->SetFontSize(9);

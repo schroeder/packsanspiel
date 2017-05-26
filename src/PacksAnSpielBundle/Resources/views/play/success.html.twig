@@ -2,14 +2,16 @@
 
 {% block playground %}
     <div id="playground" class="box">
-        <div class="panel panel-danger">
-            <div class="panel-heading"><h3 class="panel-title">Mensch, ihr spielt gerade doch noch!</h3></div>
+        <div class="panel panel-success">
+            <div class="panel-heading"><h3 class="panel-title">Ihr habt einen Joker gespielt!</h3></div>
             <div class="panel-body">
-                <h2>Geht zu Spielfeld <strong>{{ level_info.current_game.location.name }}</strong></h2>
-                {% if level_info.current_game.name %}
-                    <p>Und spielt dort "{{ level_info.current_game.name }}"!</p>
-                {% endif %}
-                <p>{{ level_info.current_game.passcode }}</p>
+                <div class="row">
+                    <h2>Ihr habt den Joker erfolgreich eingesetzt!</h2>
+                    <h2>Weiterhin viel Spaß!</h2>
+                    <p>
+                        <a href="{{ path('packsan') }}" class="btn btn-primary btn-lg" role="button">OK</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
