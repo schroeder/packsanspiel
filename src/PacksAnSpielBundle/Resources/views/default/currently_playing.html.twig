@@ -5,10 +5,11 @@
         <div class="panel panel-danger">
             <div class="panel-heading"><h3 class="panel-title">Mensch, ihr spielt gerade doch noch!</h3></div>
             <div class="panel-body">
-                <p>Geht zu {{ level_info.current_game.location.name }}</p>
-                {% if level_info.current_game.location.description %}
-                    <p>{{ level_info.current_game.location.description }}</p>
+                <h2>Geht zu Spielfeld <strong>{{ level_info.current_game.location.name }}</strong></h2>
+                {% if level_info.current_game.name %}
+                    <p>Und spielt dort "{{ level_info.current_game.name }}"!</p>
                 {% endif %}
+                <p>{{ level_info.current_game.passcode }}</p>
             </div>
         </div>
     </div>
