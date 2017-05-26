@@ -23,11 +23,10 @@ class GameRepository extends EntityRepository
         return false;
     }
 
-    public function findAFreeGame(TeamLevel $teamLevel)
+    public function findAFreeGame(TeamLevel $teamLevel, $excludeIdentifierList = [])
     {
         $level = $teamLevel->getLevel();
         $team = $teamLevel->getTeam();
-
         $grade = Game::getCorrectLevelGrade($team->getGrade(), $level->getNumber());
 
         $rsm = new ResultSetMapping();
@@ -49,8 +48,16 @@ class GameRepository extends EntityRepository
                                 FROM team_level_game 
                                 WHERE team_level_game.start_time IS NOT NULL 
                                 AND assigned_game IS NOT NULL
-                                AND team_level_game.finish_time IS NULL) 
-                            LIMIT 1";
+                                AND team_level_game.finish_time IS NULL)";
+        foreach ($excludeIdentifierList as $identifier) {
+            $queryString .= " AND g.id NOT IN (
+                SELECT gex.id FROM game gex 
+                                WHERE gex.identifier IS LIKE \"$identifier%\") ";
+
+        }
+
+
+        $queryString .= " ORDER BY priority DESC LIMIT 1";
         $query = $this->_em->createNativeQuery($queryString, $rsm);
         $game = $query->execute();
         if ($game && is_array($game) && count($game) == 1) {
@@ -60,18 +67,36 @@ class GameRepository extends EntityRepository
             $queryString = "SELECT g.id FROM game g 
                             WHERE g.status>0 
                             AND g.grade='" . $grade . "' 
-                            AND g.level_id=" . $level->getId() . " 
-                            LIMIT 1";
+                            AND g.level_id=" . $level->getId() . " ";
+            foreach ($excludeIdentifierList as $identifier) {
+                $queryString .= " AND g.id NOT IN (
+                SELECT gex.id FROM game gex 
+                                WHERE gex.identifier IS LIKE \"$identifier%\") ";
+
+            }
+            $queryString .= " ORDER BY priority DESC LIMIT 1";
             $query = $this->_em->createNativeQuery($queryString, $rsm);
             $game = $query->execute();
             if ($game && is_array($game) && count($game) == 1) {
                 return $game[0];
+            } else {
+                $queryString = "SELECT g.id FROM game g 
+                            WHERE g.status>0 
+                            AND g.grade='" . $grade . "' 
+                            AND g.level_id=" . $level->getId() . " ";
+                $queryString .= " ORDER BY priority DESC LIMIT 1";
+                $query = $this->_em->createNativeQuery($queryString, $rsm);
+                $game = $query->execute();
+                if ($game && is_array($game) && count($game) == 1) {
+                    return $game[0];
+                }
             }
         }
         return false;
     }
 
-    public function getCurrentGame(Team $team)
+    public
+    function getCurrentGame(Team $team)
     {
         $result = $this->_em->createQuery('SELECT tlg.id 
                 FROM PacksAnSpielBundle\Entity\TeamLevelGame tlg,
@@ -87,7 +112,8 @@ class GameRepository extends EntityRepository
         return false;
     }
 
-    public function getCurrentTeams($gameId)
+    public
+    function getCurrentTeams($gameId)
     {
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('PacksAnSpielBundle:Game', 'g');
@@ -118,17 +144,27 @@ class GameRepository extends EntityRepository
     }
 
 
-    public function countActiveGames($id)
+    public
+    function countActiveGames($id)
     {
         return $this->getEntityManager()
             ->createQuery('SELECT COUNT(g.assignedGame) AS activeGames FROM PacksAnSpielBundle\Entity\TeamLevelGame g WHERE g.assignedGame=' . $id . ' AND g.startTime IS NOT NULL AND g.finishTime IS NULL')
             ->getSingleScalarResult();
     }
 
-    public function countFinishedGames($id)
+    public
+    function countFinishedGames($id)
     {
         return $this->getEntityManager()
             ->createQuery('SELECT COUNT(g.assignedGame) AS activeGames FROM PacksAnSpielBundle\Entity\TeamLevelGame g WHERE g.assignedGame=' . $id . ' AND g.startTime IS NOT NULL AND g.finishTime IS NOT NULL')
+            ->getSingleScalarResult();
+    }
+
+    public
+    function checkPlayedRoundsOfGame($gameId)
+    {
+        return $this->getEntityManager()
+            ->createQuery('SELECT count(tlg.assignedGame) FROM PacksAnSpielBundle\Entity\TeamLevelGame tlg, PacksAnSpielBundle\Entity\Game g WHERE tlg.assignedGame=g.id AND g.id=' . $gameId)
             ->getSingleScalarResult();
     }
 

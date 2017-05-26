@@ -81,6 +81,20 @@ class Game
     private $status;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="max_play_rounds", type="integer")
+     */
+    private $maxPlayRounds;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="priority", type="integer")
+     */
+    private $priority;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="grade", type="string", length=15, nullable=true)
@@ -138,6 +152,54 @@ class Game
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set name
+     *
+     * @param integer $name
+     *
+     * @return Game
+     */
+    public function setMaxPlayRounds($maxPlayRounds)
+    {
+        $this->maxPlayRounds = $maxPlayRounds;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return integer
+     */
+    public function getMaxPlayRounds()
+    {
+        return $this->maxPlayRounds;
+    }
+
+    /**
+     * Set name
+     *
+     * @param integer $name
+     *
+     * @return Game
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return integer
+     */
+    public function getPriority()
+    {
+        return $this->priority;
     }
 
     /**
