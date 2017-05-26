@@ -59,32 +59,41 @@ class ImportMemberCommand extends ContainerAwareCommand
             if (($handle = fopen($file, "r")) !== false) {
                 while (($data = fgetcsv($handle, 1000, ",")) !== false) {
                     if ($row > 1) {
-                        $member = $memberRepository->findOneByPasscode($data[14]);
+                        $member = $memberRepository->findOneByPasscode($data[5]);
 
                         if (!$member) {
-                            $output->writeln('<fg=yellow>Importing member ' . $data[14] . '</fg=yellow>');
+                            $output->writeln('<fg=yellow>Importing member ' . $data[5] . '</fg=yellow>');
                             $member = new Member();
-                            $member->setPasscode($data[14]);
+                            $member->setPasscode($data[5]);
                         } else {
-                            $output->writeln('<fg=blue>Updating member ' . $data[14] . '</fg=blue>');
+                            $output->writeln('<fg=blue>Updating member ' . $data[5] . '</fg=blue>');
                         }
 
-                        $member->setName($data[2]);
-                        $member->setFirstName($data[3]);
+                        $member->setName($data[1]);
+                        $member->setFirstName($data[2]);
                         $grade = false;
-                        switch ($data[5]) {
+                        switch ($data[3]) {
                             case "W":
+                            case "Wölfling":
                                 $grade = 'w';
                                 break;
                             case "J":
+                            case "Juffi":
                                 $grade = 'j';
                                 break;
                             case "Pf":
+                            case "Pfadi":
                                 $grade = 'p';
                                 break;
                             case "R":
+                            case "Rover":
                                 $grade = 'r';
                                 break;
+                            case "Wö-Leiter":
+                            case "Mitarbeiter":
+                            case "Pfadi-Leiter":
+                            case "Rover-Begleiter":
+                            case "Juffi-Leiter":
                             case "LW":
                             case "LJ":
                             case "LPf":
@@ -96,7 +105,7 @@ class ImportMemberCommand extends ContainerAwareCommand
                                 break;
                         }
                         $member->setGrade($grade);
-                        $group = $data[1];
+                        $group = $data[0];
                         $member->setGroup($group);
                         $village = trim(substr($data[6], 0, strpos($data[6], '/')));
                         $member->setVillage($village);

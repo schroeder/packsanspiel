@@ -20,6 +20,8 @@ use FOS\RestBundle\View\View;
 use PacksAnSpielBundle\Repository\MemberRepository;
 use PacksAnSpielBundle\Entity\Member;
 use PacksAnSpielBundle\Entity\Joker;
+use PacksAnSpielBundle\Game\GameActionLogger;
+use PacksAnSpielBundle\Entity\Actionlog;
 
 
 class PlayGameController extends Controller
@@ -32,6 +34,9 @@ class PlayGameController extends Controller
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             return new RedirectResponse($this->generateUrl('login'));
         }
+
+        /* @var GameActionLogger $logger */
+        $logger = $this->get('packsan.action.logger');
 
         $selectedCategory = $request->get('subject');
 
@@ -74,8 +79,10 @@ class PlayGameController extends Controller
                 $gameSubjectInfoList = $currentTeamLevel->getTeamLevelInfo();
 
                 if ($game && $teamLevelGame->getStartTime() && !$teamLevelGame->getFinishTime()) {
+                    $logger->logAction("Team cannot choose game. Already playing", Actionlog::LOGLEVEL_GAME_CRIT, $currentTeam, $game);
                     return new RedirectResponse($this->generateUrl('packsan'));
                 } elseif (!$game) {
+                    $logger->logAction("Team started game.", Actionlog::LOGLEVEL_GAME_INFO, $currentTeam, $game);
                     // select a game
                     $currentGame = $gameRepository->findAFreeGame($currentTeamLevel);
                     $teamLevelGame->setAssignedGame($currentGame);
@@ -85,6 +92,7 @@ class PlayGameController extends Controller
                     return $this->render('PacksAnSpielBundle::play/show_game.html.twig',
                         array('team_level' => $teamLevelGame, 'game' => $currentGame, 'team' => $currentTeam, 'level_info' => $gameSubjectInfoList));
                 } else {
+                    $logger->logAction("Team cannot choose game. Already playing", Actionlog::LOGLEVEL_GAME_WARN, $currentTeam, $game);
                     return $this->render('PacksAnSpielBundle::play/show_game.html.twig',
                         array('team_level' => $teamLevelGame, 'game' => $game, 'team' => $currentTeam, 'level_info' => $gameSubjectInfoList));
                 }
@@ -166,7 +174,7 @@ class PlayGameController extends Controller
 
                 $newLevelNumber = $currentTeam->getCurrentLevel()->getNumber() + 1;
 
-                if ($newLevelNumber == 8) {
+                if ($newLevelNumber == 7) {
                     return new RedirectResponse($this->generateUrl('playgamefinished'));
                 }
 
@@ -283,7 +291,6 @@ class PlayGameController extends Controller
         if ($errorMessage != false) {
             return $this->render('PacksAnSpielBundle::joker/message.html.twig',
                 array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam, 'error_message' => $errorMessage));
-
         }
 
         $gameSubjectList = [];
@@ -315,6 +322,7 @@ class PlayGameController extends Controller
      */
     public function gameFinishedAction(Request $request)
     {
+        return $this->render('PacksAnSpielBundle::play/success.html.twig', array());
         /*
          * TODO: Erfolgsnachricht, Feuerwerk!
          *
