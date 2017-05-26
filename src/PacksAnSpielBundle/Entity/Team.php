@@ -228,7 +228,6 @@ class Team implements UserInterface, \Serializable
      */
     public function getCountMembers()
     {
-        /* TODO: Count correct members */
         return $this->getTeamMembers() ? $this->getTeamMembers()->count() : 0;
     }
 
