@@ -84,12 +84,21 @@ class ImportGamesCommand extends ContainerAwareCommand
             $row = 1;
             if (($handle = fopen($file, "r")) !== false) {
                 while (($data = fgetcsv($handle, 1000, ",")) !== false) {
-                    if ($data[0] != "" && $data[0] != "Spielnummer" && $data[0] != "Spielnr" && $data[3] != 0) {
+                    if ($data[0] != "" && $data[0] != "Spielnummer" && $data[0] != "Spielnr" && $data[3] != "0") {
 
                         $game = $gameRepository->findOneByIdentifier($data[0]);
 
                         if (!$game) {
                             $output->writeln('Importing game ' . $data[0]);
+
+                            $team = new Team();
+                            $team->setPasscode(md5($data[0]));
+                            $team->setStatus(Team::STATUS_GAME);
+                            $team->setGrade('g');
+                            $em->persist($team);
+
+                            $em->flush();
+
                             $game = new Game();
                             $game->setIdentifier($data[0]);
                         } else {
@@ -119,13 +128,13 @@ class ImportGamesCommand extends ContainerAwareCommand
                         $game->setPasscode(md5($data[0]));
                         $game->setGameAnswer($data[7]);
 
-                        if ($data[3] != "" && is_int($data[3])) {
+                        if ($data[3] != "") {
                             $game->setMaxPlayRounds($data[3]);
                         } else {
                             $game->setMaxPlayRounds(1);
                         }
 
-                        if ($data[11] != "" && is_int($data[11])) {
+                        if ($data[11] != "") {
                             $game->setPriority($data[11]);
                         } else {
                             $game->setPriority(1);
@@ -134,13 +143,6 @@ class ImportGamesCommand extends ContainerAwareCommand
                         $em->persist($game);
                         $em->flush();
 
-                        $team = new Team();
-                        $team->setPasscode(md5($data[0]));
-                        $team->setStatus(Team::STATUS_GAME);
-                        $team->setGrade('g');
-                        $em->persist($team);
-
-                        $em->flush();
                     }
                 }
                 fclose($handle);
@@ -148,6 +150,6 @@ class ImportGamesCommand extends ContainerAwareCommand
         } catch (IOExceptionInterface $e) {
             $output->writeln("<fg=red>Cannot read file!</fg=red>");
         }
-        $output->write("<fg=green>Done!</fg=green>");
+        $output->writeln("<fg=green>Done!</fg=green>");
     }
 }
