@@ -89,6 +89,8 @@ class PlayGameController extends Controller
                     $teamLevelGame->setStartTime(GameLogic::now());
                     $em->persist($teamLevelGame);
                     $em->flush();
+
+                    $em->refresh($currentGame);
                     return $this->render('PacksAnSpielBundle::play/show_game.html.twig',
                         array('team_level' => $teamLevelGame, 'game' => $currentGame, 'team' => $currentTeam, 'level_info' => $gameSubjectInfoList));
                 } else {
@@ -129,7 +131,7 @@ class PlayGameController extends Controller
         $errorMessage = false;
         $levelJumpTeam = false;
 
-        if ($gameSubjectInfoList['count_games_won'] < 2) {
+        if ($gameSubjectInfoList['count_games_won'] < 1) {
             $errorMessage = "Ihr könnt noch kein Level aufsteigen!";
         } else {
             $jumpLevelTeamPasscode = $request->get('qr');
@@ -152,7 +154,7 @@ class PlayGameController extends Controller
         $levelJumpTeamLevel = $teamLevelRepository->getCurrentTeamLevel($currentTeam, $currentTeam->getCurrentLevel());
         $gameSubjectInfoList = $levelJumpTeamLevel->getTeamLevelInfo();
 
-        if ($gameSubjectInfoList['count_games_won'] < 2) {
+        if ($gameSubjectInfoList['count_games_won'] < 1) {
             $errorMessage = "Ihr könnt noch kein Level aufsteigen, ihr habt noch keine zwei Spiele gewonnen!";
         } elseif ($levelJumpTeam && !$errorMessage) {
             if ($levelJumpTeam->getId() == $currentTeam->getId()) {
@@ -181,8 +183,8 @@ class PlayGameController extends Controller
                 $levelRepository = $em->getRepository("PacksAnSpielBundle:Level");
                 $newLevel = $levelRepository->findOneByNumber($newLevelNumber);
 
-                $levelJumpTeam->setParentTeam($currentTeam);
-                $currentTeam->setParentTeam($currentTeam);
+                //$levelJumpTeam->setParentTeam($currentTeam);
+                //$currentTeam->setParentTeam($currentTeam);
                 $currentTeam->setCurrentLevel($newLevel);
                 $levelJumpTeam->setCurrentLevel($newLevel);
                 $em->persist($currentTeam);

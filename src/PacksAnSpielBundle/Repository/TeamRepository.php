@@ -113,7 +113,7 @@ class TeamRepository extends EntityRepository implements UserProviderInterface
         if (!$eam = $this->findOneByPasscode($teamCode)) {
             $team = new Team();
             $team->setPasscode($teamCode);
-            $team->setParentTeam($teamCode);
+            //$team->setParentTeam($teamCode);
             $team->setStatus($status);
             $team->setCurrentLevel(NULL);
 
