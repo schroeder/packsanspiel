@@ -62,7 +62,6 @@ class GameRepository extends EntityRepository
         $game = $query->execute();
         if ($game && is_array($game) && count($game) == 1) {
             return $game[0];
-
         } else {
             $queryString = "SELECT g.id FROM game g 
                             WHERE g.status>0 

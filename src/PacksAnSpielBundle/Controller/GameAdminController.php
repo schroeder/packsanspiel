@@ -107,11 +107,10 @@ class GameAdminController extends Controller
         /* @var Team $team */
         $team = $member->getTeam();
 
-        if ($team && $team->getParentTeam() != null) {
-            /* @var TeamRepository $repo */
-            $repo = $em->getRepository("PacksAnSpielBundle:Team");
-            $team = $repo->findLeadingGroup($team->getPasscode());
-        }
+        /*        if ($team && $team->getParentTeam() != null) {
+                    $repo = $em->getRepository("PacksAnSpielBundle:Team");
+                    $team = $repo->findLeadingGroup($team->getPasscode());
+                }*/
 
         if (!$team) {
             $logger->logAction("Cannot find team.", Actionlog::LOGLEVEL_GAME_CRIT, null, $game);
@@ -200,9 +199,9 @@ class GameAdminController extends Controller
         /* @var Team $team */
         $team = $teamRepository->find($teamId);
 
-        if ($team && $team->getParentTeam() != null) {
+        /*if ($team && $team->getParentTeam() != null) {
             $team = $repo->findLeadingGroup($team->getPasscode());
-        }
+        }*/
 
         if (!$team) {
             $errorMessage = "Leider konnte ich das Team nicht finden!";

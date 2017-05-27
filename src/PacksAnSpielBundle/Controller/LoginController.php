@@ -143,11 +143,11 @@ class LoginController extends Controller
                     /* @var Team $team */
                     $team = $member->getTeam();
 
-                    if ($team && $team->getParentTeam() != null) {
-                        /* @var TeamRepository $repo */
+                    /*if ($team && $team->getParentTeam() != null) {
                         $repo = $em->getRepository("PacksAnSpielBundle:Team");
                         $team = $repo->findLeadingGroup($team->getPasscode());
-                    }
+            }
+            */
 
                     if (!$team) {
                         $this->get('session')->set('member_list', $memberId);
