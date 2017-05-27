@@ -98,12 +98,13 @@ class DefaultController extends Controller
 
             if (isset($gameSubjectInfoList['current_game'])) {
 
-                if ($gameSubjectInfoList['current_game'] && $gameSubjectInfoList['game_duration'] < 5 * 60) {
+                /*if ($gameSubjectInfoList['current_game'] && $gameSubjectInfoList['game_duration'] < 5 * 60) {
                     $logger->logAction("Team cannot set answer yet.", Actionlog::LOGLEVEL_TEAM_WARN, $currentTeam);
                     return $this->render('PacksAnSpielBundle::default/currently_playing.html.twig',
                         array('level_info' => $gameSubjectInfoList, 'team' => $currentTeam));
 
-                } elseif ($gameSubjectInfoList['current_game']) {
+                } else*/
+                if ($gameSubjectInfoList['current_game']) {
                     $logger->logAction("Team can answer game question.", Actionlog::LOGLEVEL_TEAM_INFO, $currentTeam);
 
                     /* @var WordRepository $wordRepository */

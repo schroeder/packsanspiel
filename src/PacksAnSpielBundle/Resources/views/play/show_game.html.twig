@@ -3,12 +3,12 @@
 {% block playground %}
     <div id="playground" class="box">
         <div class="panel panel-success">
-            <div class="panel-heading"><h3 class="panel-title">Bitte wählt die Lösung!</h3></div>
+            <div class="panel-heading"><h3 class="panel-title">Und weiter geht es!</h3></div>
             <div class="panel-body">
                 <div class="row">
                     <h2>Los geht's!</h2>
                     <p>Ihr dürft jetzt die nächste Aufgabe lösen!</p>
-                    <p>Dafür begebt ihr euch zu Feld {{ game.location }}</p>
+                    <p>Dafür begebt ihr euch zu Feld {{ game.location.name }}</p>
                     <p>
                         <a href="{{ path('logout') }}" class="btn btn-primary btn-lg" role="button">OK</a>
                     </p>
