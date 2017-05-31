@@ -162,10 +162,10 @@ class PlayGameController extends Controller
             } elseif ($levelJumpTeam->getCurrentLevel() != $currentTeam->getCurrentLevel()) {
                 $errorMessage = "Ihr müsst euch eine Gruppe aus Level " . $currentTeam->getCurrentLevel() . " suchen!";
 
-            } elseif ($levelJumpTeam->getGrade() != $currentTeam->getGrade()) {
+            }/* elseif ($levelJumpTeam->getGrade() != $currentTeam->getGrade()) {
                 $errorMessage = "Ihr müsst euch eine Gruppe aus eurer Stufe suchen!";
 
-            } else { /* Gruppen zusammenführen und zum Spielfeld*/
+            }*/ else { /* Gruppen zusammenführen und zum Spielfeld*/
 
                 $currentTeamLevel->setFinishTime(GameLogic::now());
                 $em->persist($currentTeamLevel);
